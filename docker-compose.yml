@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   house:
-    container_name: nestjs_api_prod
+    container_name: house
 
     image: house:1.0.0
 
@@ -21,7 +21,7 @@ services:
       - /usr/src/app
 
   supplier:
-    container_name: nestjs_api_prod
+    container_name: supplier
 
     image: supplier:1.0.0
 
@@ -32,7 +32,7 @@ services:
     command: npm run start:prod
 
     ports:
-      - 3002:3002
+      - 3002:3000
     networks:
       - si5-soa
     volumes:
