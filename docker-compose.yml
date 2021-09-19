@@ -20,5 +20,23 @@ services:
     volumes:
       - /usr/src/app
 
+  supplier:
+    container_name: nestjs_api_prod
+
+    image: supplier:1.0.0
+
+    build:
+      context: ./supplier
+      dockerfile: ./Dockerfile
+
+    command: npm run start:prod
+
+    ports:
+      - 3002:3002
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
 networks:
   si5-soa:
