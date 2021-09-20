@@ -1,36 +1,25 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { firstValueFrom, Observable } from 'rxjs';
-import {AxiosResponse} from "axios";
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class TotalConsumptionService {
     
     private URL: string
+    private consumption: number=-1;
 
     constructor(private httpService: HttpService) {
         this.URL = "http://house:3000/consumption";
     }
 
-    public async callToAPI(URL: string): Promise<number>{
-        var body = await firstValueFrom(this.httpService.get(URL));
- 
-        return body.data
+    public async callToAPI(URL: string){
+        await firstValueFrom(this.httpService.get(URL)).then(body=>this.consumption = body.data);
     }
 
-    getTotalConsumption(): number {
-        var promise = this.callToAPI(this.URL);
-        var cons:number;
-
-        promise.then(
-            (x)=>{
-                cons = x.data;
-            })
-            .catch((error) =>{
-                console.log(error);
-                cons = 0;
-            });
-        return cons;
+    async getTotalConsumption(): Promise<number> {
+        this.consumption = -1;
+        await this.callToAPI(this.URL);
+        return this.consumption;
     }
     
 }

@@ -6,7 +6,7 @@ export class TotalConsumptionController {
     constructor(private readonly totalConsumptionService: TotalConsumptionService) {}
 
     @Get()
-    getTotalConsumption(): number {
+    getTotalConsumption(): Promise<number> {
         return this.totalConsumptionService.getTotalConsumption();
     }
 }
