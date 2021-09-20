@@ -38,5 +38,23 @@ services:
     volumes:
       - /usr/src/app
 
+  power-grid:
+    container_name: power-grid
+
+    image: power-grid:1.0.0
+
+    build:
+      context: ./power-grid
+      dockerfile: ./Dockerfile
+
+    command: npm run start:prod
+
+    ports:
+      - 3003:3000
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
 networks:
   si5-soa:
