@@ -19,7 +19,8 @@ class Context {
 export class ProductionSteps {
     constructor(protected context: Context) {}
     private httpService : HttpService;
-    private consumption: Promise<AxiosResponse<number>>;
+    private production: Promise<AxiosResponse<number>>;
+    private totalConsumption: Promise<AxiosResponse<number>>;
 
     @before()
     public async before(): Promise<void> {
@@ -32,19 +33,22 @@ export class ProductionSteps {
         await this.context.app.init();
     }
 
-    @when(/I ask the supplier for production at "([^"]*)"/)
-    public callToAPI(url: string) {
-         this.consumption = this.houseCall(url).toPromise();
+    @when(/I ask the supplier for production at "([^"]*)" and the total-consumption at "([^"]*)"/)
+    public callToAPI(urlProd: string, urlTotCons: string) {
+         this.production = this.httpCall(urlProd).toPromise();
+         this.totalConsumption = this.httpCall(urlTotCons).toPromise();
     }
 
-    @then('the production should be {int}')
-    public dataResponse(data: number) {
-        this.consumption.then((x)=>{
-                    assert.equal(data,x.data);
+    @then(/the production and the total-consumption should be equal/)
+    public dataResponse() {
+        this.production.then((x)=>{
+                    this.totalConsumption.then((y)=>{
+                        assert.equal(y.data,x.data);
+                    });
                 });
     }
 
-    houseCall(url): Observable<AxiosResponse<number>> {
+    httpCall(url): Observable<AxiosResponse<number>> {
         return this.httpService.get(url);
     }
 
