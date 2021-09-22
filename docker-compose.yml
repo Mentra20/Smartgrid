@@ -1,18 +1,13 @@
 version: '3.8'
 
 services:
-
   house:
     container_name: house
-
     image: house:1.0.0
-
     build:
       context: ./house
       dockerfile: ./Dockerfile
-
     command: npm run start:prod
-
     ports:
       - 3000:3000
     networks:
@@ -22,20 +17,15 @@ services:
 
   supplier:
     container_name: supplier
-
     image: supplier:1.0.0
-
     build:
       context: ./supplier
       dockerfile: ./Dockerfile
-
     command: npm run start:prod
-
     depends_on:
       - "clock"
-
     ports:
-      - 3002:3000
+      - 3002:3002
     networks:
       - si5-soa
     volumes:
@@ -43,17 +33,13 @@ services:
 
   power-grid:
     container_name: power-grid
-
     image: power-grid:1.0.0
-
     build:
       context: ./power-grid
       dockerfile: ./Dockerfile
-
     command: npm run start:prod
-
     ports:
-      - 3003:3000
+      - 3003:3003
     networks:
       - si5-soa
     volumes:
@@ -61,17 +47,13 @@ services:
 
   clock:
     container_name: clock
-
     image: clock:1.0.0
-
     build:
       context: ./clock
       dockerfile: ./Dockerfile
-
     command: npm run start:prod
-
     ports:
-      - 3004:3000
+      - 3004:3004
     networks:
       - si5-soa
     volumes:
