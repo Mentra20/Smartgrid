@@ -1,14 +1,22 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class TotalConsumptionService {
-    private total_consumption: number;
+    
+    private URL: string
 
-    constructor() {
-        this.total_consumption = 600;
+    constructor(private httpService: HttpService) {
+        this.URL = "http://house:3000/consumption";
     }
 
-    getTotalConsumption(): number {
-        return this.total_consumption;
+    public callToAPI(URL: string): Promise<number>{
+        return firstValueFrom(this.httpService.get(URL)).then(body=>body.data);;
     }
+
+    getTotalConsumption(): Promise<number> {
+        return this.callToAPI(this.URL);
+    }
+    
 }
