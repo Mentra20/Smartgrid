@@ -31,6 +31,9 @@ services:
 
     command: npm run start:prod
 
+    depends_on:
+      - "clock"
+
     ports:
       - 3002:3000
     networks:
@@ -51,6 +54,24 @@ services:
 
     ports:
       - 3003:3000
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  clock:
+    container_name: clock
+
+    image: clock:1.0.0
+
+    build:
+      context: ./clock
+      dockerfile: ./Dockerfile
+
+    command: npm run start:prod
+
+    ports:
+      - 3004:3000
     networks:
       - si5-soa
     volumes:
