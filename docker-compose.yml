@@ -59,5 +59,19 @@ services:
     volumes:
       - /usr/src/app
 
+  house-object:
+    container_name: voiture
+    image: house-object:1.0.0
+    build:
+      context: ./house-object
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3005:3005
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
 networks:
   si5-soa:
