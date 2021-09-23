@@ -30,6 +30,7 @@ export class ProductionService {
             }
             else{
                 console.log("Bad consumption, produce : "+this.production+", require : "+consumption);
+                this.adaptProductionToConsumption(consumption);
             }
         }
         )
@@ -38,6 +39,11 @@ export class ProductionService {
 
     private checkCorrectConsumption(value:number):boolean{
         return value==this.production;
+    }
+
+    private adaptProductionToConsumption(value:number) {
+        this.production = value;
+        console.log("Production have been adapted, it is now : " + this.production + ".");
     }
 
     getProduction(): number{
