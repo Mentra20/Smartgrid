@@ -73,5 +73,17 @@ services:
     volumes:
       - /usr/src/app
 
+  scenario:
+    container_name: scenario
+    image: scenario:1.0.0
+    build:
+      context: ./scenario
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
 networks:
   si5-soa:

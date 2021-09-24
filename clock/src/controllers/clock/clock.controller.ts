@@ -1,5 +1,4 @@
 import { Controller, Get, Sse, MessageEvent } from '@nestjs/common';
-import { nextTick } from 'process';
 import { interval, map, Observable } from 'rxjs';
 import { ClockService } from 'src/services/clock/clock.service';
 
@@ -12,8 +11,6 @@ export class ClockController {
     GetTime() : string {
         return Date().toString();
     }
-
-
 
     @Sse('tick')
     sse(): Observable<MessageEvent> {
