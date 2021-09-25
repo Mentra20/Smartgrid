@@ -13,15 +13,19 @@ export class ProductionService {
         this.URL = "http://power-grid:3003/total-consumption"
     }
 
-    verifyProductionVsConsumption(date:Date){
-        firstValueFrom(this.http.get(this.URL, {params: {date:date}})).then((body)=>{
+    verifyProductionVsConsumption(date:Date):Promise<boolean>{
+        return firstValueFrom(this.http.get(this.URL, {params: {date:date}})).then((body)=>{
             var consumption = body.data;
             if(this.checkCorrectConsumption(consumption)){
-                console.log("Consumption OK");
+                let message = "Consumption OK";
+                console.log(message);
+                return true;
             }
             else{
-                console.log("Bad consumption, produce : "+this.production+", require : "+consumption);
+                let message = "Bad consumption, produce : "+this.production+", require : "+consumption;
+                console.log(message);
                 this.adaptProductionToConsumption(consumption);
+                return false;
             }
         })
     }

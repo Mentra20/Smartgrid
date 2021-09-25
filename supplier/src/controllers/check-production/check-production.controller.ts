@@ -6,7 +6,7 @@ export class CheckProductionController {
     constructor(private readonly productionService: ProductionService) {}
 
     @Get()
-    getProduction(@Query('date') dateString:Date): any {
+    checkProduction(@Query('date') dateString:Date): Promise<any> {
         var date = new Date(dateString);
         return this.productionService.verifyProductionVsConsumption(date);
     }
