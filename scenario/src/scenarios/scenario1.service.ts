@@ -14,16 +14,16 @@ export class Scenario1Service {
     consumeDate:Date = new Date('2021-10-02T02:00');
     notConsumeDate:Date = new Date('2021-10-01T12:00');
   
-    async onModuleInit(){
+    async LaunchScenario(){
         await this.dateWhereHouseConsume();
-
+        console.log("\n");
         await this.dateWhereHouseNotConsume();
     }
 
     async callToAPI(date:Date){
         await firstValueFrom(this.http.get(this.URL,{params:{date:date.toJSON()}})).then((body)=>{
             var consumption = body.data;
-            console.log("A la date du "+date.toUTCString()+" ma maison consomme "+consumption);
+            console.log("Le "+date.toUTCString()+" ma maison consomme "+consumption);
         })
     }
 
