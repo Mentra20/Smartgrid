@@ -11,8 +11,8 @@ export class ConsumptionService {
     }
 
     getConsumption(): Promise<number>{
-        var date:Date = new Date(2021,10,1);
-        return firstValueFrom(this.http.get(this.URL,{data:date})).then((body)=>{
+        var date:Date = new Date('2021-10-01T00:00');
+        return firstValueFrom(this.http.get(this.URL,{params:{date:date.toJSON()}})).then((body)=>{
             return body.data.consumption;
         }
         );

@@ -17,6 +17,6 @@ export class ClockController {
 
     @Sse('tick')
     sse(): Observable<MessageEvent> {
-        return this.clockService.getTick().pipe(map((_)=>({data:this.clockService.getDate()} as MessageEvent)));
+        return this.clockService.getTick().pipe(map((_)=>({data:this.clockService.getDate().toJSON()} as MessageEvent)));
     } 
 }
