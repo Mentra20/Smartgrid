@@ -26,10 +26,7 @@ export class Scenario1Service {
     }
 
     isDesiredDate(date:Date){
-        console.log(date)
-        console.log(this.desiredDate)
-
-        return (date== this.desiredDate);
+        return (date.getTime() === this.desiredDate.getTime());
     }
 
     callToAPI(){

@@ -4,8 +4,8 @@ import { interval, Observable } from 'rxjs';
 @Injectable()
 export class ClockService {
 
-    date:Date = new Date(2021,10,1);
-    tick = interval(1000);
+    date:Date = new Date("2021-09-30T12:00");
+    tick = interval(100);
     updateTick = this.tick.subscribe((_)=>this.doTick())
 
     getTick():Observable<number>{
