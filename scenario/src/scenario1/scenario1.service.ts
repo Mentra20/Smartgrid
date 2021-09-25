@@ -15,19 +15,21 @@ export class Scenario1Service {
         var source = new EventSource('http://clock:3004/clock/tick');
 
         source.onmessage = ({ data }) => {
-            console.log(data);
             this.waitDesiredHour(new Date(data));
         }
     }
 
     waitDesiredHour(date:Date){
         if(this.isDesiredDate(date)){
-            
+            this.callToAPI();
         }
     }
 
     isDesiredDate(date:Date){
-        return (date == this.desiredDate);
+        console.log(date)
+        console.log(this.desiredDate)
+
+        return (date== this.desiredDate);
     }
 
     callToAPI(){
