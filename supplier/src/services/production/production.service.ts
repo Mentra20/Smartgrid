@@ -16,8 +16,7 @@ export class ProductionService {
         var source = new EventSource('http://clock:3004/clock/tick');
 
         source.onmessage = ({ data }) => {
-            console.log(data);
-            this.verifyProductionVsConsumption(new Date(+data));
+            this.verifyProductionVsConsumption(new Date(data));
         }
     }
 

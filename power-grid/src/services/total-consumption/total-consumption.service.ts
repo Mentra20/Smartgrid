@@ -12,7 +12,6 @@ export class TotalConsumptionService {
     }
 
     public callToAPI(URL: string): Promise<number>{
-        new Date()
         return firstValueFrom(this.httpService.get(URL)).then(body=>body.data);;
     }
 

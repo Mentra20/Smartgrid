@@ -60,7 +60,7 @@ services:
       - /usr/src/app
 
   house-object:
-    container_name: voiture
+    container_name: house-object
     image: house-object:1.0.0
     build:
       context: ./house-object
@@ -68,6 +68,18 @@ services:
     command: npm run start:prod
     ports:
       - 3005:3005
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  scenario:
+    container_name: scenario
+    image: scenario:1.0.0
+    build:
+      context: ./scenario
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
     networks:
       - si5-soa
     volumes:
