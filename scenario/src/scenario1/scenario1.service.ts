@@ -6,34 +6,34 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class Scenario1Service {
 
-    constructor(private http:HttpService){}
-
-    desiredDate:Date = new Date('2021-10-02T02:00');
-
-    onModuleInit(){
-        var EventSource = require("eventsource");
-        var source = new EventSource('http://clock:3004/clock/tick');
-
-        source.onmessage = ({ data }) => {
-            this.waitDesiredHour(new Date(data));
-        }
+    constructor(private http:HttpService){
+        this.URL = "http://house:3000/consumption";
     }
 
-    waitDesiredHour(date:Date){
-        if(this.isDesiredDate(date)){
-            this.callToAPI();
-        }
+    URL:string;
+    consumeDate:Date = new Date('2021-10-02T02:00');
+    notConsumeDate:Date = new Date('2021-10-01T12:00');
+  
+    async onModuleInit(){
+        console.log("CAS 1 : ma maison consomme à cette date : ");
+        await this.dateWhereHouseConsume();
+
+        console.log("CAS 2 : ma maison ne consomme pas à cette date : ");
+        await this.dateWhereHouseNotConsume();
     }
 
-    isDesiredDate(date:Date){
-        return (date.getTime() === this.desiredDate.getTime());
-    }
-
-    callToAPI(){
-        firstValueFrom(this.http.get("http://house:3000/consumption")).then((body)=>{
+    async callToAPI(date:Date){
+        await firstValueFrom(this.http.get(this.URL,{params:{date:date.toJSON()}})).then((body)=>{
             var consumption = body.data;
-            console.log("A la date du "+this.desiredDate.toUTCString()+" ma maison consomme "+consumption);
-        }
-        )
+            console.log("A la date du "+date.toUTCString()+" ma maison consomme "+consumption);
+        })
+    }
+
+    async dateWhereHouseConsume(){
+        await this.callToAPI(this.consumeDate);
+    }
+
+    async dateWhereHouseNotConsume(){
+        await this.callToAPI(this.notConsumeDate);
     }
 }

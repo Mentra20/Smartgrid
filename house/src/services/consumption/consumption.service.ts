@@ -10,13 +10,10 @@ export class ConsumptionService {
         this.URL = "http://house-object:3005/consumption";
     }
 
-    getConsumption(): Promise<number>{
-        var date:Date = new Date('2021-10-01T00:00');
+    getConsumption(date:Date): Promise<number>{
         return firstValueFrom(this.http.get(this.URL,{params:{date:date.toJSON()}})).then((body)=>{
             return body.data.consumption;
-        }
-        );
+        });
     }
-    
 }
 

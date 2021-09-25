@@ -1,4 +1,4 @@
-import { Controller,Get } from '@nestjs/common';
+import { Controller,Get, Query } from '@nestjs/common';
 import { ConsumptionService } from 'src/services/consumption/consumption.service';
 
 @Controller('consumption')
@@ -6,7 +6,8 @@ export class ConsumptionController {
     constructor(private readonly consumptionService: ConsumptionService) {}
 
     @Get()
-    getConsumption(): Promise<number> {
-        return this.consumptionService.getConsumption();
+    getConsumption(@Query("date") dateString:string): Promise<number> {
+        var date = new Date(dateString);
+        return this.consumptionService.getConsumption(date);
     }
 }

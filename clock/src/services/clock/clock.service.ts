@@ -5,7 +5,7 @@ import { interval, Observable } from 'rxjs';
 export class ClockService {
 
     date:Date = new Date("2021-09-30T12:00");
-    tick = interval(100);
+    tick = interval(100000000);
     updateTick = this.tick.subscribe((_)=>this.doTick())
 
     getTick():Observable<number>{
