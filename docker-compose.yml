@@ -45,20 +45,6 @@ services:
     volumes:
       - /usr/src/app
 
-  clock:
-    container_name: clock
-    image: clock:1.0.0
-    build:
-      context: ./clock
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3004:3004
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
-
   house-object:
     container_name: house-object
     image: house-object:1.0.0
