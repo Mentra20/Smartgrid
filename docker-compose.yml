@@ -60,7 +60,7 @@ services:
       - /usr/src/app
 
   house-object:
-    container_name: voiture
+    container_name: house-object
     image: house-object:1.0.0
     build:
       context: ./house-object
