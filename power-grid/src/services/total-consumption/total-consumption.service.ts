@@ -11,12 +11,12 @@ export class TotalConsumptionService {
         this.URL = "http://house:3000/consumption";
     }
 
-    public callToAPI(URL: string): Promise<number>{
-        return firstValueFrom(this.httpService.get(URL)).then(body=>body.data);;
+    public callToAPI(date:Date): Promise<number>{
+        return firstValueFrom(this.httpService.get(this.URL, {params: {date:date}})).then(body=>body.data);;
     }
 
-    getTotalConsumption(): Promise<number> {
-        return this.callToAPI(this.URL);
+    getTotalConsumption(date:Date): Promise<number> {
+        return this.callToAPI(date);
     }
     
 }

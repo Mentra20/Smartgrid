@@ -15,10 +15,8 @@ export class Scenario1Service {
     notConsumeDate:Date = new Date('2021-10-01T12:00');
   
     async onModuleInit(){
-        console.log("CAS 1 : ma maison consomme à cette date : ");
         await this.dateWhereHouseConsume();
 
-        console.log("CAS 2 : ma maison ne consomme pas à cette date : ");
         await this.dateWhereHouseNotConsume();
     }
 
@@ -30,10 +28,12 @@ export class Scenario1Service {
     }
 
     async dateWhereHouseConsume(){
+        console.log("CAS 1 : ma maison consomme à cette date : ");
         await this.callToAPI(this.consumeDate);
     }
 
     async dateWhereHouseNotConsume(){
+        console.log("CAS 2 : ma maison ne consomme pas à cette date : ");
         await this.callToAPI(this.notConsumeDate);
     }
 }

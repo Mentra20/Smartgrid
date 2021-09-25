@@ -6,23 +6,15 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class ProductionService {
     private production: number;
+    private URL: string;
 
     constructor(private http:HttpService) {
         this.production = 200;
+        this.URL = "http://power-grid:3003/total-consumption"
     }
 
-    onModuleInit(){
-        var EventSource = require("eventsource");
-        var source = new EventSource('http://clock:3004/clock/tick');
-
-        source.onmessage = ({ data }) => {
-            this.verifyProductionVsConsumption(new Date(data));
-        }
-    }
-
-    private verifyProductionVsConsumption(date:Date){
-        console.log(date);
-        firstValueFrom(this.http.get("http://power-grid:3003/total-consumption")).then((body)=>{
+    verifyProductionVsConsumption(date:Date){
+        firstValueFrom(this.http.get(this.URL, {params: {date:date}})).then((body)=>{
             var consumption = body.data;
             if(this.checkCorrectConsumption(consumption)){
                 console.log("Consumption OK");
@@ -31,9 +23,7 @@ export class ProductionService {
                 console.log("Bad consumption, produce : "+this.production+", require : "+consumption);
                 this.adaptProductionToConsumption(consumption);
             }
-        }
-        )
-
+        })
     }
 
     private checkCorrectConsumption(value:number):boolean{
