@@ -3,10 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConsumptionService } from './services/consumption/consumption.service';
 import { ConsumptionController } from './controllers/consumption/consumption.controller';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [HttpModule],
+  imports: [],
   controllers: [AppController, ConsumptionController],
   providers: [AppService, ConsumptionService],
 })

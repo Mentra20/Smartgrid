@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  house:
+    container_name: house
+    image: house:1.0.0
+    build:
+      context: ./house
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3000:3000
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  supplier:
+    container_name: supplier
+    image: supplier:1.0.0
+    build:
+      context: ./supplier
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3002:3002
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  power-grid:
+    container_name: power-grid
+    image: power-grid:1.0.0
+    build:
+      context: ./power-grid
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3003:3003
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  house-object:
+    container_name: voiture
+    image: house-object:1.0.0
+    build:
+      context: ./house-object
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3005:3005
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  scenario:
+    container_name: scenario
+    image: scenario:1.0.0
+    build:
+      context: ./scenario
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "house-object"
+      - "house"
+      - "supplier"
+      - "power-grid"
+
+networks:
+  si5-soa:
