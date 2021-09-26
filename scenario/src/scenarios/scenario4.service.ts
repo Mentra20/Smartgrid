@@ -10,29 +10,30 @@ export class Scenario4Service {
     }
 
     URL:string;
-    consumeDate:Date = new Date('2021-11-02T02:00');
-    notConsumeDate:Date = new Date('2021-11-01T12:00');
+    startDate:Date = new Date('2021-10-01T00:00');
+    
+    endDate:Date = new Date('2021-10-02T06:00');
 
         async LaunchScenario(){
-        await this.dateWhereHouseObjectConsume();
+        await this.houseObjectConsumption();
         console.log("\n");
-        await this.dateWhereHouseObjectNotConsume();
     }
 
     async callToAPI(date:Date){
         await firstValueFrom(this.http.get(this.URL,{params:{date:date.toJSON()}})).then((body)=>{
-            var consumption = body.data;
-            console.log("A la date du "+date.toUTCString()+" mon objet consomme "+consumption);
+            var objectName = body.data.objectName;
+            var consumption = body.data.consumption;
+            console.log("A la date du "+date.toString()+" mon objet \""+objectName+"\" consomme "+consumption);
         })
     }
 
-    async dateWhereHouseObjectConsume(){
+    async houseObjectConsumption(){
         console.log("CAS 1 : mon objet consomme à cette date : ");
-        await this.callToAPI(this.consumeDate);
+        var currentDate:Date = this.startDate;
+        while(currentDate<this.endDate){
+            await this.callToAPI(currentDate);
+            currentDate.setHours(currentDate.getHours()+1);
+        }
     }
 
-    async dateWhereHouseObjectNotConsume(){
-        console.log("CAS 2 : mon objet ne consomme pas à cette date : ");
-        await this.callToAPI(this.notConsumeDate);
-    }
 }

@@ -12,7 +12,7 @@ export class ConsumptionService {
             consumption: 500
         },
         {
-            start:'2021-10-02T00:00',
+            start:'2021-10-01T22:00',
             end:'2021-10-02T06:00',
             consumption: 600
         },

@@ -28,7 +28,11 @@ export class ScenarioManagerService {
         console.log("----- Scenario supplier -----");
         await this.scenarioSupplier.LaunchScenarioSupplier();
 
+        console.log("\n\n");
+
         console.log("----- Scenario house-object -----");
         await this.scenarioHouseObject.LaunchScenario();
+
+        console.log("\n\n");
     }
 }
