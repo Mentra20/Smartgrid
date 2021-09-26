@@ -22,8 +22,6 @@ services:
       context: ./supplier
       dockerfile: ./Dockerfile
     command: npm run start:prod
-    depends_on:
-      - "clock"
     ports:
       - 3002:3002
     networks:
@@ -46,7 +44,7 @@ services:
       - /usr/src/app
 
   house-object:
-    container_name: house-object
+    container_name: voiture
     image: house-object:1.0.0
     build:
       context: ./house-object
@@ -70,6 +68,11 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "house-object"
+      - "house"
+      - "supplier"
+      - "power-grid"
 
 networks:
   si5-soa:
