@@ -20,8 +20,9 @@
 
 | Service       | Chemin      | Body            | Return     |Description            |
 | :-------------|:--------    | :-----          |:--------   |:----------------------|
-| house         | consumption | -               | number     | La consomation de la maison|
-| house-object  | consumption | Date            |{ objectName : string, consumption : number } | La consomation de la maison   |
-|power-grid     |total-consumption|-            |number      | Consomation total du reseau |
-|supplier       |production   |-                |number      | La production total |
-| Clock         | clock/tick  |-                |  Date      | La date courrant dans la simultion a chaque tick |
+| house         | consumption | Date              | consommation (number)     | La consommation de la maison|
+| house-object  | consumption | Date            |{ objectName : string, consumption : number } | La consommation de l'objet de la maison   |
+|supplier       | production   |-                | production (number)      | La production totale |
+| consumption-manager | house-consumption | ID (number) | consommation (number) | La consommation de la maison d'un ID donné |
+| consumption-manager | communitie-consumption | ID (number) | consommation (number) | La consommation totale d'une communauté d'un ID donné |
+| consumption-manager | total-consumption | - | consommation (number) | La consommation totale de toutes les maisons |
