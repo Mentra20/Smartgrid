@@ -10,34 +10,30 @@ export class ProductionService {
 
     constructor(private http:HttpService) {
         this.production = 200;
-        this.URL = "http://power-grid:3003/total-consumption"
+        this.URL = "http://consumption-verifier:XXX/consumption-check";
     }
 
-    verifyProductionVsConsumption(date:Date):Promise<boolean>{
-        return firstValueFrom(this.http.get(this.URL, {params: {date:date}})).then((body)=>{
-            var consumption = body.data;
-            if(this.checkCorrectConsumption(consumption)){
-                let message = "Consumption OK";
-                console.log(message);
-                return true;
-            }
-            else{
-                let message = "Bad consumption, produce : "+this.production+", require : "+consumption;
-                console.log(message);
-                this.adaptProductionToConsumption(consumption);
-                return false;
-            }
-        })
+    checkIfProductionNeedsAdaptation(date:Date): Promise<boolean> {
+        if (this.getIfConsumptionEqualsProduction(date)) {
+            let message = "Production needs to be adapted to the consumption of the grid ASAP.";
+            console.log(message);
+            return true;
+        }
+        else {
+            let message = "Production is equal to the consumption of the grid, you have nothing to worry about - yet.";
+            console.log(message);
+            return false;
+        }
     }
 
-    private checkCorrectConsumption(value:number):boolean{
-        return value==this.production;
+    private getIfConsumptionEqualsProduction(date:Date): Promise<boolean> {
+        return firstValueFrom(this.http.get(this.URL, {params: {date:date}})).then((body)=> {body.data});
     }
 
-    private adaptProductionToConsumption(value:number) {
+    /*private adaptProductionToConsumption(value:number) {
         this.production = value;
         console.log("Production have been adapted, it is now : " + this.production + ".");
-    }
+    }*/
 
     getProduction(): number{
         return this.production;
