@@ -14,13 +14,13 @@ export class HouseConsumptionService {
         return firstValueFrom(this.httpService.get(await houseURL, {params: {date:date}})).then(body=>body.data);
     }
 
-    public getHouseURLFromID(ID:number): Promise<string>{
+    public getHouseURLFromHouseID(ID:number): Promise<string>{
         return firstValueFrom(this.httpService.get(this.dataServiceURL, {params: {ID:ID}})).then(body=>body.data);
     }
 
     getHouseConsumption(date:Date, houseID:number): Promise<number> {
 
-        var houseURL = this.getHouseURLFromID(houseID);
+        var houseURL = this.getHouseURLFromHouseID(houseID);
         
         return this.callToHouseService(date, houseURL);
     }
