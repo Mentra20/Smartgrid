@@ -1,5 +1,5 @@
 {
-  "name": "house",
+  "name": "registry-manager",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -21,9 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/axios": "0.0.2",
     "@nestjs/common": "^8.0.0",
-    "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "reflect-metadata": "^0.1.13",
@@ -58,9 +56,6 @@
       "json",
       "ts"
     ],
-    "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
-    },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
