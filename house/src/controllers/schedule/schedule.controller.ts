@@ -6,7 +6,7 @@ export class ScheduleController {
     constructor(private readonly scheduleService: ScheduleService) {}
 
     @Get()
-    getSchedule(): Promise<Date[]> {
+    getSchedule(): Promise<string[]> {
         return this.scheduleService.getSchedule();
     }
 }

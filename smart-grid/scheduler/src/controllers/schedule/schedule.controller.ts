@@ -6,7 +6,7 @@ export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   @Get()
-  getSchedule(): Date[] {
-    return this.scheduleService.getSchedule();
+  getSchedule(@Query('ID') houseID: number): string[] {
+    return this.scheduleService.getSchedule(houseID);
   }
 }

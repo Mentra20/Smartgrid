@@ -5,14 +5,17 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class ScheduleService {
   private URL: string;
+  private id: number;
 
   constructor(private http: HttpService) {
     this.URL = 'http://localhost:3015/schedule';
+    this.id = 1;
   }
 
-
-  getSchedule(): Promise<Date[]> {
-    return firstValueFrom(this.http.get(this.URL)).then((body) => {
+  getSchedule(): Promise<string[]> {
+    return firstValueFrom(
+      this.http.get(this.URL, { params: { ID: this.id } }),
+    ).then((body) => {
       return body.data;
     });
   }
