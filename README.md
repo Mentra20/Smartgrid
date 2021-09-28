@@ -23,8 +23,8 @@
 | house         | consumption | Date              | consommation (number)     | La consommation de la maison|
 | house-object  | consumption | Date            |{ objectName : string, consumption : number } | La consommation de l'objet de la maison   |
 |supplier       | production   |-                | production (number)      | La production totale |
-| consumption-manager | house-consumption | ID (number) | consommation (number) | La consommation de la maison d'un ID donné |
-| consumption-manager | community-consumption | ID (number) | consommation (number) | La consommation totale d'une communauté d'un ID donné |
-| consumption-manager | total-consumption | - | consommation (number) | La consommation totale de toutes les maisons |
+| consumption-manager | house-consumption | Date & ID (number) | consommation (number) | La consommation de la maison d'un ID donné |
+| consumption-manager | community-consumption | Date & ID (number) | consommation (number) | La consommation totale d'une communauté d'un ID donné |
+| consumption-manager | total-consumption | Date | consommation (number) | La consommation totale de toutes les maisons |
 | consumption-verifier | consumption-peak | Date & ID (number) | booléen (true si il y a un pic, false sinon) | Indique la présence d'un pic à une certaine date et pour un certain groupe de maison
 | consumption-verifier | consumption-check | Date | booléen (true si consommation == production, false sinon) | Indique si la consommation de la grid a la même valeur que la production

@@ -6,7 +6,7 @@ export class ConsumptionPeakController {
     constructor(private readonly consumptionPeakService: ConsumptionPeakService) {}
 
     @Get()
-    checkIfConsumptionPeakExist(@Query('date') dateString:Date, @Query('community') communityID:number): Promise<any> {
+    checkIfConsumptionPeakExist(@Query('date') dateString:Date, @Query('ID') communityID:number): Promise<any> {
         var date = dateString;
         var community_id = communityID;
 

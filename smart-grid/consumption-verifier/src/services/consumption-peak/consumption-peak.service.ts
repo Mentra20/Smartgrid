@@ -12,16 +12,16 @@ export class ConsumptionPeakService {
         this.URL = "http://consumption-manager:XXX/community-consumption";
     }
 
-    verifyIfEnergyPeakExist(date:Date, community_id:number):Promise<boolean> {
-        return firstValueFrom(this.http.get(this.URL, {params: {date:date}})).then((body)=>{
-            var community_consumption = body.data;
+    verifyIfEnergyPeakExist(date:Date, ID:number): Promise<boolean>{
+        return firstValueFrom(this.http.get(this.URL, {params: {date:date, number:ID}})).then((body)=>{
+            var community_consumption: number = body.data;
             if(this.checkConsumptionPeak(community_consumption)) {
-                let message = "!! Consumption for community " + community_id + " is at a PEAK !!";
+                let message = "!! Consumption for community " + ID + " is at a PEAK !!";
                 console.log(message);
                 return true;
             }
             else {
-                let message = "Consumption for community " + community_id + " is correct.";
+                let message = "Consumption for community " + ID + " is correct.";
                 return false;
             }
         })
