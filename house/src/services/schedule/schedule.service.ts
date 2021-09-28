@@ -10,9 +10,10 @@ export class ScheduleService {
     this.URL = 'http://localhost:3015/schedule';
   }
 
+
   getSchedule(): Promise<Date[]> {
     return firstValueFrom(this.http.get(this.URL)).then((body) => {
-      return body.data.schedule;
+      return body.data;
     });
   }
 }

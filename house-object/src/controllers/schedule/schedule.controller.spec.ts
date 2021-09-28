@@ -20,7 +20,7 @@ describe('ScheduleController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('Have the correct consumption',()=>{
+  it('Have the correct schedule', () => {
     expect(controller.getSchedule()).toEqual(service.getSchedule());
-  })
+  });
 });
