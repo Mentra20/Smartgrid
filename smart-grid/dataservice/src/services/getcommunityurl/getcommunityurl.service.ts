@@ -7,8 +7,8 @@ export class GetcommunityurlService {
         this.dict[ID]=url;
     }
     public getCommunityURL(ID:number):string[]{
+        var localStorageCommunityURL = [];
         for(var key in this.dict) {
-            var localStorageCommunityURL = [];
             localStorageCommunityURL.push(this.dict[key]);
             console.log(this.dict[key]);
         }
