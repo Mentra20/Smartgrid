@@ -9,7 +9,7 @@ export class ConsumptionPeakService {
 
     constructor(private http:HttpService) {
         this.max_production = 1000000; //Valeur à modifier
-        this.URL = "http://consumption-manager:3014/community-consumption";
+        this.URL = "http://consumption-manager:3008/community-consumption";
     }
 
     verifyIfEnergyPeakExist(date:Date, ID:number): Promise<boolean>{

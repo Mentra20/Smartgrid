@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class SubscribeService {
 
-    private subcriptionURI = "http://registry:3001/subscription" 
+    private subcriptionURI = "http://registry:3003/subscription" 
 
     private isSubscribe = false;
 

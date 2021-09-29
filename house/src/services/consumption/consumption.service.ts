@@ -7,7 +7,7 @@ export class ConsumptionService {
     private URL: string;
 
     constructor(private http:HttpService) {
-        this.URL = "http://house-object:3005/consumption";
+        this.URL = "http://house-object:3001/consumption";
     }
 
     getConsumption(date:Date): Promise<number>{

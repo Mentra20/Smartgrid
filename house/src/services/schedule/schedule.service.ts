@@ -8,7 +8,7 @@ export class ScheduleService {
   private id: number;
 
   constructor(private http: HttpService) {
-    this.URL = 'http://localhost:3015/schedule';
+    this.URL = 'http://localhost:3002/schedule';
     this.id = 1;
   }
 

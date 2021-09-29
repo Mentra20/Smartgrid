@@ -4,9 +4,9 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class Scenario3Service {
-    private URL_CHECK_PROD = "http://supplier:3002/check-production";
-    private URL_CURRENT_CONSUMPTION = "http://supplier:3002/production";
-    private URL_GRID_TOTAL_CONSUMPTION = "http://power-grid:3003/total-consumption"
+    private URL_CHECK_PROD = "http://supplier:3005/check-production";
+    private URL_CURRENT_CONSUMPTION = "http://supplier:3005/production";
+    private URL_GRID_TOTAL_CONSUMPTION = "http://power-grid:3004/total-consumption"
 
     
 

@@ -7,7 +7,7 @@ export class HouseConsumptionService {
     private dataServiceURL: string
 
     constructor(private httpService: HttpService) {
-        this.dataServiceURL = "http://DATASERVICE:3000/GETHOUSEURL";
+        this.dataServiceURL = "http://dataservice:3006/fromregistry/gethouseurl";
     }
 
     public async callToHouseService(date:Date, houseURL:Promise<string>): Promise<number>{

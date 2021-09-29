@@ -4,7 +4,7 @@ import { catchError } from 'rxjs';
 
 @Injectable()
 export class SubscriptionService {
-    private URL_DATASERVICE_REGISTRY = "http://data-service:3000/fromregistry"
+    private URL_DATASERVICE_REGISTRY = "http://data-service:3006/fromregistry"
 
     constructor(private http:HttpService){}
 
@@ -39,7 +39,7 @@ export class SubscriptionService {
         var ID_Community= this.IDCommunityCount++;
         var ID_House = this.IDHouseCount++;
         var message = {ID_Community, ID_House,URL_House}
-        await this.http.post(this.URL_DATASERVICE_REGISTRY,{data : message})
+        await this.http.post(this.URL_DATASERVICE_REGISTRY,{params : message})
         return {ID_House , ID_Community};
     }
 
