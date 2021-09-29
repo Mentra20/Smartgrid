@@ -28,6 +28,6 @@ export class ConsumptionPeakService {
     }
 
     private checkConsumptionPeak(value:number):boolean {
-        return value==this.max_production;
+        return value>=this.max_production;
     }
 }
