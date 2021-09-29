@@ -8,15 +8,15 @@ export class ConsumptionCheckService {
     private URL_supplier: string;
 
     constructor(private http:HttpService) {
-        this.URL_consumption_manager = "http://consumption-manager:XXX/total-consumption";
+        this.URL_consumption_manager = "http://consumption-manager:3014/total-consumption";
         this.URL_supplier = "http://supplier:3002/production";
     }
 
-    verifyProductionVsConsumption(date:Date):boolean{
+    async verifyProductionVsConsumption(date:Date):Promise<boolean>{
         var production = this.getProductionValue(date);
         var consumption = this.getTotalConsumption(date);
 
-        if (this.checkCorrectConsumption(consumption, production)) {
+        if (this.checkCorrectConsumption(await consumption, await production)) {
             let message = "Consumption is OK";
             console.log(message);
             return true;
