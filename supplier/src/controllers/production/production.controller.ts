@@ -1,12 +1,18 @@
 import { Controller,Get } from '@nestjs/common';
 import { ProductionService } from 'src/services/production/production.service';
 
-@Controller('production')
+@Controller()
 export class ProductionController {
     constructor(private readonly productionService: ProductionService) {}
 
-    @Get()
+    @Get('get-production')
     getProduction(): number {
+        return this.productionService.getProduction();
+    }
+
+    @Get('change-production')
+    changeProductionAndReturnIt(value:number): number {
+        this.productionService.setProduction(value);
         return this.productionService.getProduction();
     }
 }

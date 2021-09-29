@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { CommunitieConsumptionService } from 'src/services/communitie-consumption/communitie-consumption.service';
 
-@Controller('communitie-consumption')
+@Controller('community-consumption')
 export class CommunitieConsumptionController {
     constructor(private readonly communitieConsumptionService: CommunitieConsumptionService) {}
 
