@@ -10,7 +10,7 @@ export class ProductionService {
 
     constructor(private http:HttpService) {
         this.production = 200;
-        this.URL = "http://consumption-verifier:XXX/consumption-check";
+        this.URL = "http://consumption-verifier:3013/consumption-check";
     }
 
     checkIfProductionNeedsAdaptation(date:Date): Promise<boolean> {

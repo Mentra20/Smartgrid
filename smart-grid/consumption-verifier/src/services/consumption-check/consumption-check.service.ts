@@ -34,10 +34,10 @@ export class ConsumptionCheckService {
     }
 
     private getProductionValue(date:Date): Promise<number> {
-        return firstValueFrom(this.http.get(this.URL_supplier, {params: {date:date}})).then((body)=> {body.data})
+        return firstValueFrom(this.http.get(this.URL_supplier, {params: {date:date}})).then((body)=>body.data)
     }
 
     private getTotalConsumption(date:Date): Promise<number> {
-        return firstValueFrom(this.http.get(this.URL_consumption_manager, {params: {date:date}})).then((body)=>{body.data})
+        return firstValueFrom(this.http.get(this.URL_consumption_manager, {params: {date:date}})).then((body)=>body.data)
     }
 }
