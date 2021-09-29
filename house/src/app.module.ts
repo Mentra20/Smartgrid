@@ -6,10 +6,24 @@ import { ConsumptionController } from './controllers/consumption/consumption.con
 import { HttpModule } from '@nestjs/axios';
 import { ScheduleController } from './controllers/schedule/schedule.controller';
 import { ScheduleService } from './services/schedule/schedule.service';
+import { SubscribeService } from './services/subscribe/subscribe.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule],
-  controllers: [AppController, ConsumptionController, ScheduleController],
-  providers: [AppService, ConsumptionService, ScheduleService],
+  imports: [
+      HttpModule,
+      ConfigModule.forRoot()
+      ],
+  controllers: [
+      AppController, 
+      ConsumptionController,
+      ScheduleController
+      ],
+  providers: [
+      AppService, 
+      ConsumptionService, 
+      SubscribeService, 
+      ScheduleService
+      ],
 })
 export class AppModule {}
