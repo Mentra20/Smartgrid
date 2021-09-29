@@ -2,15 +2,17 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GetcommunityurlService {
-    public dict = new Object();
+    public dict = {};
     public addCommunityURL(ID:number,url:string):void{
         this.dict[ID]=url;
     }
     public getCommunityURL(ID:number):string[]{
-        var localStorageCommunityURL:string[]
         for(var key in this.dict) {
+            var localStorageCommunityURL = [];
             localStorageCommunityURL.push(this.dict[key]);
-        return localStorageCommunityURL;
+            console.log(this.dict[key]);
         }
+        return localStorageCommunityURL;
+        
     }
 }

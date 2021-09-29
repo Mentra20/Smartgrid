@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GethouseurlService {
-    public dict = new Object();
+    public dict = {};
     public addHouseURL(ID:number,url:string):void{
         this.dict[ID]=url;
     }
