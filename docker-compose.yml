@@ -17,11 +17,25 @@ services:
     depends_on:
       - "registry"
 
-  supplier:
-    container_name: supplier
-    image: supplier:1.0.0
+  house-object:
+    container_name: voiture
+    image: house-object:1.0.0
     build:
-      context: ./supplier
+      context: ./house-object
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3001:3001
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  scheduler:
+    container_name: scheduler
+    image: scheduler:1.0.0
+    build:
+      context: ./scheduler
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
@@ -31,11 +45,11 @@ services:
     volumes:
       - /usr/src/app
 
-  power-grid:
-    container_name: power-grid
-    image: power-grid:1.0.0
+  registry-manager:
+    container_name: registry-manager
+    image: registry-manager:1.0.0
     build:
-      context: ./power-grid
+      context: ./registry-manager
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
@@ -45,11 +59,26 @@ services:
     volumes:
       - /usr/src/app
 
-  house-object:
-    container_name: voiture
-    image: house-object:1.0.0
+
+  power-grid:
+    container_name: power-grid
+    image: power-grid:1.0.0
     build:
-      context: ./house-object
+      context: ./power-grid
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3004:3004
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+      
+  supplier:
+    container_name: supplier
+    image: supplier:1.0.0
+    build:
+      context: ./supplier
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
@@ -59,19 +88,48 @@ services:
     volumes:
       - /usr/src/app
 
-  registry:
-    container_name: registry-manager
-    image: registry-manager:1.0.0
+  dataservice:
+    container_name: dataservice
+    image: dataservice:1.0.0
     build:
-      context: ./smart-grid/registry-manager
+      context: ./dataservice
       dockerfile: ./Dockerfile
     command: npm run start:prod
+    ports:
+      - 3006:3006
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app   
+
+  consumption-verifier:
+    container_name: consumption-verifier
+    image: consumption-verifier:1.0.0
+    build:
+      context: ./consumption-verifier
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3006:3007
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
 
-
+  consumption-manager:
+    container_name: consumption-manager
+    image: consumption-manager:1.0.0
+    build:
+      context: ./consumption-manager
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3008:3008
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+      
   scenario:
     container_name: scenario
     image: scenario:1.0.0

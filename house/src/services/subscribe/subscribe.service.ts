@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class SubscribeService {
 
-    private subcriptionURI = "http://registry:3003/subscription" 
+    private subcriptionURI = "http://registry-manager:3003/subscription" 
 
     private isSubscribe = false;
 
@@ -15,8 +15,8 @@ export class SubscribeService {
         const publicIp = require('public-ip');
         var ipv4 = await publicIp.v4();
 
-        console.log("I go to subscribe with ip: "+ipv4+" and port: 3001")
-        this.http.post(this.subcriptionURI,{params: {ip:ipv4,port:"3001"}}).subscribe({
+        console.log("I go to subscribe with ip: "+ipv4+" and port: 3003")
+        this.http.post(this.subcriptionURI,{params: {ip:ipv4,port:"3003"}}).subscribe({
             next:(x)=>{
                 var ID_House = x.data.ID_House;
                 var ID_Community = x.data.ID_Community;
