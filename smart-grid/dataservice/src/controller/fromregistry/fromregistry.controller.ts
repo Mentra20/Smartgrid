@@ -1,13 +1,13 @@
-import { Controller,Get,Query } from '@nestjs/common';
+import { Controller,Get,Query,Post} from '@nestjs/common';
 import { GethouseurlService } from 'src/services/gethouseurl/gethouseurl.service';
-import { GetcommunityurlService } from 'src/services/getcommunityurl/getcommunityurl.service';
 import { GetallhouseurlService } from 'src/services/getallhouseurl/getallhouseurl.service';
-
 
 
 @Controller('fromregistry')
 export class FromregistryController {
-    constructor(private readonly getHouseUrlService :GethouseurlService,private readonly getCommunityUrlService :GetcommunityurlService,private readonly getAllHouseUrlService:GetallhouseurlService) {}
+    constructor(private readonly getHouseUrlService :GethouseurlService,
+        private readonly getAllHouseUrlService:GetallhouseurlService,
+        ) {}
 
     @Get('getallhouseurl')
     getAllhousesUrl(): string[] {
@@ -19,13 +19,11 @@ export class FromregistryController {
     }
     @Get('getcommunityurl')
     getHouseConsumption(@Query('ID') ID:number): string[] {
-        return this.getCommunityUrlService.getCommunityURL(ID);
+        return this.getAllHouseUrlService.getAllhousesURLFromCommunityId(ID);
     }
-    @Get()
-    register(@Query('ID_Community') ID_Community:number, @Query('URL_Community') URL_Community:string,
-    @Query('ID_House') ID_House:number, @Query('URL_House') URL_House:string): void {
-        this.getCommunityUrlService.addCommunityURL(ID_Community,URL_Community);
-        this.getAllHouseUrlService.addHouseURL(ID_House,URL_House);
+    @Post()
+    register(@Query('ID_Community') ID_Community:number,@Query('ID_House') ID_House:number, @Query('URL_House') URL_House:string): void {
+        this.getAllHouseUrlService.addHouseURL(ID_House,ID_Community,URL_House);
         this.getHouseUrlService.addHouseURL(ID_House,URL_House);
     }
 }
