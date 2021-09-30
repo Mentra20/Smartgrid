@@ -26,7 +26,7 @@ export class GetallhouseurlService {
         var localStorageHouseURL = [];
                 for(var key in this.dictHouseToCommunity) {
                     if (this.dictHouseToCommunity[key]==ID_Community){
-                        localStorageHouseURL.push(key);
+                        localStorageHouseURL.push(this.dictIdToUrl[key]);
                     }
             console.log(this.dictHouseToCommunity[key]);
             }

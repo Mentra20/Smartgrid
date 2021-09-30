@@ -110,7 +110,7 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3006:3007
+      - 3007:3007
     networks:
       - si5-soa
     volumes:
