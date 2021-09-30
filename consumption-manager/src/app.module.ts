@@ -7,9 +7,10 @@ import { CommunitieConsumptionController } from './controllers/communitie-consum
 import { CommunitieConsumptionService } from './services/communitie-consumption/communitie-consumption.service';
 import { TotalConsumptionController } from './controllers/total-consumption/total-consumption.controller';
 import { TotalConsumptionService } from './services/total-consumption/total-consumption.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [AppController, HouseConsumptionController, CommunitieConsumptionController, TotalConsumptionController],
   providers: [AppService, HouseConsumptionService, CommunitieConsumptionService, TotalConsumptionService],
 })

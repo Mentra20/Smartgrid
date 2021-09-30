@@ -5,9 +5,10 @@ import { ConsumptionPeakController } from './controllers/consumption-peak/consum
 import { ConsumptionPeakService } from './services/consumption-peak/consumption-peak.service';
 import { ConsumptionCheckController } from './controllers/consumption-check/consumption-check.controller';
 import { ConsumptionCheckService } from './services/consumption-check/consumption-check.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [AppController, ConsumptionPeakController, ConsumptionCheckController],
   providers: [AppService, ConsumptionPeakService, ConsumptionCheckService],
 })

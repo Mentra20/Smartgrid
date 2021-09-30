@@ -15,7 +15,7 @@ services:
     volumes:
       - /usr/src/app
     depends_on:
-      - "registry"
+      - "registry-manager"
 
   house-object:
     container_name: voiture
@@ -146,6 +146,11 @@ services:
       - "house"
       - "supplier"
       - "power-grid"
+      - "consumption-manager"
+      - "scheduler"
+      - "registry-manager"
+      - "consumption-verifier"
+      - "dataservice"
 
 networks:
   si5-soa:
