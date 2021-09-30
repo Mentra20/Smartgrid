@@ -21,7 +21,7 @@ export class SubscriptionService {
     async updateSubscription(idHouse:number,newIp:string,newPort:string){
         var URL_House = "http://"+newIp+":"+newPort;
         var message = {ID_House:idHouse,URL_House}
-        await this.http.post(this.URL_DATASERVICE_REGISTRY,{data : message})
+        await this.http.post(this.URL_DATASERVICE_REGISTRY,message)
         return;
     }
 
@@ -39,7 +39,12 @@ export class SubscriptionService {
         var ID_Community= this.IDCommunityCount++;
         var ID_House = this.IDHouseCount++;
         var message = {ID_Community, ID_House,URL_House}
-        await this.http.post(this.URL_DATASERVICE_REGISTRY,{params : message})
+        this.http.post(this.URL_DATASERVICE_REGISTRY, message).subscribe(
+            {
+                next: (value) => console.log("data store") , 
+                error: (error) => console.log(error)
+            }
+        )
         return {ID_House , ID_Community};
     }
 

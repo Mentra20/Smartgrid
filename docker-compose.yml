@@ -58,6 +58,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "dataservice"
 
 
   power-grid:

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 
 @Controller('subscription')
@@ -7,14 +7,14 @@ export class SubscriptionController {
     constructor(private SubscriptionService: SubscriptionService){}
 
     @Post()
-    clientSubscribe(@Query("ip") ip:string,@Query("port") port:string){
+    clientSubscribe(@Body("ip") ip:string,@Body("port") port:string){
         console.log("new subscribe")
         return this.SubscriptionService.subscribeClient(ip,port);
     }
 
     /*inutiliser pour le moment*/
     @Post("update")
-    updateConnexion(@Param("idHouse") idHouse:number, @Param("ip") newIp:string,@Param("port") newPort:string){
+    updateConnexion(@Body("idHouse") idHouse:number, @Body("ip") newIp:string,@Body("port") newPort:string){
         return this.SubscriptionService.updateSubscription(idHouse,newIp,newPort);
     }
 

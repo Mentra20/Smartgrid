@@ -1,4 +1,4 @@
-import { Controller,Get,Query,Post} from '@nestjs/common';
+import { Controller,Get,Query,Post,Body} from '@nestjs/common';
 import { GethouseurlService } from 'src/services/gethouseurl/gethouseurl.service';
 import { GetallhouseurlService } from 'src/services/getallhouseurl/getallhouseurl.service';
 
@@ -13,16 +13,20 @@ export class FromregistryController {
     getAllhousesUrl(): string[] {
         return this.getAllHouseUrlService.getAllhousesURL();
     }
-    @Post('gethouseurl')
+    @Get('gethouseurl')
     getHouseUrl(@Query('ID') ID:number): string {
         return this.getHouseUrlService.getHouseURL(ID);
     }
-    @Post('getcommunityurl')
+    @Get('getcommunityurl')
     getHouseConsumption(@Query('ID') ID:number): string[] {
         return this.getAllHouseUrlService.getAllhousesURLFromCommunityId(ID);
     }
     @Post()
-    register(@Query('ID_Community') ID_Community:number,@Query('ID_House') ID_House:number, @Query('URL_House') URL_House:string): void {
+    register(@Body('ID_Community') ID_Community:number,@Body('ID_House') ID_House:number, @Body('URL_House') URL_House:string): void {
+        console.log("new registry: ")
+        console.log("ID_Community: "+ID_Community)
+        console.log("ID_House: "+ID_House)
+        console.log("URL_House: "+URL_House)
         this.getAllHouseUrlService.addHouseURL(ID_House,ID_Community,URL_House);
         this.getHouseUrlService.addHouseURL(ID_House,URL_House);
     }
