@@ -15,7 +15,7 @@ export class HouseConsumptionService {
     }
 
     public getHouseURLFromHouseID(ID:number): Promise<string>{
-        return firstValueFrom(this.httpService.get(this.dataServiceURL, {params: {ID:ID}})).then(body=>body.data);
+        return firstValueFrom(this.httpService.post(this.dataServiceURL, {params: {ID:ID}})).then(body=>body.data);
     }
 
     getHouseConsumption(date:Date, houseID:number): Promise<number> {

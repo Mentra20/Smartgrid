@@ -4,7 +4,7 @@ import { catchError } from 'rxjs';
 
 @Injectable()
 export class SubscriptionService {
-    private URL_DATASERVICE_REGISTRY = "http://data-service:3006/fromregistry"
+    private URL_DATASERVICE_REGISTRY = "http://dataservice:3006/fromregistry"
 
     constructor(private http:HttpService){}
 

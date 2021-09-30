@@ -15,7 +15,7 @@ export class CommunitieConsumptionService {
     }
 
     public getHousesURLFromCommunitieID(ID:number): Promise<string[]>{
-        return firstValueFrom(this.httpService.get(this.dataServiceURL, {params: {ID:ID}})).then(body=>body.data);
+        return firstValueFrom(this.httpService.post(this.dataServiceURL, {params: {ID:ID}})).then(body=>body.data);
     }
 
     async getCommunitieConsumption(date:Date, communitieID:number): Promise<number> {

@@ -13,11 +13,11 @@ export class FromregistryController {
     getAllhousesUrl(): string[] {
         return this.getAllHouseUrlService.getAllhousesURL();
     }
-    @Get('gethouseurl')
+    @Post('gethouseurl')
     getHouseUrl(@Query('ID') ID:number): string {
         return this.getHouseUrlService.getHouseURL(ID);
     }
-    @Get('getcommunityurl')
+    @Post('getcommunityurl')
     getHouseConsumption(@Query('ID') ID:number): string[] {
         return this.getAllHouseUrlService.getAllhousesURLFromCommunityId(ID);
     }
