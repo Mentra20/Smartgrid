@@ -28,3 +28,14 @@
 | consumption-manager | total-consumption | Date | consommation (number) | La consommation totale de toutes les maisons |
 | consumption-verifier | consumption-peak | Date & ID (number) | booléen (true si il y a un pic, false sinon) | Indique la présence d'un pic à une certaine date et pour un certain groupe de maison
 | consumption-verifier | consumption-check | Date | booléen (true si consommation == production, false sinon) | Indique si la consommation de la grid a la même valeur que la production
+
+## Port
+- 127.0.0.1 house=3000  
+- 127.0.0.1 house-object=3001  
+- 127.0.0.1 scheduler=3002  
+- 127.0.0.1 registry=3003  
+- 127.0.0.1 power-grid=3004  
+- 127.0.0.1 supplier=3005  
+- 127.0.0.1 dataservice=3006  
+- 127.0.0.1 consumption-verifier=3007  
+- 127.0.0.1 consumption-manager=3008  
