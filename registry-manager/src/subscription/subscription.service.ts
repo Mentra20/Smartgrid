@@ -12,7 +12,7 @@ export class SubscriptionService {
     IDHouseCount = 0;
 
     async subscribeClient(ip:string,port:string):Promise<{ ID_House: number; ID_Community: number; }>{
-        console.log("new subscribe: "+ip+":"+port)
+        console.log("registred info : "+ip+":"+port)
         var URL_House = "http://"+ip+":"+port;
         await this.checkURL(URL_House);
         return await this.generateSubscription(URL_House);
@@ -41,7 +41,7 @@ export class SubscriptionService {
         var message = {ID_Community, ID_House,URL_House}
         this.http.post(this.URL_DATASERVICE_REGISTRY, message).subscribe(
             {
-                next: (value) => console.log("data store") , 
+                next: (value) => console.log("data stored") , 
                 error: (error) => console.log(error)
             }
         )

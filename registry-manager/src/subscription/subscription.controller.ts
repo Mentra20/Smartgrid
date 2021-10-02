@@ -8,7 +8,7 @@ export class SubscriptionController {
 
     @Post()
     clientSubscribe(@Body("ip") ip:string,@Body("port") port:string){
-        console.log("new subscribe")
+        console.log("new registration")
         return this.SubscriptionService.subscribeClient(ip,port);
     }
 
