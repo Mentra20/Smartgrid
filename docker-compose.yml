@@ -2,14 +2,11 @@ version: '3.8'
 
 services:
   house:
-    container_name: house
     image: house:1.0.0
     build:
       context: ./house
       dockerfile: ./Dockerfile
     command: npm run start:prod
-    ports:
-      - 3000:3000
     networks:
       - si5-soa
     volumes:
