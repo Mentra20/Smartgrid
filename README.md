@@ -20,8 +20,11 @@
 
 | Service       | Chemin      | Body            | Return     |Description            |
 | :-------------|:--------    | :-----          |:--------   |:----------------------|
-| house         | consumption | Date              | consommation (number)     | La consommation de la maison|
-| house-object  | consumption | Date            |{ objectName : string, consumption : number } | La consommation de l'objet de la maison   |
+| house         | consumption/global | Date              | consommation (number)     | La consommation de la maison|
+| house         | consumption/detailed | Date              | consommationByObject ([{name:string,consumption:number}])     | La consommation de chaque objet a l'heure donnée|
+| house         | consumption/detailed/{name} | Date  | consommation (number)     | La consommation de l'objet|
+| house         | object-editor/add-scheduled | {name:string, consumption:number}  | -    | Ajout un objet programmer par la smart grid|
+| house         |object-editor/add-basic | HouseObject  | -    | Ajout d'un objet classique|
 |supplier       | get-production   |-                | production (number)      | La production totale |
 |supplier       | change-production   | consumption                | new production (number)      | Permet de changer la production |
 | consumption-manager | house-consumption | Date & ID (number) | consommation (number) | La consommation de la maison d'un ID donné |
@@ -38,7 +41,6 @@
 
 ## Port
 - 127.0.0.1 house=3000  
-- 127.0.0.1 house-object=3001  
 - 127.0.0.1 consumption-scheduler=3002  
 - 127.0.0.1 registry-manager=3003   
 - 127.0.0.1 supplier=3005  

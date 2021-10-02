@@ -17,20 +17,6 @@ services:
     depends_on:
       - "registry-manager"
 
-  house-object:
-    container_name: voiture
-    image: house-object:1.0.0
-    build:
-      context: ./house-object
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3001:3001
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
-
   consumption-scheduler:
     container_name: consumption-scheduler
     image: consumption-scheduler:1.0.0
@@ -129,7 +115,6 @@ services:
     volumes:
       - /usr/src/app
     depends_on:
-      - "house-object"
       - "house"
       - "supplier"
       - "consumption-manager"
