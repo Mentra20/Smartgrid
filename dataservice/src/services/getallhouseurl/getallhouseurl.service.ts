@@ -22,13 +22,14 @@ export class GetallhouseurlService {
             }
         return localStorageHouseURL;
         }
+
+
      public getAllhousesURLFromCommunityId(ID_Community:number):string[]{
         var localStorageHouseURL = [];
                 for(var key in this.dictHouseToCommunity) {
                     if (this.dictHouseToCommunity[key]==ID_Community){
                         localStorageHouseURL.push(this.dictIdToUrl[key]);
                     }
-            console.log(this.dictHouseToCommunity[key]);
             }
         return localStorageHouseURL;
         }

@@ -15,19 +15,16 @@ export class ConsumptionCheckService {
     }
 
     async verifyProductionVsConsumption(date:Date){
-        var production = this.getProductionValue(date);
-        var consumption = this.getTotalConsumption(date);
+        var production = await this.getProductionValue(date);
+        var consumption = await this.getTotalConsumption(date);
 
         if (this.checkCorrectConsumption(await consumption, await production)) {
-            let message = "Consumption is OK";
-            console.log(message);
-        }
+            console.log("consumption is OK");
+        } 
         else {
-            let message = "Bad consumption, produce : " + production + ", require : " + consumption;
-            console.log(message);
+            console.log("bad consumption, produce : " + production + ", require : " + consumption);
             this.productionNeedToChange(consumption);
         }
-
     }
 
     private checkCorrectConsumption(consumption:number, production:number):boolean{
@@ -42,11 +39,10 @@ export class ConsumptionCheckService {
         return firstValueFrom(this.http.get(this.URL_consumption_manager, {params: {date:date}})).then((body)=>body.data)
     }
 
-    private productionNeedToChange(consumption:Promise<number>) {
-        return firstValueFrom(this.http.get(this.URL_supplier_change, {params: {number:consumption}})).then((body)=> {
+    private productionNeedToChange(consumption:number) {
+        return firstValueFrom(this.http.get(this.URL_supplier_change, {params: {consumption:consumption}})).then((body)=> {
             var new_production:number = body.data;  
-            let value_message = "Value changed : " + new_production + ".";
-            console.log(value_message);
+            console.log("Adapt production to : " + new_production + ".");
         });
     }
 }

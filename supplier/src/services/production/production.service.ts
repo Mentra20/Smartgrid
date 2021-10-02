@@ -17,6 +17,7 @@ export class ProductionService {
     }
 
     setProduction(value:number) {
+        console.log("Set production to :"+value);
         this.production = value;
     }
 }

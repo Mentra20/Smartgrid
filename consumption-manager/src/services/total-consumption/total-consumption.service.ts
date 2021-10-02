@@ -11,7 +11,7 @@ export class TotalConsumptionService {
     }
 
     public async getHouseConsumption(date:Date, houseURL:string): Promise<number>{
-        return firstValueFrom(this.httpService.get(await houseURL, {params: {date:date}})).then(body=>body.data);
+        return firstValueFrom(this.httpService.get(await houseURL+"/consumption", {params: {date:date}})).then(body=>body.data);
     }
 
     public getAllHousesURL(): Promise<string[]>{
@@ -26,7 +26,9 @@ export class TotalConsumptionService {
             (houses)=> houses.forEach(
                 async (houseURL)=> consumptionSum += await this.getHouseConsumption(date, houseURL)
             ));
-
+        
+        console.log("total consumption is : "+consumptionSum);
+            
         return consumptionSum;
     }
 }

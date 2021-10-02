@@ -21,6 +21,6 @@ describe('ScheduleController', () => {
   });
 
   it('Have the correct schedule', () => {
-    expect(controller.getSchedule()).toEqual(service.getSchedule());
+    expect(controller.getSchedule(1)).toEqual(service.getSchedule(1));
   });
 });

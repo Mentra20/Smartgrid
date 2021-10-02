@@ -8,6 +8,6 @@ export class ConsumptionController {
     @Get()
     getConsumption(@Query("date") dateString:string): Promise<number> {
         var date = new Date(dateString);
-        return this.consumptionService.getConsumption(date);
+        return this.consumptionService.getConsumption(date); 
     }
 }

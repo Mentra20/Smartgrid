@@ -11,15 +11,23 @@ export class FromregistryController {
 
     @Get('getallhouseurl')
     getAllhousesUrl(): string[] {
-        return this.getAllHouseUrlService.getAllhousesURL();
+        var allHousesURL = this.getAllHouseUrlService.getAllhousesURL();
+        console.log("Return all houses URL : "+allHousesURL);
+        return allHousesURL;
     }
+
     @Get('gethouseurl')
     getHouseUrl(@Query('ID') ID:number): string {
-        return this.getHouseUrlService.getHouseURL(ID);
+        var houseURL = this.getHouseUrlService.getHouseURL(ID);
+        console.log("Get houseID : "+ID+" and return URL : "+houseURL);
+        return houseURL;
     }
+
     @Get('getcommunityurl')
     getHouseConsumption(@Query('ID') ID:number): string[] {
-        return this.getAllHouseUrlService.getAllhousesURLFromCommunityId(ID);
+        var communityHousesURL = this.getAllHouseUrlService.getAllhousesURLFromCommunityId(ID);
+        console.log("Get community ID : "+ID+" and return URL list : "+communityHousesURL);
+        return communityHousesURL;
     }
     @Post()
     register(@Body('ID_Community') ID_Community:number,@Body('ID_House') ID_House:number, @Body('URL_House') URL_House:string): void {

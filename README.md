@@ -32,9 +32,8 @@
 ## Port
 - 127.0.0.1 house=3000  
 - 127.0.0.1 house-object=3001  
-- 127.0.0.1 scheduler=3002  
-- 127.0.0.1 registry=3003  
-- 127.0.0.1 power-grid=3004  
+- 127.0.0.1 consumption-scheduler=3002  
+- 127.0.0.1 registry-manager=3003   
 - 127.0.0.1 supplier=3005  
 - 127.0.0.1 dataservice=3006  
 - 127.0.0.1 consumption-verifier=3007  

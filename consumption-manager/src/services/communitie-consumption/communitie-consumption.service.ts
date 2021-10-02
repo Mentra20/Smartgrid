@@ -11,7 +11,7 @@ export class CommunitieConsumptionService {
     }
 
     public async getHouseConsumption(date:Date, houseURL:string): Promise<number>{
-        return firstValueFrom(this.httpService.get(await houseURL, {params: {date:date}})).then(body=>body.data);
+        return firstValueFrom(this.httpService.get(await houseURL+"/consumption", {params: {date:date}})).then(body=>body.data);
     }
 
     public getHousesURLFromCommunitieID(ID:number): Promise<string[]>{
@@ -26,6 +26,8 @@ export class CommunitieConsumptionService {
             (houses)=> houses.forEach(
                 async (houseURL)=> consumptionSum += await this.getHouseConsumption(date, houseURL)
             ));
+            
+        console.log("community consumption is : "+consumptionSum);
 
         return consumptionSum;
     }

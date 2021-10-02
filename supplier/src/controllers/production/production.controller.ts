@@ -1,4 +1,4 @@
-import { Controller,Get } from '@nestjs/common';
+import { Controller,Get, Query } from '@nestjs/common';
 import { ProductionService } from 'src/services/production/production.service';
 
 @Controller()
@@ -11,8 +11,8 @@ export class ProductionController {
     }
 
     @Get('change-production')
-    changeProductionAndReturnIt(value:number): number {
-        this.productionService.setProduction(value);
+    changeProductionAndReturnIt(@Query('consumption') consumption:number): number {
+        this.productionService.setProduction(consumption);
         return this.productionService.getProduction();
     }
 }
