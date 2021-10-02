@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DEFAULT_PORT } from 'src/main';
 
 @Injectable()
 export class SubscribeService {
@@ -13,10 +14,11 @@ export class SubscribeService {
 
     async onModuleInit(){
         const publicIp = require('public-ip');
-        var ipv4 = await publicIp.v4();
+        var ipv4 = this.configService.get("IP")||await publicIp.v4();
+        var port = this.configService.get("PORT") || DEFAULT_PORT;
 
-        console.log("I go to subscribe with ip: "+ipv4+" and port: 3000")
-        this.http.post(this.subcriptionURI,{ip:ipv4,port:"3000"}).subscribe({
+        console.log("I'm going to subscribe with ip: "+ipv4+" and port: "+port)
+        this.http.post(this.subcriptionURI,{ip:ipv4,port:port}).subscribe({
             next:(x)=>{
                 var ID_House = x.data.ID_House;
                 var ID_Community = x.data.ID_Community;
@@ -25,7 +27,7 @@ export class SubscribeService {
                 console.log("ID_House: "+ID_House)
                 console.log("ID_Community: "+ID_Community)
             },
-            error:(err)=>{this.isSubscribe = false; console.log("cannot connect to subscribre")}
+            error:(err)=>{this.isSubscribe = false; console.log("unable to connect to the subscription")}
         });
     }
 }
