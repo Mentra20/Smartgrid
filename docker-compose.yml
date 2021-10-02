@@ -122,3 +122,4 @@ services:
 
 networks:
   si5-soa:
+    name: "si5-soa"
