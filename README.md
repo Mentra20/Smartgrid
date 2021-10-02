@@ -22,12 +22,19 @@
 | :-------------|:--------    | :-----          |:--------   |:----------------------|
 | house         | consumption | Date              | consommation (number)     | La consommation de la maison|
 | house-object  | consumption | Date            |{ objectName : string, consumption : number } | La consommation de l'objet de la maison   |
-|supplier       | production   |-                | production (number)      | La production totale |
+|supplier       | get-production   |-                | production (number)      | La production totale |
+|supplier       | change-production   | consumption                | new production (number)      | Permet de changer la production |
 | consumption-manager | house-consumption | Date & ID (number) | consommation (number) | La consommation de la maison d'un ID donné |
 | consumption-manager | community-consumption | Date & ID (number) | consommation (number) | La consommation totale d'une communauté d'un ID donné |
 | consumption-manager | total-consumption | Date | consommation (number) | La consommation totale de toutes les maisons |
-| consumption-verifier | consumption-peak | Date & ID (number) | booléen (true si il y a un pic, false sinon) | Indique la présence d'un pic à une certaine date et pour un certain groupe de maison
-| consumption-verifier | consumption-check | Date | booléen (true si consommation == production, false sinon) | Indique si la consommation de la grid a la même valeur que la production
+| consumption-verifier | consumption-peak | Date & ID (number) | booléen (true si il y a un pic, false sinon) | Indique la présence d'un pic à une certaine date et pour une certaine communauté
+| consumption-verifier | consumption-check | Date | booléen (true si consommation == production, false sinon) | Indique si la consommation de la grid a la même valeur que la production et sinon adapte la production
+| consumption-scheduler | schedule | ID | Liste d'horaires (string[]) | Retourne une liste d'horaires pour une maison donnée
+| dataservice | fromregistry/getallhouseurl | _ | Liste des URL (string[]) | Retourne la liste des URL de toutes les maisons
+| dataservice | fromregistry/gethouseurl | ID | une URL (string) | Retourne l'URL de la maison d'un ID donné
+| dataservice | fromregistry/getcommunityurl | ID | Liste des URL (string[]) | Retourne la liste des URL de toutes les maisons d'une communauté d'un ID donné
+| dataservice | fromregistry/'POST' | ID_Community ID_House  URL_House | _ | Ajoute une nouvelle maison 
+| registry-manager | subscription/'POST' | IP PORT | ID_House ID_Community  | Inscrit une nouvelle maison et retourne son ID et son ID de communauté
 
 ## Port
 - 127.0.0.1 house=3000  
