@@ -1,6 +1,6 @@
 # smartrix-21-22-soa-21-22-i
 
-Le PDF de rendu du 03/10/2021 est dans ./DOC/Rendu intermédiaire - Equipe I.pdf
+Le PDF de rendu du 03/10/2021 est dans [/DOC/Rendu intermédiaire - Equipe I.pdf](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/dev/DOC/Rendu%20interm%C3%A9diaire%20-%20Equipe%20I.pdf)
 
 # Résultats attendus lors du prepare.sh
 Lors du prepare.sh, toutes les images de nos services sont construites grâce à notre docker-compose, puis 5 containers de maisons (notre service House) sont créés.
