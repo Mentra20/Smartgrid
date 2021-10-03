@@ -1,0 +1,21 @@
+name: SI5 
+on: 
+   push: 
+      branches: 
+      - dev 
+      - master 
+
+ 
+jobs: 
+   build: 
+      runs-on: ubuntu-latest 
+      steps: 
+      -  uses: actions/checkout@v2 
+      -  name: prepare
+         run: ./prepare.sh
+   run:
+      runs-on: ubuntu-latest 
+      steps: 
+      -  uses: actions/checkout@v2 
+      -  name: run
+         run: ./run.sh
