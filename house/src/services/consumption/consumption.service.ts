@@ -11,7 +11,9 @@ export class ConsumptionService {
 
     getTotalConsumption(date:Date): number{
         var totalConsumption = 0;
-        this.objectManagerService.getAllHouseObject().forEach((object)=>totalConsumption+=object.getConsumption(date));
+        this.objectManagerService.getAllHouseObject().forEach((object)=>{
+            totalConsumption+=object.getConsumption(date)
+        });
         return totalConsumption;
     }
 

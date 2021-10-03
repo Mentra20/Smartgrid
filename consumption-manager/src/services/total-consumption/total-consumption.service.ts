@@ -11,7 +11,8 @@ export class TotalConsumptionService {
     }
 
     public async getHouseConsumption(date:Date, houseURL:string): Promise<number>{
-        return firstValueFrom(this.httpService.get(await houseURL+"/consumption", {params: {date:date}})).then(body=>body.data);
+        console.log(houseURL+"/consumption/global")
+        return firstValueFrom(this.httpService.get(houseURL+"/consumption/global", {params: {date:date}})).then(body=>body.data);
     }
 
     public getAllHousesURL(): Promise<string[]>{
@@ -19,16 +20,17 @@ export class TotalConsumptionService {
     }
 
     async getTotalConsumption(date:Date): Promise<number> {
-        var consumptionSum = 0;
-        var housesURL: Promise<string[]> = this.getAllHousesURL();
+        var housesURL: string[] = await this.getAllHousesURL();
         
-        await housesURL.then(
-            (houses)=> houses.forEach(
-                async (houseURL)=> consumptionSum += await this.getHouseConsumption(date, houseURL)
-            ));
-        
-        console.log("total consumption is : "+consumptionSum);
-            
-        return consumptionSum;
+        var allConsumption = 0; 
+        console.log(housesURL)
+        for(const url of housesURL){
+            console.log("url:"+url)
+            var current = await this.getHouseConsumption(date,url);
+            console.log("current : "+current)
+            allConsumption+=current
+        }
+        return allConsumption;
+
     }
 }

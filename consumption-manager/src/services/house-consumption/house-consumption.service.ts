@@ -11,10 +11,12 @@ export class HouseConsumptionService {
     }
 
     public async callToHouseService(date:Date, houseURL:Promise<string>): Promise<number>{
-        return firstValueFrom(this.httpService.get(await houseURL+"/consumption", {params: {date:date}})).then(body=>body.data);
+        console.log(houseURL+"/consumption/global")
+        return firstValueFrom(this.httpService.get(await houseURL+"/consumption/global", {params: {date:date}})).then(body=>body.data);
     }
 
     public getHouseURLFromHouseID(ID:number): Promise<string>{
+        console.log(this.dataServiceURL)
         return firstValueFrom(this.httpService.get(this.dataServiceURL, {params: {ID:ID}})).then(body=>body.data);
     }
 

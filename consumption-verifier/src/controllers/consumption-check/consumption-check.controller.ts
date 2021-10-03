@@ -6,7 +6,7 @@ export class ConsumptionCheckController {
     constructor(private readonly consumptionCheckService: ConsumptionCheckService) {}
 
     @Get()
-    checkIfConsumptionEqualsProduction(@Query('date') dateString:Date): Promise<any> {
+    checkIfConsumptionEqualsProduction(@Query('date') dateString:Date): Promise<boolean> {
         var date = dateString;
 
         return this.consumptionCheckService.verifyProductionVsConsumption(date);

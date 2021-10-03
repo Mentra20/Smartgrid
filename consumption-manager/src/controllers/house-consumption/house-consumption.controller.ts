@@ -6,7 +6,8 @@ export class HouseConsumptionController {
     constructor(private readonly houseConsumptionService: HouseConsumptionService) {}
 
     @Get()
-    getHouseConsumption(@Query('date') dateString:Date, @Query('ID') houseID:number): Promise<number> {
+    getHouseConsumption(@Query('date') dateString:string, @Query('ID') houseID:number): Promise<number> {
+        console.log(dateString+":"+houseID)
         var date = new Date(dateString);
 
         return this.houseConsumptionService.getHouseConsumption(date, houseID);

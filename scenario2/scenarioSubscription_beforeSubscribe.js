@@ -9,7 +9,8 @@ function doRequest({url,qs,body}) {
 }
 
 async function main(){
-	console.log("A ce moment là ma maison n'est pas inscrite :");
+    var IP = process.env.IP;
+	console.log("A ce moment là ma maison avec l'ip: "+IP +" n'est pas inscrite :");
 	
 	var response = await doRequest({url:"http://dataservice:3006/fromregistry/getallhouseurl"})
 	console.log("Maisons inscrites: " + response.body);

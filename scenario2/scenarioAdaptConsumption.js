@@ -21,7 +21,7 @@ async function main(){
 	var response;
 
 	//------ BEFORE STEPS ------
-    var IPclient = "";//TODO
+    var IPclient = process.env.IP_PORT;//TODO
 
     //On ajout des objects pour un conso égale à la prod
     var mixeur = {
@@ -52,7 +52,7 @@ async function main(){
 	//------------ STEP 3 --------------
 	console.log("\nUn objet est branché, la consommation augmente :");
 	var mixeur = {
-		name:'Mixeur', 
+		name:'Mixeur2', 
 		consumptionTime:{
 			timeSlots:[
 			{start:"2021-10-02T03:00",end:"2021-10-02T05:00",consumption:500}]

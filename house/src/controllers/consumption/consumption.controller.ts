@@ -10,7 +10,9 @@ export class ConsumptionController {
     @Get("global")
     getConsumption(@Query("date") dateString:string): number {
         var date = new Date(dateString);
-        return this.consumptionService.getTotalConsumption(date);
+        var consumption = this.consumptionService.getTotalConsumption(date)
+        console.log("controller consumption global: "+consumption)
+        return consumption;
     }
 
     @Get("detailed")

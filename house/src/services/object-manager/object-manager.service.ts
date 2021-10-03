@@ -13,6 +13,7 @@ export class ObjectManagerService {
     constructor(private http: HttpService, private subscribeService:SubscribeService){}
 
     addHouseObject(object:HouseObject){
+        console.log("new house object : "+object.getName())
         this.houseObject.set(object.getName(),object);
     }
 
@@ -30,6 +31,7 @@ export class ObjectManagerService {
     }
 
     getAllHouseObject():HouseObject[]{
+        console.log("im call: size = "+Array.from(this.houseObject.values()).length)
         return Array.from(this.houseObject.values());
     }
 

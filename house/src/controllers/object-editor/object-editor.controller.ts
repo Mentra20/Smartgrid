@@ -18,7 +18,7 @@ export class ObjectEditorController {
     addHouseObject(@Body("houseObject") houseObject:any){
         var newHouseObject = HouseObject.fromJson(houseObject);
 
-        console.log("Ajout d'un nouvel objet :"+newHouseObject)
+        console.log("Ajout d'un nouvel objet :"+JSON.stringify(newHouseObject))
 
         this.houseObjectService.addHouseObject(newHouseObject);
     }

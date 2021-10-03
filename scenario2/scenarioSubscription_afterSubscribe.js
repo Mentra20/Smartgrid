@@ -10,7 +10,7 @@ function doRequest({url,qs,body}) {
 }
 
 async function main(){
-	var IPClient = "";//TODO
+	var IPClient = process.env.IP;//TODO
 
 	//---------- STEP 1
 	console.log("Ma maison est maintenant inscrite :");

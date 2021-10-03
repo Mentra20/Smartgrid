@@ -12,7 +12,7 @@ export class HouseObject {
         var consumptionTime = new TimeSlotsList();
 
         object?.consumptionTime?.timeSlots.forEach(el => {
-            consumptionTime.addSlots(el.start,el.end,el.consumption);
+            consumptionTime.addSlots(new Date(el.start),new Date(el.end),+el.consumption);
         });
 
         var houseObject = new HouseObject(name,consumptionTime);

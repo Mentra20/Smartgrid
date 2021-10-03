@@ -14,16 +14,18 @@ export class ConsumptionCheckService {
         this.URL_supplier_change = "http://supplier:3005/change-production";
     }
 
-    async verifyProductionVsConsumption(date:Date){
+    async verifyProductionVsConsumption(date:Date): Promise<boolean>{
         var production = await this.getProductionValue(date);
         var consumption = await this.getTotalConsumption(date);
 
         if (this.checkCorrectConsumption(await consumption, await production)) {
             console.log("consumption is OK");
+            return true;
         } 
         else {
             console.log("bad consumption, produce : " + production + ", require : " + consumption);
             this.productionNeedToChange(consumption);
+            return false;
         }
     }
 
