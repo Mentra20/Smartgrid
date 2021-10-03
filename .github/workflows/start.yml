@@ -4,20 +4,19 @@ on:
     branches: 
       - dev 
       - master 
-
  
 jobs: 
-  build: 
+  run-project: 
     runs-on: ubuntu-latest 
     steps: 
-      uses: actions/checkout@v2 
-      name: prepare and run
-      run: chmod +x ./prepare.sh
-      shell: bash
-      run: ./prepare.sh
-      shell: bash
-      id: run
-      run: chmod +x ./run.sh
-      shell: bash
-      run: ./run.sh
-      shell: bash
+      - uses: actions/checkout@v2 
+        name: prepare and run
+      - run: chmod +x ./prepare.sh
+        shell: bash
+      - run: ./prepare.sh
+        shell: bash
+      - run: chmod +x ./run.sh
+        shell: bash
+      - id: run
+        run: ./run.sh
+        shell: bash
