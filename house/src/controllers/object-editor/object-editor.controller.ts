@@ -15,8 +15,12 @@ export class ObjectEditorController {
     }
 
     @Post("add-basic")
-    addHouseObject(@Body("houseObject") houseObject:HouseObject){
-        this.houseObjectService.addHouseObject(houseObject);
+    addHouseObject(@Body("houseObject") houseObject:any){
+        var newHouseObject = HouseObject.fromJson(houseObject);
+
+        console.log("Ajout d'un nouvel objet :"+newHouseObject)
+
+        this.houseObjectService.addHouseObject(newHouseObject);
     }
 
 }

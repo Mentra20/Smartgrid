@@ -8,7 +8,7 @@ export class ConsumptionPeakService {
     private max_production: number;
 
     constructor(private http:HttpService) {
-        this.max_production = 10000; //Valeur à modifier
+        this.max_production = 5000; //Valeur à modifier
         this.URL = "http://consumption-manager:3008/community-consumption";
     }
 

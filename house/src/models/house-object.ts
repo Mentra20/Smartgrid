@@ -7,6 +7,18 @@ export class HouseObject {
         protected consumptionTime: TimeSlotsList
         ){}
 
+    public static fromJson(object:any){
+        var name = object?.name;
+        var consumptionTime = new TimeSlotsList();
+
+        object?.consumptionTime?.timeSlots.forEach(el => {
+            consumptionTime.addSlots(el.start,el.end,el.consumption);
+        });
+
+        var houseObject = new HouseObject(name,consumptionTime);
+        return houseObject;
+    }
+
     public getConsumption(date:Date){
         return this.consumptionTime.getConsumption(date);
     }

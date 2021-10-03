@@ -36,7 +36,7 @@ async function main(){
 	//---------- STEP 3 
 	console.log("\nJe peux maintenant consulter sa consommation :");
 	response = await doRequest({url:"http://consumption-manager:3008/house-consumption", qs:HouseDate})
-	console.log("Consommation de la maison d'ID "+houseID+" : " + response.body);
+	console.log("Consommation de la maison d'ID "+houseID+" a la date "+date+" est : " + response.body);
 }
 
 main();
