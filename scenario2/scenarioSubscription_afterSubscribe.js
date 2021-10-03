@@ -39,10 +39,10 @@ async function main() {
 
 
     var houseID = await doRequest({ url: "http://" + IPClient + "/consumption/houseID" })
-    console.log("HouseId reçu depuis la maison: " + houseID.body);
+    console.log("HouseID reçu depuis la maison: " + houseID.body);
 
     var communityID = await doRequest({ url: "http://" + IPClient + "/consumption/communityID" })
-    console.log("CommunityID reçu de la communauté: " + communityID.body);
+    console.log("CommunityID reçu de la maison: " + communityID.body);
 
     var date = '2021-10-02T03:00';
 
@@ -51,10 +51,10 @@ async function main() {
     var Date = { date: date };
 
     response = await doRequest({ url: "http://dataservice:3006/fromregistry/gethouseurl", qs: House })
-    console.log("HouseId reçu depuis dataservice" + House.ID + " : " + response.body);
+    console.log("HouseID reçu depuis dataservice " + House.ID + " : " + response.body);
 
     response = await doRequest({ url: "http://dataservice:3006/fromregistry/getcommunityurl", qs: Community })
-    console.log("CommunityID reçu depuis dataservice" + Community.ID + " : " + response.body);
+    console.log("CommunityID reçu depuis dataservice " + Community.ID + " : " + response.body);
 
     //---------- STEP 3 
     console.log("\nJe peux maintenant consulter sa consommation en interne :");
