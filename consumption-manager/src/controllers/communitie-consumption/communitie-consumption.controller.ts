@@ -8,7 +8,8 @@ export class CommunitieConsumptionController {
     @Get()
     getHouseConsumption(@Query('date') dateString:Date, @Query('ID') communitieID:number): Promise<number> {
         var date = new Date(dateString);
-
+        console.log("[consumption-manager][getHouseConsumption] dateString:Date "+ dateString + " ; communityID:number "+ communitieID + " => Promise<number>");
+        
         return this.communitieConsumptionService.getCommunitieConsumption(date, communitieID);
     }
 }

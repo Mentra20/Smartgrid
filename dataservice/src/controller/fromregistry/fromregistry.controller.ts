@@ -19,18 +19,19 @@ export class FromregistryController {
     @Get('gethouseurl')
     getHouseUrl(@Query('ID') ID:number): string {
         var houseURL = this.getHouseUrlService.getHouseURL(ID);
-        console.log("Get houseID : "+ID+" and return URL : "+houseURL);
+        console.log("[fromregistry/gethouseurl][getHouseUrl] urlGet houseID : "+ID+" and return URL : "+houseURL);
         return houseURL;
     }
 
     @Get('getcommunityurl')
     getHouseConsumption(@Query('ID') ID:number): string[] {
         var communityHousesURL = this.getAllHouseUrlService.getAllhousesURLFromCommunityId(ID);
-        console.log("Get community ID : "+ID+" and return URL list : "+communityHousesURL);
+        console.log("[fromregistry/getcommunityurl][getHouseConsumption] Get community ID : "+ID+" and return URL list : "+communityHousesURL);
         return communityHousesURL;
     }
     @Post()
     register(@Body('ID_Community') ID_Community:number,@Body('ID_House') ID_House:number, @Body('URL_House') URL_House:string): void {
+        console.log("[fromregistry][register] ID_Community:number ; ID_House:number ; URL_House:string => void")
         console.log("new registry: ")
         console.log("ID_Community: "+ID_Community)
         console.log("ID_House: "+ID_House)

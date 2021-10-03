@@ -45,7 +45,7 @@ echo "==========================================================================
 echo "---------------------------- Scenario : Consumption Peak ----------------------------"
 docker-compose up --force-recreate -d
 docker start house1
-sleep 10
+sleep 20
 docker exec scenario2 sh -c 'IP_PORT=house1:3000 node ./scenarioConsumptionPeak.js'
 docker stop house1
 

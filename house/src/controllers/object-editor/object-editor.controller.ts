@@ -10,14 +10,16 @@ export class ObjectEditorController {
 
     @Post("add-scheduled")
     async addScheduledHouseObject(@Body("name") name:string, @Body("consumption") consumption:number){
-        console.log("Ajout d'un object programmé")
+        console.log("[object-editor/add-scheduled][addScheduledHouseObject] name:string "+ name +" consumption:number "+consumption+" => number \n Ajout d'un object programmé")
+        
         await this.houseObjectService.addScheduledHouseObject(name,Number(consumption));
     }
 
     @Post("add-basic")
     addHouseObject(@Body("houseObject") houseObject:any){
         var newHouseObject = HouseObject.fromJson(houseObject);
-
+        console.log("[object-editor/add-scheduled][addScheduledHouseObject] houseObject:any => void")
+        
         console.log("Ajout d'un nouvel objet :"+JSON.stringify(newHouseObject))
 
         this.houseObjectService.addHouseObject(newHouseObject);

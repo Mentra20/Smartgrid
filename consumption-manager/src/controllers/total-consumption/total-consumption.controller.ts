@@ -8,7 +8,8 @@ export class TotalConsumptionController {
     @Get()
     getHouseConsumption(@Query('date') dateString:Date): Promise<number> {
         var date = new Date(dateString);
-
+        console.log("[total-consumption][getHouseConsumption] dateString:Date "+ dateString +" => Promise<number>");
+        
         return this.totalConsumptionService.getTotalConsumption(date);
     }
 }

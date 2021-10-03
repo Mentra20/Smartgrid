@@ -8,6 +8,8 @@ export class ConsumptionCheckController {
     @Get()
     checkIfConsumptionEqualsProduction(@Query('date') dateString:Date): Promise<boolean> {
         var date = dateString;
+        console.log("[consumption-check][checkIfConsumptionEqualsProduction] dateString:Date "+ dateString +" => Promise<boolean>");
+        
 
         return this.consumptionCheckService.verifyProductionVsConsumption(date);
     }
