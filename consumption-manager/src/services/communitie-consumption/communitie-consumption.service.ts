@@ -22,11 +22,8 @@ export class CommunitieConsumptionService {
         var consumptionSum = 0;
         var housesURL: string[] = await this.getHousesURLFromCommunitieID(communitieID);
         
-        console.log(housesURL);
-
         for(const url of housesURL){
             var current = await this.getHouseConsumption(date,url);
-            console.log(current);
             consumptionSum+=current
         }
             
