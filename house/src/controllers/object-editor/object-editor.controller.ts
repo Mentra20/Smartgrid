@@ -9,9 +9,9 @@ export class ObjectEditorController {
 
 
     @Post("add-scheduled")
-    addScheduledHouseObject(@Body("name") name:string, @Body("consumption") consumption:number){
+    async addScheduledHouseObject(@Body("name") name:string, @Body("consumption") consumption:number){
         console.log("Ajout d'un object programmé")
-        this.houseObjectService.addScheduledHouseObject(name,consumption);
+        await this.houseObjectService.addScheduledHouseObject(name,Number(consumption));
     }
 
     @Post("add-basic")

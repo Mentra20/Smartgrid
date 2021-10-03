@@ -21,7 +21,7 @@ async function main(){
 	var response;
 
 	//------ BEFORE STEPS ------
-    var IPclient = process.env.IP_PORT;//TODO
+    var IPclient = process.env.IP_PORT;
 
     //On ajout des objects pour un conso égale à la prod
     var mixeur = {

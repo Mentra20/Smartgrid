@@ -17,9 +17,9 @@ export class ObjectManagerService {
         this.houseObject.set(object.getName(),object);
     }
 
-    addScheduledHouseObject(name:string,consumption:number){
+    async addScheduledHouseObject(name:string,consumption:number){
         var objectScheduled = new HouseObjectScheduled(name,consumption);
-        var schedule = this.getSchedule(objectScheduled)
+        var schedule = await this.getSchedule(objectScheduled)
     }
 
     getHouseObject(name:string){
