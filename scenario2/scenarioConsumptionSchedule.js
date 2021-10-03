@@ -1,17 +1,9 @@
 
 var request = require('request');
 
-function doRequest({url,qs,body}) {
+function doRequest(reqParam) {
     return new Promise(function (resolve, reject) {
-        request({url,qs,body}, function (error, res, body) {
-            resolve({error, res, body});
-        });
-    });
-}
-
-function doRequestPost({url,qs,form, method}) {
-    return new Promise(function (resolve, reject) {
-        request({url,qs,form, method}, function (error, res, body) {
+        request(reqParam, function (error, res, body) {
             resolve({error, res, body});
         });
     });
@@ -21,7 +13,7 @@ async function main(){
 	var response;
 
 	//------ BEFORE STEPS ------
-    var IPclient = "";//TODO
+    var IPclient = process.env.IP_PORT;
 
     //On ajout des objects pour une conso
     var mixeur = {
@@ -31,11 +23,11 @@ async function main(){
 			{start:"2021-10-02T01:00",end:"2021-10-02T05:00",consumption:200}]
 		}
       };
-	response = await doRequestPost({url:"http://"+IPclient+"/object-editor/add-basic", form:{houseObject:mixeur},  method:"POST"})
+	response = await doRequest({url:"http://"+IPclient+"/object-editor/add-basic", form:{houseObject:mixeur},  method:"POST"})
 
 	//------------ STEP 1 --------------
     var date1 = '2021-10-02T02:00';
-    var houseID = 0;
+    var houseID = await doRequest({url:"http://"+IPclient+"/consumption/houseID"}).body;
 
 	console.log("\nOn regarde la consommation actuelle de la maison en interne :");
 	response = await doRequest({url:"http://"+IPclient+"/consumption/global	", qs:{date:date1}})
@@ -54,7 +46,7 @@ async function main(){
 		consumption:500
       };
 
-	response = await doRequestPost({url:"http://"+IPclient+"/object-editor/add-scheduled", form:voiture,  method:"POST"})
+	response = await doRequest({url:"http://"+IPclient+"/object-editor/add-scheduled", form:voiture,  method:"POST"})
 
     console.log("\nOn regarde si la voiture est ajoutée:");
 	response = await doRequest({url:"http://"+IPclient+"/consumption/detailed", qs:{date:date2}})
@@ -72,7 +64,7 @@ async function main(){
 	response = await doRequest({url:"http://consumption-manager:3008/house-consumption", qs:req1})
 	console.log("La consommation de la maison d'ID "+houseID+" le "+date2+" est : " + response.body);
 	
-    console.log("\nOn voit donc que la voiture est branchée :");
+    console.log("\nOn voit donc que la voiture est branchée.");
 }
 
 main();

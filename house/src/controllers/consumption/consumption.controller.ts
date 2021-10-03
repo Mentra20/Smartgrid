@@ -16,22 +16,22 @@ export class ConsumptionController {
     }
 
     @Get("detailed")
-    getDetailedConsumtion(@Query("date")date:Date){
-        return this.consumptionService.getDetailedConsumptuion(date);
+    getDetailedConsumtion(@Query("date")date:string){
+        return this.consumptionService.getDetailedConsumptuion(new Date(date));
     }
 
     @Get("detailed/:name")
-    getDetailedConsumtionByName(@Param("name") name:string,@Query("date")date:Date){
-        return this.consumptionService.getConsumptionByName(name,date);
+    getDetailedConsumtionByName(@Param("name") name:string,@Query("date")date:string){
+        return this.consumptionService.getConsumptionByName(name,new Date(date));
     }
 
     @Get("houseID")
-    getHouseID(){
+    getHouseID():number{
         return this.subscribeService.getSubscribeID();
     }
 
     @Get("communityID")
-    getCommunityID(){
+    getCommunityID():number{
         return this.subscribeService.getCommunityID();
     }
 }
