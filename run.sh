@@ -18,7 +18,7 @@ docker stop house2
 
 #scenario adapt consumption
 echo "=========================================================================================="
-echo "---------------------------- Scenario : Adaptation production ----------------------------"
+echo "---------------------------- Scenario : Adaptation de la production ----------------------------"
 docker-compose up --force-recreate -d
 docker start house1
 sleep 10
@@ -27,7 +27,7 @@ docker stop house1
 
 #scenario consumption schedule
 echo "=========================================================================================="
-echo "---------------------------- Scenario : Adaptation production ----------------------------"
+echo "---------------------------- Scenario : Planning de consommation ----------------------------"
 docker-compose up --force-recreate -d
 docker start house1
 docker start house2
@@ -42,7 +42,7 @@ docker stop house4
 
 #scenario consumption peak
 echo "=========================================================================================="
-echo "---------------------------- Scenario : Consumption Peak ----------------------------"
+echo "---------------------------- Scenario : Pic de consommation ----------------------------"
 docker-compose up --force-recreate -d
 docker start house1
 sleep 20
