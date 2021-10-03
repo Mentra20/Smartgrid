@@ -1,19 +1,6 @@
 version: '3.8'
 
 services:
-  house:
-    image: house:1.0.0
-    build:
-      context: ./house
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
-    depends_on:
-      - "registry-manager"
-
   consumption-scheduler:
     container_name: consumption-scheduler
     image: consumption-scheduler:1.0.0
@@ -112,7 +99,6 @@ services:
     volumes:
       - /usr/src/app
     depends_on:
-      - "house"
       - "supplier"
       - "consumption-manager"
       - "consumption-scheduler"
