@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 export class Scenario4Service {
 
     constructor(private http:HttpService){
-        this.URL = "http://house-object:3005/consumption";
+        this.URL = "http://house-object:3001/consumption";
     }
 
     URL:string;

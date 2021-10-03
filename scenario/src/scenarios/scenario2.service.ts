@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class Scenario2Service {
     constructor(private http:HttpService){
-        this.URL = "http://power-grid:3003/total-consumption";
+        this.URL = "http://power-grid:3004/total-consumption";
     }
 
     URL:string;

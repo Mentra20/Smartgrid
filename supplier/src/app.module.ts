@@ -4,11 +4,10 @@ import { AppService } from './app.service';
 import { ProductionService } from './services/production/production.service';
 import { ProductionController } from './controllers/production/production.controller';
 import { HttpModule } from '@nestjs/axios';
-import { CheckProductionController } from './controllers/check-production/check-production.controller';
 
 @Module({
   imports: [HttpModule],
-  controllers: [AppController, ProductionController,CheckProductionController],
+  controllers: [AppController, ProductionController],
   providers: [AppService, ProductionService],
 })
 export class AppModule {}
