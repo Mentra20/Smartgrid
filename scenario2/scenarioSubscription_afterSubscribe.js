@@ -10,6 +10,8 @@ function doRequest({url,qs,body}) {
 }
 
 async function main(){
+	var IPClient = "";//TODO
+
 	//---------- STEP 1
 	console.log("Ma maison est maintenant inscrite :");
 	
@@ -25,7 +27,7 @@ async function main(){
 
 	var House = { ID:houseID };
 	var Community = { ID:communityID };
-	var HouseDate = {date:date, ID:houseID };
+	var Date = {date:date};
 
 	response = await doRequest({url:"http://dataservice:3006/fromregistry/gethouseurl", qs:House})
 	console.log("House ID = "+houseID+" : " + response.body);
@@ -34,9 +36,9 @@ async function main(){
 	console.log("Community ID = "+communityID+" : " + response.body);
 
 	//---------- STEP 3 
-	console.log("\nJe peux maintenant consulter sa consommation :");
-	response = await doRequest({url:"http://consumption-manager:3008/house-consumption", qs:HouseDate})
-	console.log("Consommation de la maison d'ID "+houseID+" a la date "+date+" est : " + response.body);
+	console.log("\nJe peux maintenant consulter sa consommation en interne :");
+	response = await doRequest({url:"http://"+IPClient+"/consumption/global	", qs:Date})
+	console.log("Consommation de la maison a la date "+date+" est : " + response.body);
 }
 
 main();

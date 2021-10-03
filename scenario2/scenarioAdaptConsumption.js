@@ -34,19 +34,20 @@ async function main(){
 	response = await doRequestPost({url:"http://"+IPclient+"/object-editor/add-basic", form:{houseObject:mixeur},  method:"POST"})
 
 	//------------ STEP 1 --------------
+	var date1 = { date:'2021-10-02T02:00'};
+
 	console.log("\nOn monitore la consommation totale de la grille :");
-	response = await doRequest({url:"http://consumption-manager:3008/total-consumption"})
-	console.log("La consommation totale est : " + response.body);
+	response = await doRequest({url:"http://consumption-manager:3008/total-consumption",qs:date1})
+	console.log("La consommation totale a la date"+date1.date+" est : " + response.body);
 
 	//------------ STEP 2 --------------
 	console.log("\nOn compare la production et la consommation :");
-	var date1 = { date:'2021-10-02T02:00'};
 
 	response = await doRequest({url:"http://supplier:3005/get-production"})
 	console.log("La production est : " + response.body);
 
 	response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:date1})
-	console.log("La production est-elle égale à la consommation le "+date1+" ? : " + response.body);
+	console.log("La production est-elle égale à la consommation le "+date1.date+" ? : " + response.body);
 
 	//------------ STEP 3 --------------
 	console.log("\nUn objet est branché, la consommation augmente :");
@@ -63,12 +64,12 @@ async function main(){
 	var date2 = { date:'2021-10-02T03:00'};
 
 	response = await doRequest({url:"http://consumption-manager:3008/total-consumption", qs:date2})
-	console.log("La consommation totale a la date" +date2 +" est : " + response.body);
+	console.log("La consommation totale a la date" +date2.date +" est : " + response.body);
 
 	//------------ STEP 4 --------------
 	console.log("\nOn compare de nouveau la production et la consommation :");
 	response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:date2})
-	console.log("La production est-elle égale à la consommation le "+date2+" ? : " + response.body);
+	console.log("La production est-elle égale à la consommation le "+date2.date+" ? : " + response.body);
 
 	//------------ STEP 5 --------------
 	console.log("\nOn constate que la production s'est adaptée :");

@@ -21,6 +21,8 @@
 | Service       | Chemin      | Body            | Return     |Description            |
 | :-------------|:--------    | :-----          |:--------   |:----------------------|
 | house         | consumption/global | Date              | consommation (number)     | La consommation de la maison|
+| house         | consumption/houseID | _              | ID (number)     | L'ID de la maison|
+| house         | consumption/communityID | _              | ID (number)     | L'ID de communauté de la maison|
 | house         | consumption/detailed | Date              | consommationByObject ([{name:string,consumption:number}])     | La consommation de chaque objet a l'heure donnée|
 | house         | consumption/detailed/{name} | Date  | consommation (number)     | La consommation de l'objet|
 | house         | object-editor/add-scheduled | {name:string, consumption:number}  | -    | Ajout un objet programmer par la smart grid|

@@ -10,7 +10,7 @@ export class ObjectEditorController {
 
     @Post("add-scheduled")
     addScheduledHouseObject(@Body("name") name:string, @Body("consumption") consumption:number){
-        console.log("scheduled object add")
+        console.log("Ajout d'un object programmé")
         this.houseObjectService.addScheduledHouseObject(name,consumption);
     }
 
