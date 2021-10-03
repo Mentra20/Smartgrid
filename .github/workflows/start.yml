@@ -1,7 +1,7 @@
 name: SI5 
 on: 
-   push: 
-      branches: 
+  push: 
+    branches: 
       - dev 
       - master 
 
@@ -9,14 +9,14 @@ on:
 jobs: 
   build: 
     runs-on: ubuntu-latest 
-      steps: 
-        - uses: actions/checkout@v2 
-        - name: prepare and run
-        - run: |
-              chmod +x ./prepare.sh
-              ./prepare.sh
-          shell: bash
-        - run: |
+    steps: 
+      - uses: actions/checkout@v2 
+      - name: prepare and run
+      - run: |
+            chmod +x ./prepare.sh
+            ./prepare.sh
+        shell: bash
+      - run: |
             chmod +x ./run.sh
             ./run.sh
-          shell: bash
+        shell: bash
