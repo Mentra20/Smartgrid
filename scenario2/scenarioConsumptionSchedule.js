@@ -27,7 +27,7 @@ async function main(){
 
 	//------------ STEP 1 --------------
     var date1 = '2021-10-02T02:00';
-    var houseID = await doRequest({url:"http://"+IPclient+"/consumption/houseID"}).body;
+    var houseID = (await doRequest({url:"http://"+IPclient+"/consumption/houseID"})).body;
 
 	console.log("\nOn regarde la consommation actuelle de la maison en interne :");
 	response = await doRequest({url:"http://"+IPclient+"/consumption/global	", qs:{date:date1}})

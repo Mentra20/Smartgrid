@@ -33,7 +33,7 @@ docker start house1
 docker start house2
 docker start house3
 docker start house4
-sleep 20
+sleep 10
 docker exec scenario2 sh -c 'IP_PORT=house3:3000 node ./scenarioConsumptionSchedule.js'
 docker stop house1
 docker stop house2
