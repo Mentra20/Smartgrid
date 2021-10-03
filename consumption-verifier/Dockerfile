@@ -2,11 +2,11 @@ FROM node:14.17.6-alpine
 
 WORKDIR /usr/src/app
 
-COPY package* .
+COPY package* ./
 
 RUN npm install
 
-COPY . .
+COPY . ./
 
 RUN npm run build
 
