@@ -25,10 +25,18 @@ sleep 10
 docker exec scenario2 sh -c 'IP_PORT=house1:3000 node ./scenarioAdaptConsumption.js'
 docker stop house1
 
+#scenario consumption peak
+echo "=========================================================================================="
+echo "---------------------------- Scenario : Consumption Peak ----------------------------"
+docker-compose up --force-recreate -d
+docker start house1
+sleep 10
+docker exec scenario2 sh -c 'IP_PORT=house1:3000 node ./scenarioConsumptionPeak.js'
+docker stop house1
+
+#METTRE QU'A LA FIN
 docker-compose stop
 docker stop scenario2
-
-
 
 
 
