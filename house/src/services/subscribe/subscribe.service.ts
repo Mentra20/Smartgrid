@@ -45,4 +45,11 @@ export class SubscribeService {
         return this.subscribeID;
     }
 
+    public getCommunityID(){
+        if(!this.isSubscribe){
+            console.log("ERROR - No subscription");
+            return undefined;
+        }
+        return this.subscribeCommunity;
+    }
 }

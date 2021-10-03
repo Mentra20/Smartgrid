@@ -50,7 +50,6 @@ async function main(){
 
 	//------------ STEP 3 --------------
 	console.log("\nUn objet est branché, la consommation augmente :");
-	var IPclient = "";//TODO
 	var mixeur = {
 		name:'Mixeur', 
 		consumptionTime:{
