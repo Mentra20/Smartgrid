@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DetailedConsumption } from './models/detailed-consumption';
-import { AddDetailedConsumptionService } from './services/add-detailed-consumption/add-detailed-consumption.service';
-import { AddDetailedConsumptionController } from './controllers/add-detailed-consumption/add-detailed-consumption.controller';
+import { DetailedConsumptionService } from './services/detailed-consumption/detailed-consumption.service';
+import { DetailedConsumptionController } from './controllers/detailed-consumption/detailed-consumption.controller';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { AddDetailedConsumptionController } from './controllers/add-detailed-con
       synchronize: true,
     }),
   ],
-  controllers: [AppController, AddDetailedConsumptionController],
-  providers: [AppService, AddDetailedConsumptionService],
+  controllers: [AppController, DetailedConsumptionController],
+  providers: [AppService, DetailedConsumptionService],
 })
 export class AppModule {}

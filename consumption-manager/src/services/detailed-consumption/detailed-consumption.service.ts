@@ -5,21 +5,14 @@ import { Repository } from 'typeorm';
 
 
 @Injectable()
-export class AddDetailedConsumptionService {
+export class DetailedConsumptionService {
 
     constructor(
         @InjectRepository(DetailedConsumption)
         private detailedConsumptionRepository: Repository<DetailedConsumption>,
     ){}
 
-    public addDetailedConsumptionToDB(ID:string, date:Date, objectName:string, consumption:number){
-
-        var detailedConsumption = Object.assign(new DetailedConsumption(),{
-            houseID:ID,
-            consommationDate:date,
-            objectName:objectName,
-            consumption:consumption});
-        
+    public addDetailedConsumptionToDB(detailedConsumption:DetailedConsumption){
         this.detailedConsumptionRepository.save(detailedConsumption);
     }
 }

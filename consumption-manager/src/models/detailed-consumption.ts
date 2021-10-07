@@ -7,7 +7,7 @@ export class DetailedConsumption {
     houseID: string;
 
     @PrimaryColumn()
-    consommationDate: Date;
+    consumptionDate: Date;
 
     @PrimaryColumn({
         length: 100
