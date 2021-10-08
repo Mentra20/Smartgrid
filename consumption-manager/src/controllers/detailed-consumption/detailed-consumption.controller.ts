@@ -17,16 +17,20 @@ export class DetailedConsumptionController {
         
         if(!objectsConsumptions?.length) return;
 
-        var sum = 0;
+        var clientConsumptionSum = 0;
+        var houseID = objectsConsumptions[0].houseID;
+        var consumptionDate = objectsConsumptions[0].consumptionDate;
+
         for(let object of objectsConsumptions){
 
             var detailedConsumption = Object.assign(new DetailedConsumption(),{...object});
 
             this.detailedConsumptionService.addDetailedConsumptionToDB(detailedConsumption);
 
-            sum += detailedConsumption.consumption;
+            clientConsumptionSum += detailedConsumption.consumption;
         }
-        //TODO envoyer une conso totale du client.
         console.log("new detailed consumptions added")
+
+        this.detailedConsumptionService.pushClientConsumption(houseID,consumptionDate,clientConsumptionSum);
     }
 }
