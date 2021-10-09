@@ -14,6 +14,6 @@ export class ProductionService {
         this.productionRepository.save(production);
     }
     public getProductionByDate(date:Date){
-        return this.productionRepository.findAll({where:{productionDate:date}});
+        return this.productionRepository.find({where:{productionDate:date}});
     }
 }
