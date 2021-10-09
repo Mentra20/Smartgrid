@@ -1,8 +1,9 @@
+import { map } from "rxjs";
 import { AbstractHouseObject } from "./house-object";
 
 export class House {
 
-    private allHouseObject:Map<string,AbstractHouseObject>;
+    private allHouseObject:Map<string,AbstractHouseObject> = new Map();
 
     constructor(private clientName:string,private houseId:string){
         this.allHouseObject = new Map();
@@ -13,6 +14,10 @@ export class House {
     }
     public getClientName():string{
         return this.clientName;
+    }
+
+    public getObject(name:string):AbstractHouseObject{
+        return this.allHouseObject.get(name);
     }
 
     public addHouseObject(object:AbstractHouseObject){

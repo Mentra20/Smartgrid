@@ -1,7 +1,6 @@
 import { TimeSlots, TimeSlotsList } from "./time-slots";
 
 export abstract class AbstractHouseObject {
-
     constructor(
         private name:string
         ){}
@@ -12,14 +11,50 @@ export abstract class AbstractHouseObject {
         return this.name;
     }
 
+    public abstract setConsumption(consumption:number);
+
+    public abstract setEnabled(enabled: boolean);
+
 }
 export class BasicHouseObject extends AbstractHouseObject{
+    private enbled = true;
+
+    constructor(name: string,private consumption:number){
+        super(name)
+    }
+
+    public setEnabled(isEnabled: boolean) {
+        this.enbled=isEnabled
+    }
+
+    public getConsumption(date: Date) {
+        return this.enbled? this.consumption:0;
+    }
+
+    public setConsumption(consumption: number) {
+        return this.consumption = consumption;
+    }
+
+}
+
+export class ScheduledHouseObject extends AbstractHouseObject{
+    
+    private timeChargeNeed:number;
+
+    constructor(name: string,private consumption:number){
+        super(name)
+    }
+
+
+    public setEnabled(isEnabled: boolean) {
+    }
 
     public getConsumption(date: Date) {
         return this.consumption;
     }
-    constructor(name: string,private consumption:number){
-        super(name)
+
+    public setConsumption(consumption: number) {
+        return this.consumption = consumption;
     }
 
 }

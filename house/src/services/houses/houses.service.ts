@@ -30,7 +30,10 @@ export class HousesService {
     async pushConsumption(house:House){
         var jsonHouseDetailed = [];
         for(let object of house.getAllObject()){
-            jsonHouseDetailed.push({idHouse:house.getHouseId(),dateConsumption:this.currentDate,objectName:object.getName(),consumption:object.getConsumption(this.currentDate)})
+            var consumption = object.getConsumption(this.currentDate)
+            if(consumption>0){
+                jsonHouseDetailed.push({idHouse:house.getHouseId(),dateConsumption:this.currentDate,objectName:object.getName(),consumption:object.getConsumption(this.currentDate)})
+            }
         }
         this.http.post(this.URL_PUSH_CONSUMPTION,{param:jsonHouseDetailed}).subscribe({
             next : (response)=> console.log(response),
@@ -54,6 +57,11 @@ export class HousesService {
         var newHouse = new House(clientName,clientId);
         this.allHouse.set(clientId,newHouse)
         return clientId;
+
+    }
+
+    public getHouse(clientId:string):House{
+        return this.allHouse.get(clientId);
 
     }
 }

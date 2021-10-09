@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 // import { ObjectManagerService } from './services/object-manager/object-manager.service';
 // import { ObjectEditorController } from './controllers/object-editor/object-editor.controller';
 import { HousesService } from './services/houses/houses.service';
+import { HouseEditorController } from './controllers/house-editor/house-editor.controller';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { HousesService } from './services/houses/houses.service';
       ConfigModule.forRoot(),
       ],
   controllers: [
-      AppController, 
+      AppController,
+      HouseEditorController, 
     //   ConsumptionController,
     //   ObjectEditorController,
       ],
