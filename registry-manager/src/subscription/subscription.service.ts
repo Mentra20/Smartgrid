@@ -1,8 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, Injectable } from '@nestjs/common';
 import { catchError } from 'rxjs';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class SubscriptionService {
@@ -10,6 +8,9 @@ export class SubscriptionService {
     private URL_UpdateClientDB = "http://client-registry:5432/updateClientConnection";
 
     constructor(private http:HttpService){}
+
+    ID_Community = 1;
+    nbHouseInCommunity = 0;
 
     async subscribeClient(ip:string, port:string) {
         console.log("Registred info : " + ip + ":" + port)
@@ -38,7 +39,10 @@ export class SubscriptionService {
     }
 
     private async generateClientSubscription(URL_House:string){
-        this.http.post(this.URL_SubscribeClientDB, URL_House).subscribe(
+        var community_ID = this.giveCommunityID();
+        var message = {URL_House, community_ID};
+        
+        this.http.post(this.URL_SubscribeClientDB, message).subscribe(
             {
                 next: (value) => console.log("Data stored\n"), 
                 error: (error) => console.log(error)
@@ -46,4 +50,15 @@ export class SubscriptionService {
         )
     }
 
+    private giveCommunityID():number {
+        if (this.nbHouseInCommunity < 10) {
+            this.nbHouseInCommunity++;
+            return this.ID_Community;
+        }
+        else {
+            this.ID_Community++;
+            this.nbHouseInCommunity = 1;
+            return this.ID_Community;
+        }
+    }
 }

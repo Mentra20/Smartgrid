@@ -23,9 +23,9 @@ export class ClientRegistryController {
     }
     
     @Post("subscribe")
-    clientSubscribe(@Body("clientName") clientName:string){
+    clientSubscribe(@Body("clientName") clientName:string, @Body("communityID") communityID:number){
         console.log("[client-registry][clientSubscribe] clientName:string "+ clientName + "=> void");
-        return this.clientRegistryService.subscribeClient(clientName);
+        return this.clientRegistryService.subscribeClient(clientName, communityID);
     }
 
     @Post("updateClientConnection")
