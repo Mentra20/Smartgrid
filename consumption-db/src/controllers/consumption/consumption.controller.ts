@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { HouseConsumption } from 'src/models/house-consumption';
 import { ConsumptionService } from 'src/services/consumption/consumption.service';
 
@@ -27,4 +27,28 @@ export class ConsumptionController {
         console.log("new house consumption added")
     }
 
+    @Get('get-total-consumption')
+    async getTotalConsumption(@Query('date') date:Date) {
+        var consumptionSum=0;
+        var consumptionList:HouseConsumption[] = await this.consumptionService.getTotalConsumptionByDate(date);
+
+        console.log("[get-total-consumption][getTotalConsumption] Get date : "+date.toDateString);
+        
+        for (var houseCons of consumptionList){
+            consumptionSum+=houseCons.consumption;
+        }
+        console.log("Total consumption at date "+date+" is "+consumptionSum);
+        return consumptionSum;
+    }
+
+    @Get('get-house-consumption')
+    async getHouseConsumption(@Query('date') date:Date, @Query('houseID') houseID:string) {
+
+        var houseConsumption:HouseConsumption = await this.consumptionService.getHouseConsumptionByDate(date,houseID);
+        console.log("[get-house-consumption][getHouseConsumption] Get date : "+date.toDateString+" and house ID");
+
+        console.log("house consumption of ID +"+houseID+" at date "+date+" is "+houseConsumption.consumption);
+
+        return houseConsumption.consumption;
+    }
 }
