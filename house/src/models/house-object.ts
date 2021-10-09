@@ -11,7 +11,7 @@ export abstract class AbstractHouseObject {
         return this.name;
     }
 
-    public abstract setMaxConsumption(maxConsumption:number);
+    public abstract changeMaxConsumption(maxConsumption:number);
     public abstract getMaxConsumption();
 
 }
@@ -36,7 +36,7 @@ export class BasicHouseObject extends AbstractHouseObject{
     public getMaxConsumption() {
         return this.maxConsumption;
     }
-    public setMaxConsumption(maxConsumption: number) {
+    public changeMaxConsumption(maxConsumption: number) {
         return this.maxConsumption = maxConsumption;
     }
 
@@ -60,7 +60,7 @@ export class ScheduledHouseObject extends AbstractHouseObject {
     }
 
 
-    public getMaxConsumption() {
+    public changeMaxConsumption() {
         return this.maxConsumption;
     }
     public setMaxConsumption(maxConsumption: number) {

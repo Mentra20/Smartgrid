@@ -15,8 +15,8 @@ export class HouseEditorController {
         return this.housesService.addNewHouse(house);
     }
 
-    @Post(":id/add-object")
-    public addObject(@Param("id") houseId:string, @Body("object",new HouseObjectPipe()) object:AbstractHouseObject,@Res() res: Response){
+    @Post(":id_house/add-object")
+    public addObject(@Param("id_house") houseId:string, @Body("object",new HouseObjectPipe()) object:AbstractHouseObject,@Res() res: Response){
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){
             res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
@@ -25,8 +25,8 @@ export class HouseEditorController {
         currentHouse.addHouseObject(Object.assign(BasicHouseObject,object))
     }
 
-    @Post(":id/basic-object/:object/enabled")
-    public enabledObject(@Param("id") houseId:string,@Param("object") objectName:string, @Body("enabled") enabled:boolean,@Res() res: Response){
+    @Post(":id_house/basic-object/:object/enabled")
+    public enabledObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("enabled") enabled:boolean,@Res() res: Response){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName)
         if(!currentHouse ||!currentObject){
@@ -42,8 +42,8 @@ export class HouseEditorController {
         }
     }
 
-    @Post(":id/scheduled-object/:object/requestTimeSlot")
-    public needSchedulObject(@Param("id") houseId:string,@Param("object") objectName:string, @Res() res: Response){
+    @Post(":id_house/scheduled-object/:object_name/requestTimeSlot")
+    public needSchedulObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Res() res: Response){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName)
         if(!currentHouse ||!currentObject){
@@ -60,14 +60,14 @@ export class HouseEditorController {
 
     }
 
-    @Post(":id/:object/consumption")
-    public changeConsumption(@Param("id") houseId:string,@Param("object") objectName:string, @Body("consumption") consumption:number,@Res() res: Response){
+    @Post(":id_house/:object_name/consumption")
+    public changeConsumption(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("consumption") consumption:number,@Res() res: Response){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName);
         if(!currentHouse ||!currentObject){
             res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
-        currentObject.setMaxConsumption(consumption);
+        currentObject.changeMaxConsumption(consumption);
     }
 }
