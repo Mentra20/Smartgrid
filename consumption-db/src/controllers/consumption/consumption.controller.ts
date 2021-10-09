@@ -14,7 +14,7 @@ export class ConsumptionController {
             consumptionDate:Date, 
             consumption:number})
     {
-        console.log("[consumption-db/push-house-consumption][pushHouseConsumption] houseConsumption:any "+ houseConsumption +" => void")
+        console.log("[consumption-db/push-house-consumption][pushHouseConsumption] houseConsumption:any "+ houseConsumptionReceived +" => void")
         console.log("new house consumption")
 
         var houseConsumption = new HouseConsumption();
