@@ -21,7 +21,7 @@ export class DetailedConsumptionService {
     public pushClientConsumption(houseID:string, consumptionDate:Date, clientConsumption:number){
     
         var message = {houseID:houseID, consumptionDate:consumptionDate,consumption:clientConsumption}
-        this.http.post("http://URL_CONSUMPTION_DB:PORT/ROUTE", message).subscribe(
+        this.http.post("http://URL_CONSUMPTION_DB:PORT/ROUTE", {param:message}).subscribe(
             {
                 next: (value) => console.log("client consumption send to ConsumptionDB") , 
                 error: (error) => console.log(error)

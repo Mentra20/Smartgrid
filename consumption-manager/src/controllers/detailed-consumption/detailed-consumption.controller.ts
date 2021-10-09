@@ -9,7 +9,12 @@ export class DetailedConsumptionController {
     constructor(private detailedConsumptionService: DetailedConsumptionService){}
 
     @Post('add-detailed-consumption')
-    addDetailedConsumption(@Body("param") objectsConsumptions:{houseID:string, consumptionDate:Date, objectName:string, consumption:number}[])
+    addDetailedConsumption(
+        @Body("param") objectsConsumptions:{
+            houseID:string, 
+            consumptionDate:Date, 
+            objectName:string, 
+            consumption:number}[])
     {
         //TODO: verifier si le client existe dans la DB
         console.log("[consumption-manager/add-detailed-consumption][addDetailedConsumption] objectsConsumptions:any[] "+ objectsConsumptions +" => void")

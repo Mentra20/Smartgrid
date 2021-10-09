@@ -86,6 +86,20 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+
+  consumption-db:
+    container_name: consumption-db
+    image: consumption-db:1.0.0
+    build:
+      context: ./consumption-db
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3009:3009
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
       
 
 networks:
