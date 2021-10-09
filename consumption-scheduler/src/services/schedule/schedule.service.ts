@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ScheduleService {
-
-
   getSchedule(houseID: number): string[] {
     const schedule: string[] = [];
     if (houseID % 2 == 0) {
