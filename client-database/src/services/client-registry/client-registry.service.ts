@@ -26,9 +26,9 @@ export class ClientRegistryService {
         return await this.generateClientSubscription(clientName, communityID);
     }
 
-    async updateClientSubscription(idClient:number, clientName:string){
+    async updateClientSubscription(idClient:number, newClientName:string){
         let client = await this.clientRepository.findOne(idClient);
-        client.clientName = clientName;
+        client.clientName = newClientName;
 
         await this.clientRepository.save(client);
 

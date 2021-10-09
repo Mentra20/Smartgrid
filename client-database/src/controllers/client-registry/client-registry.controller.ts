@@ -29,8 +29,8 @@ export class ClientRegistryController {
     }
 
     @Post("updateClientConnection")
-    updateConnection(@Body("idClient") idClient:number, @Body("clientName") clientName:string) {
-        return this.clientRegistryService.updateClientSubscription(idClient, clientName);
+    updateConnection(@Body("idClient") idClient:number, @Body("newClientName") newClientName:string) {
+        return this.clientRegistryService.updateClientSubscription(idClient, newClientName);
     }
 
 }
