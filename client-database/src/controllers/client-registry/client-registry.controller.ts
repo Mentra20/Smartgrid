@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Client } from '../../entity/Client';
+import { Client } from 'src/models/Client';
 import { ClientRegistryService } from '../../services/client-registry/client-registry.service';
 
 @Controller('client-registry')
