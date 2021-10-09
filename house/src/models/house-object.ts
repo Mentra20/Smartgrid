@@ -5,56 +5,78 @@ export abstract class AbstractHouseObject {
         private name:string
         ){}
 
-    public abstract getConsumption(date:Date);
+    public abstract getCurrentConsumption(date:Date);
 
     public getName(){
         return this.name;
     }
 
-    public abstract setConsumption(consumption:number);
-
-    public abstract setEnabled(enabled: boolean);
+    public abstract setMaxConsumption(maxConsumption:number);
+    public abstract getMaxConsumption();
 
 }
 export class BasicHouseObject extends AbstractHouseObject{
     private enbled = true;
 
-    constructor(name: string,private consumption:number){
+    constructor(name: string,private maxConsumption:number){
         super(name)
     }
+
 
     public setEnabled(isEnabled: boolean) {
         this.enbled=isEnabled
     }
 
-    public getConsumption(date: Date) {
-        return this.enbled? this.consumption:0;
+
+    public getCurrentConsumption(date: Date) {
+        return this.enbled? this.maxConsumption:0;
     }
 
-    public setConsumption(consumption: number) {
-        return this.consumption = consumption;
+
+    public getMaxConsumption() {
+        return this.maxConsumption;
+    }
+    public setMaxConsumption(maxConsumption: number) {
+        return this.maxConsumption = maxConsumption;
     }
 
 }
 
-export class ScheduledHouseObject extends AbstractHouseObject{
+export class ScheduledHouseObject extends AbstractHouseObject {
     
     private timeChargeNeed:number;
+    private timeSlot:TimeSlotsList = new TimeSlotsList;
 
-    constructor(name: string,private consumption:number){
+    constructor(name: string,private maxConsumption:number){
         super(name)
     }
 
 
-    public setEnabled(isEnabled: boolean) {
+    public getCurrentConsumption(date: Date) {
+        if(this.timeSlot?.isConsump(date)){
+            return this.maxConsumption;
+        }
+        return 0;
     }
 
-    public getConsumption(date: Date) {
-        return this.consumption;
+
+    public getMaxConsumption() {
+        return this.maxConsumption;
+    }
+    public setMaxConsumption(maxConsumption: number) {
+       return this.maxConsumption;
     }
 
-    public setConsumption(consumption: number) {
-        return this.consumption = consumption;
+
+    public setTimeChargeNeed(timeChargeNeed: number) {
+        this.timeChargeNeed = timeChargeNeed;
+    }
+    public getTimeChargeNeed() {
+        return this.timeChargeNeed;
+    }
+
+    public getTimeSlot():TimeSlotsList{
+        return this.timeSlot;
     }
 
 }

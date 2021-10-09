@@ -35,7 +35,7 @@ export class House {
     public getTotalConsumption(date:Date):number{
         var consumptionKW = 0
         for(let house of this.allHouseObject.values()){
-            consumptionKW+=house.getConsumption(date);
+            consumptionKW+=house.getCurrentConsumption(date);
         }
         return consumptionKW;
     }
