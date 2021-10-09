@@ -60,10 +60,10 @@ export class ScheduledHouseObject extends AbstractHouseObject {
     }
 
 
-    public changeMaxConsumption() {
+    public getMaxConsumption() {
         return this.maxConsumption;
     }
-    public setMaxConsumption(maxConsumption: number) {
+    public changeMaxConsumption(maxConsumption: number) {
        return this.maxConsumption;
     }
 

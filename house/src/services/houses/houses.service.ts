@@ -18,6 +18,7 @@ export class HousesService {
 
     doTick(date:Date){
         this.currentDate = date;
+        this.pushAllHouseConsumption();
     }
 
     getTotalConsumption(houseID:string){
@@ -50,6 +51,7 @@ export class HousesService {
             this.pushConsumption(houseEntry[1])
         }
     }
+
 
     public async registryNewClient(clientName:string):Promise<string>{
         return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, { client_name: clientName }))).data

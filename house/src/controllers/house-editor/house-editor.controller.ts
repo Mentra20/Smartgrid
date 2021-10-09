@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { AbstractHouseObject, BasicHouseObject, ScheduledHouseObject } from 'src/models/house-object';
 import { HousesService } from 'src/services/houses/houses.service';
 import { Response } from 'express'
@@ -69,5 +69,25 @@ export class HouseEditorController {
             return;
         }
         currentObject.changeMaxConsumption(consumption);
+    }
+
+    @Get(":id_house/get_all_object")
+    public getAllObject(@Param("id_house") houseId:string){
+        return this.housesService.getHouse(houseId)?.getAllObject();
+    }
+
+    @Get(":id_house/get_all_object/scheduled")
+    public getAllObjectScheduled(@Param("id_house") houseId:string){
+        return this.housesService.getHouse(houseId)?.getAllObject()?.filter((value)=>value instanceof ScheduledHouseObject);
+    }
+
+    @Get(":id_house/get_all_object/basic")
+    public getAllObjectBasic(@Param("id_house") houseId:string){
+        return this.housesService.getHouse(houseId)?.getAllObject()?.filter((value)=>value instanceof BasicHouseObject);
+    }
+
+    @Get(":id_house/get_object/:object_name")
+    public getSpecificObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string){
+        return this.housesService.getHouse(houseId)?.getAllObject().find((object)=>object.getName()===objectName);
     }
 }
