@@ -12,7 +12,7 @@ import { Production} from './models/production';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5532,
+      port: 5432,
       username: 'SI5-SOA',
       password: 'SI5-SOA',
       database: 'SI5-SOA',
