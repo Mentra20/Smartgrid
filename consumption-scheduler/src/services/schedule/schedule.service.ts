@@ -1,16 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { randomInt } from 'crypto';
 
 @Injectable()
 export class ScheduleService {
-  getSchedule(houseID: number): string[] {
-    const schedule: string[] = [];
-    if (houseID % 2 == 0) {
-      schedule.push('2021-10-01T22:00');
-      schedule.push('2021-10-02T04:00');
-    } else {
-      schedule.push('2021-10-02T02:00');
-      schedule.push('2021-10-02T06:00');
-    }
+  private date: Date;
+
+  setDate(dayDate: Date) {
+    this.date = dayDate;
+  }
+
+  getSchedule(houseID: number, consumptionTime: number): Date[] {
+    const schedule: Date[] = [];
+    const int = randomInt(0, 5);
+    const date = this.date;
+    this.date.setHours(date.getHours() + int);
+    schedule.push(date);
+    this.date.setHours(date.getHours() + consumptionTime);
+    schedule.push(date);
+
     return schedule;
   }
 }
