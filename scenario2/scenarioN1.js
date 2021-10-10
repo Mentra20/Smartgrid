@@ -69,7 +69,7 @@ async function main(){
 
     console.log("\nUn nouveau producteur souhaite s'inscrire : ");
     response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
-    console.log("[service]:supplier; [route]:supplier-editor/add-supplier; [params]:"+JSON.stringify(producer)+ " => [return]:"+response.body);
+    console.log("[service]:supplier; [route]:add-supplier; [params]:"+JSON.stringify(producer)+ " => [return]:"+response.body);
     var producerID = response.body;
 
     console.log("\nLe producteur est inscrits : ");
@@ -182,7 +182,7 @@ async function main(){
 
 async function beforeStep(){
     //------ BEFORE STEPS ------
-    /*
+    
     var response;
     var mixeur = {object:{name:"Mixeur",maxConsumption:500,enabled:true}, type:"BASIC"}
     //On inscrit des maisons et ajout des objets
@@ -199,9 +199,12 @@ async function beforeStep(){
     response = await doRequest({url:"http://house:3000/house-editor/house/"+houseID3+"/add-object", form:mixeur, method:"POST"});
 
     //On inscrit un producteur et on fixe sa production
-    var producer = {producer_name:"EDF", production:1000};
-    response = await doRequest({url:"http://supplier:3005/supplier-editor/add-supplier", form:producer, method:"POST"});
-    */
+    var producer = {producerName:"EDF",production:1000}
+    response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
+    await sleep(2000)
+    
+    var producer = {producerName:"ENGIE",production:1000}
+    
 }
 
 async function doTick(){

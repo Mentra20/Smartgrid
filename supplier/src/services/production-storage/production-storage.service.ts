@@ -17,7 +17,7 @@ export class ProductionServiceStorage {
     setProduction(newProduction:number){
         console.log("Production set with production value : " + newProduction);
         for(var key in this.dictProducer) {
-            this.dictProducer[key]={id_societe:this.dictProducer[key].id_societe,productionDate:this.dictProducer[key].productionDate,production:newProduction};
+            this.dictProducer[key].production+=newProduction;
             break;
             }
         }
