@@ -1,12 +1,10 @@
 export class TimeSlots {
   private start: Date;
   private end: Date;
-  private consumption: number;
 
-  constructor(start: Date, end: Date, consumption: number) {
+  constructor(start: Date, end: Date) {
     this.start = start;
     this.end = end;
-    this.consumption = consumption;
   }
   public getStart(): Date {
     return this.start;
@@ -14,24 +12,25 @@ export class TimeSlots {
   public getEnd(): Date {
     return this.end;
   }
-  public getConsumption(): number {
-    return this.consumption;
-  }
 }
 
 export class TimeSlotsList {
   private timeSlots: TimeSlots[] = [];
 
-  addSlots(start: Date, end: Date, consumption: number) {
-    this.timeSlots.push(new TimeSlots(start, end, consumption));
+  addSlots(start: Date, end: Date) {
+    this.timeSlots.push(new TimeSlots(start, end));
   }
 
-  getConsumption(date: Date) {
+  isConsump(date: Date): boolean {
     for (const ts of this.timeSlots) {
       if (ts.getStart() <= date && date <= ts.getEnd()) {
-        return ts.getConsumption();
+        return true;
       }
     }
-    return 0;
+    return false;
+  }
+
+  removeTimeSlot(date: Date) {
+    this.timeSlots = this.timeSlots.filter((slot)=>slot.getStart() >= date || date >= slot.getEnd())
   }
 }
