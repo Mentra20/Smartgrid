@@ -11,12 +11,17 @@ export class ScheduleService {
 
   getSchedule(houseID: number, consumptionTime: number): Date[] {
     const schedule: Date[] = [];
-    const int = randomInt(0, 5);
-    const date = this.date;
-    this.date.setHours(date.getHours() + int);
-    schedule.push(date);
-    this.date.setHours(date.getHours() + consumptionTime);
-    schedule.push(date);
+
+    var dateStart = new Date(this.date);
+    schedule.push(dateStart);
+    var dateEnd = new Date(this.date);
+    console.log(`hour : ${dateEnd.getHours()} , addHour = ${consumptionTime}`)
+
+    dateEnd.setTime(dateEnd.getTime() +consumptionTime*1000*60*60);
+    schedule.push(dateEnd);
+    console.log(dateStart)
+    console.log(dateEnd)
+    console.log(this.date)
 
     return schedule;
   }

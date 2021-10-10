@@ -11,18 +11,16 @@ export class ManageSchedulObjectController {
 
 
     @Post(":id_house/scheduled-object/:object_name/requestTimeSlot")
-    public needSchedulObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Res() res: Response){
+    public needSchedulObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName)
         if(!currentHouse ||!currentObject){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
         if(currentObject instanceof ScheduledHouseObject){
             return this.housesService.requestTimeSLot(currentObject);
         }
         else{
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return ;
         }
 
@@ -34,7 +32,6 @@ export class ManageSchedulObjectController {
     public stopAllScheduledObject(@Param("id_house") houseId:string,@Res() res: Response){
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
         for(var currentObjectScheduled of currentHouse.getAllObject().filter((obj)=>obj instanceof ScheduledHouseObject)){

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DetailedConsumption } from 'src/models/detailed-consumption';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 
 
@@ -30,6 +30,6 @@ export class DetailedConsumptionService {
     }
 
     public getDetailedConsumptionByDate(houseID:string, consumptionDate:Date, objectName:string){
-        return this.detailedConsumptionRepository.findOne({where:{houseID:houseID, consumptionDate:consumptionDate, objectName:objectName}});
+        return this.detailedConsumptionRepository.findOne({where:{houseID:houseID, consumptionDate: Between(new Date(consumptionDate.getTime()-1000),new Date(consumptionDate.getTime()+1000)), objectName:objectName}});
     }
 }

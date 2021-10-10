@@ -122,6 +122,8 @@ async function main(){
     //STEP 8 
     console.log("\n\n================= STEP 8 =================")
 
+    response = await doRequest({url:"http://consumption-scheduler:3002/schedule",form:{dayDate:globalDate}, method:"POST"});
+
     console.log("\nOn demande un planning de consommation :");
     response = await doRequest({url:"http://house:3000/manage-schedul-object/"+houseID+"/scheduled-object/"+objectName+"/requestTimeSlot", method:"POST"});
     console.log("[service]:house; [route]:manage-schedul-object/"+houseID+"/scheduled-object/"+objectName+"/requestTimeSlot"+"; [params]:_ => [return]: "+response.body);
@@ -129,7 +131,8 @@ async function main(){
 
     //STEP 9 
     console.log("\n\n================= STEP 9 =================")
-    waitTick(36);//6h (temps mini de début de conso)
+    await waitTick(36);//6h (temps mini de début de conso)
+    await sleep(2000);
 
     var detailedObject = {
         date:globalDate,

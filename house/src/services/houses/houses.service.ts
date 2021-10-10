@@ -10,7 +10,7 @@ export class HousesService {
     private URL_PUSH_CONSUMPTION = "http://consumption-manager:3008/add-detailed-consumption"
     private URL_PUSH_PRODUCTION = "http://production-manager:3006/add-production"
 
-    private URL_TIME_SLOT = "http://scheduler:3002/schedule"
+    private URL_TIME_SLOT = "http://consumption-scheduler:3002/schedule"
     private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/clientSubscribe"
     private URL_REGISTER_NEW_PRODUCER = "http://registry-manager:3003/subscription/producerSubscribe"
 
@@ -93,7 +93,7 @@ export class HousesService {
 
 
     public async requestTimeSLot(object: ScheduledHouseObject):Promise<any>{
-        var timeSlot:{start:string,end:string} = await firstValueFrom(this.http.get(this.URL_TIME_SLOT,{params:{time:object.getTimeChargeNeed(),consumption:object.getMaxConsumption()}})).then((response)=>response.data)
+        var timeSlot:{start:string,end:string} = await firstValueFrom(this.http.get(this.URL_TIME_SLOT,{params:{consumptionTime:object.getTimeChargeNeed(),ID:undefined}})).then((response)=>response.data)
         object.getTimeSlot().addSlots(new Date(timeSlot.start),new Date(timeSlot.end))
         return timeSlot;
     }

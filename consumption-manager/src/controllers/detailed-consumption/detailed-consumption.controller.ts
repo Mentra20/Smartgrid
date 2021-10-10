@@ -12,7 +12,7 @@ export class DetailedConsumptionController {
     addDetailedConsumption(
         @Body("param") objectsConsumptions:{
             houseID:string, 
-            consumptionDate:Date, 
+            consumptionDate:string, 
             objectName:string, 
             consumption:number}[])
     {
@@ -36,15 +36,15 @@ export class DetailedConsumptionController {
         }
         console.log("new detailed consumptions added")
 
-        this.detailedConsumptionService.pushClientConsumption(houseID,consumptionDate,clientConsumptionSum);
+        this.detailedConsumptionService.pushClientConsumption(houseID,new Date(consumptionDate),clientConsumptionSum);
     }
 
 
     @Get('get-detailed-consumption')
-    async getDetailedConsumption(@Query('date') date:Date, @Query('houseID') houseID:string, @Query('objectName') objectName:string) {
-
+    async getDetailedConsumption(@Query('date') dateString:string, @Query('houseID') houseID:string, @Query('objectName') objectName:string) {
+        var date = new Date(dateString);
         var detailedConsumption:DetailedConsumption = await this.detailedConsumptionService.getDetailedConsumptionByDate(houseID,date,objectName);
-        console.log("[get-detailed-consumption][getDetailedConsumption] Get date : "+date.toDateString+" and house ID "+houseID+" and objectName "+objectName);
+        console.log("[get-detailed-consumption][getDetailedConsumption] Get date : "+date+" and house ID "+houseID+" and objectName "+objectName);
 
         console.log("house consumption of "+objectName+" for houseID "+ houseID +" at date "+date+" is "+detailedConsumption.consumption);
 

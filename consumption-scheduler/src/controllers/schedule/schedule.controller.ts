@@ -6,8 +6,8 @@ export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   @Post()
-  setDate(@Body('dayDate') dayDate: Date) {
-    this.scheduleService.setDate(dayDate);
+  setDate(@Body('dayDate') dayDate: string) {
+    this.scheduleService.setDate(new Date(dayDate));
   }
 
   @Get()
