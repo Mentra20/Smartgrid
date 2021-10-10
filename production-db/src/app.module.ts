@@ -20,6 +20,7 @@ import { HttpModule } from '@nestjs/axios';
       database: 'SI5-SOA',
       entities: [Production],
       synchronize: true,
+      logger:'debug'
     }),
   ],
   controllers: [AppController, ProductionController],

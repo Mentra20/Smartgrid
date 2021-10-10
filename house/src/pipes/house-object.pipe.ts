@@ -10,7 +10,7 @@ export class HouseObjectPipe implements PipeTransform {
       return object
     }
     else if(value.type == "SCHEDULED"){
-      var scheduledHouseObject = new ScheduledHouseObject(value.name,+value.maxConsumption);
+      var scheduledHouseObject = new ScheduledHouseObject(value.object.name,+value.object.maxConsumption);
       return scheduledHouseObject;
     }
     
