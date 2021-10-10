@@ -6,6 +6,7 @@ import { HousesService } from './services/houses/houses.service';
 import { HouseEditorController } from './controllers/house-editor/house-editor.controller';
 import { ManageSchedulObjectController } from './controllers/manage-schedul-object/manage-schedul-object.controller';
 import { TickController } from './controllers/tick/tick.controller';
+import { ConsumptionController } from './controllers/consumption/consumption.controller';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TickController } from './controllers/tick/tick.controller';
   controllers: [
       HouseEditorController,
       ManageSchedulObjectController,
+      ConsumptionController,
       TickController, 
       ],
   providers: [

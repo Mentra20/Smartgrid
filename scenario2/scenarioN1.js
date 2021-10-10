@@ -14,7 +14,7 @@ var globalDate = new Date();
 
 async function main(){
 
-    console.log("Scénario 1 : inscription, object paramétrable et adaptation de la production avec la consommation");
+    console.log("Scénario 1 : inscription, object paramétrable et adaptation de la production avec la consommation\n");
 
     await beforeStep();
 
@@ -28,27 +28,29 @@ async function main(){
     var client = {client_name:"Jean-Paul"};
     var mixeur = {object:{name:"Mixeur",maxConsumption:500,enabled:true}, type:"BASIC"}
 
-    console.log("Une nouvelle maison souhaite s'inscrire : ");
+    console.log("\nUne nouvelle maison souhaite s'inscrire : ");
 	response = await doRequest({url:"http://house:3000/house-editor/add-house", form:client, method:"POST"});
     console.log("[service]:house; [route]:house-editor/add-house; [params]:"+JSON.stringify(client)+" => [return]:"+response.body);
     var houseID = response.body;
     
     response = await doRequest({url:"http://house:3000/house-editor/house/"+houseID+"/add-object", form:mixeur, method:"POST"});
 
-    console.log("La maison est inscrite :");
+    console.log("\nLa maison est inscrite :");
     response = await doRequest({url:"http://client-database:3004/client-registry/allHouses", method:"GET"});
     console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body);
     console.log("Les maisons inscrites : "+response.body);
 
     // STEP 2
-    console.log("La maison reçoit un ID : "+houseID);
+    console.log("\nLa maison reçoit un ID : "+houseID);
 
     //STEP 3 
-    console.log("Le client peut voir sa consommation");
+    console.log("\nLe client peut voir sa consommation");
     response = await doRequest({url:"http://house:3000/consumption/global", qs:{houseID:houseID}, method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:houseID:"+houseID+" => [return]:"+response.body);
     console.log("La consommation globale de la maison : "+response.body);
-    await waitTick(1);
+    
+    //await waitTick(1);
+
     /*
     //STEP 4 
     console.log("On regarde les producteurs actuellement inscrits : ");
@@ -180,7 +182,7 @@ async function beforeStep(){
 async function doTick(){
     globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+10));
     response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
-    response = await doRequest({url:"http://supplier:3000/tick", form:{date:globalDate}, method:"POST"});
+    response = await doRequest({url:"http://supplier:3005/tick", form:{date:globalDate}, method:"POST"});
 }
 
 async function waitTick(iterationNumber){

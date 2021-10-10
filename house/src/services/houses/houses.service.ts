@@ -76,7 +76,7 @@ export class HousesService {
     public pushAllHouseProduction(){
         for(let houseEntry of this.allHouse){
             if(houseEntry[1].getProducerId()){
-                this.pushConsumption(houseEntry[1])
+                this.pushProduction(houseEntry[1])
             }
         }
     }
