@@ -9,7 +9,11 @@ services:
       - POSTGRES_USER=SI5-SOA
       - POSTGRES_DB=SI5-SOA
     ports:
-      - 5432:5432
+      - 2345:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - si5-soa
 
   client-database:
     container_name: client-database
@@ -24,6 +28,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
 
   consumption-db:
     container_name: consumption-db
@@ -38,6 +44,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
 
   consumption-manager:
     container_name: consumption-manager
@@ -108,6 +116,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
 
   production-db:
     container_name: production-db
@@ -122,6 +132,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
 
   production-manager:
     container_name: production-manager
@@ -169,3 +181,7 @@ services:
 networks:
   si5-soa:
     name: "si5-soa"
+
+
+volumes:
+  db:
