@@ -14,7 +14,8 @@ export class ProductionController {
     @Get('change-production')
     changeProductionAndReturnIt(@Query('consumption') consumption:number): number {
         console.log("[change-production][changeProductionAndReturnIt] consumption:number "+consumption+" => number")
-        return this.productionService.setProduction(consumption);
+        this.productionServiceStorage.setProduction(consumption);
+        return consumption;
     }
     @Post('add-supplier')
     addProducter(@Param('producerName') producerName:string,@Param('production') production:number): number {
