@@ -5,10 +5,13 @@ import { AbstractHouseObject, BasicHouseObject, ScheduledHouseObject } from 'src
 export class HouseObjectPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata):AbstractHouseObject {
     if(value.type=="BASIC"){
-      return Object.assign(BasicHouseObject,value.object())
+      var object = new BasicHouseObject(value.object.name,value.object.maxConsumption);
+      object.setEnabled(value.object.enabled);
+      return object
     }
     else if(value.type == "SCHEDULED"){
-      return Object.assign(ScheduledHouseObject,value.object())
+      var scheduledHouseObject = new ScheduledHouseObject(value.name,value.maxConsumption);
+      return scheduledHouseObject;
     }
     
     throw new BadRequestException('Validation failed');

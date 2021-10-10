@@ -22,7 +22,7 @@ export class ClientRegistryService {
         return await this.clientRepository.find({id_community: communityID});
     }
 
-    async subscribeClient(clientName:string, communityID:number):Promise<number>{
+    async subscribeClient(clientName:string, communityID:number):Promise<string>{
         return await this.generateClientSubscription(clientName, communityID);
     }
 
@@ -36,7 +36,7 @@ export class ClientRegistryService {
         return;
     }
 
-    private async generateClientSubscription(clientName:string, communityID:number): Promise<number> {
+    private async generateClientSubscription(clientName:string, communityID:number): Promise<string> {
         let client = new Client();
         client.clientName = clientName;
         client.id_community = communityID;
