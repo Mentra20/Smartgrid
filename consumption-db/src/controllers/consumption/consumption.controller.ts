@@ -51,4 +51,21 @@ export class ConsumptionController {
 
         return houseConsumption.consumption;
     }
+
+    @Get('get-community-consumption')
+    async getCommunityConsumption(@Query('date') date:Date, @Query('housesID') housesID:any[]) {
+        console.log("[get-community-consumption][getCommunityConsumption] Get date : "+date.toDateString+" and houses ID "+housesID);
+        var communitySum = 0;
+        
+        for (var houseID of housesID){
+            var houseConsumption:HouseConsumption = await this.consumptionService.getHouseConsumptionByDate(date,houseID);
+            communitySum +=houseConsumption.consumption;
+        }
+
+        var houseConsumption:HouseConsumption = await this.consumptionService.getHouseConsumptionByDate(date,houseID);
+
+        console.log("community consumption at date "+date+" is "+communitySum);
+
+        return communitySum;
+    }
 }
