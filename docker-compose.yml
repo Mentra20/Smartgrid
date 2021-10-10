@@ -1,73 +1,39 @@
 version: '3.8'
 
 services:
-  consumption-scheduler:
-    container_name: consumption-scheduler
-    image: consumption-scheduler:1.0.0
+
+  database:
+    image: postgres:13.4
+    environment:
+      - POSTGRES_PASSWORD=SI5-SOA
+      - POSTGRES_USER=SI5-SOA
+      - POSTGRES_DB=SI5-SOA
+    ports:
+      - 5432:5432
+
+  client-database:
+    container_name: client-database
+    image: client-database:1.0.0
     build:
-      context: ./consumption-scheduler
+      context: ./client-database
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3002:3002
+      - 3004:3004
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
 
-  registry-manager:
-    container_name: registry-manager
-    image: registry-manager:1.0.0
+  consumption-db:
+    container_name: consumption-db
+    image: consumption-db:1.0.0
     build:
-      context: ./registry-manager
+      context: ./consumption-db
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3003:3003
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
-    depends_on:
-      - "dataservice"
-
-  supplier:
-    container_name: supplier
-    image: supplier:1.0.0
-    build:
-      context: ./supplier
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3005:3005
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
-
-  dataservice:
-    container_name: dataservice
-    image: dataservice:1.0.0
-    build:
-      context: ./dataservice
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3006:3006
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app   
-
-  consumption-verifier:
-    container_name: consumption-verifier
-    image: consumption-verifier:1.0.0
-    build:
-      context: ./consumption-verifier
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3007:3007
+      - 3009:3009
     networks:
       - si5-soa
     volumes:
@@ -87,20 +53,118 @@ services:
     volumes:
       - /usr/src/app
 
-  consumption-db:
-    container_name: consumption-db
-    image: consumption-db:1.0.0
+  consumption-scheduler:
+    container_name: consumption-scheduler
+    image: consumption-scheduler:1.0.0
     build:
-      context: ./consumption-db
+      context: ./consumption-scheduler
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3009:3009
+      - 3002:3002
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
-      
+
+  consumption-verifier:
+    container_name: consumption-verifier
+    image: consumption-verifier:1.0.0
+    build:
+      context: ./consumption-verifier
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3007:3007
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  house:
+    container_name: house
+    image: house:1.0.0
+    build:
+      context: ./house
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3000:3000
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  producer-database:
+    container_name: producer-database
+    image: producer-database:1.0.0
+    build:
+      context: ./producer-database
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3010:3010
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  production-db:
+    container_name: production-db
+    image: production-db:1.0.0
+    build:
+      context: ./production-db
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3001:3001
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  production-manager:
+    container_name: production-manager
+    image: production-manager:1.0.0
+    build:
+      context: ./production-manager
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3006:3006
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  registry-manager:
+    container_name: registry-manager
+    image: registry-manager:1.0.0
+    build:
+      context: ./registry-manager
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3003:3003
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+
+  supplier:
+    container_name: supplier
+    image: supplier:1.0.0
+    build:
+      context: ./supplier
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3005:3005
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
 
 networks:
   si5-soa:

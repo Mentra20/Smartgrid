@@ -13,7 +13,7 @@ import { DetailedConsumptionController } from './controllers/detailed-consumptio
     TypeOrmModule.forFeature([DetailedConsumption]),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'database',
       port: 5432,
       username: 'SI5-SOA',
       password: 'SI5-SOA',

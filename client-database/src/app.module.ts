@@ -10,7 +10,7 @@ import { ClientRegistryService } from './services/client-registry/client-registr
   imports: [TypeOrmModule.forFeature([Client]),
   TypeOrmModule.forRoot({
     type: 'postgres',
-    host: 'localhost',
+    host: 'database',
     port: 5432,
     username: 'SI5-SOA',
     password: 'SI5-SOA',

@@ -11,7 +11,7 @@ import { HouseConsumption } from './models/house-consumption';
     TypeOrmModule.forFeature([HouseConsumption]),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'database',
       port: 5432,
       username: 'SI5-SOA',
       password: 'SI5-SOA',
