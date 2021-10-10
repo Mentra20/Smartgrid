@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 // import { ObjectEditorController } from './controllers/object-editor/object-editor.controller';
 import { HousesService } from './services/houses/houses.service';
 import { HouseEditorController } from './controllers/house-editor/house-editor.controller';
+import { ManageSchedulObjectController } from './controllers/manage-schedul-object/manage-schedul-object.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { HouseEditorController } from './controllers/house-editor/house-editor.c
       ],
   controllers: [
       AppController,
-      HouseEditorController, 
+      HouseEditorController,
+      ManageSchedulObjectController, 
     //   ConsumptionController,
     //   ObjectEditorController,
       ],

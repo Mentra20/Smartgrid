@@ -4,6 +4,7 @@ import { AbstractHouseObject } from "./house-object";
 export class House {
 
     private allHouseObject:Map<string,AbstractHouseObject> = new Map();
+    private producerId:string;
 
     constructor(private clientName:string,private houseId:string){
         this.allHouseObject = new Map();
@@ -14,6 +15,13 @@ export class House {
     }
     public getClientName():string{
         return this.clientName;
+    }
+
+    public getProducerId():string{
+        return this.producerId;
+    }
+    public setProducerId(producerId:string){
+        this.producerId = producerId;
     }
 
     public getObject(name:string):AbstractHouseObject{

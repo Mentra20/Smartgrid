@@ -29,4 +29,8 @@ export class TimeSlotsList {
     }
     return false;
   }
+
+  removeTimeSlot(date: Date) {
+    this.timeSlots = this.timeSlots.filter((slot)=>slot.getStart() >= date || date >= slot.getEnd())
+  }
 }

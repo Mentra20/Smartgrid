@@ -79,6 +79,10 @@ export class ScheduledHouseObject extends AbstractHouseObject {
         return this.timeSlot;
     }
 
+    public removeCurrentTimeSlot(date:Date){
+        this.timeSlot.removeTimeSlot(date);
+    }
+
 }
 // export class HouseObject {
     

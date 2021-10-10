@@ -8,8 +8,12 @@ import { ScheduledHouseObject } from 'src/models/house-object';
 @Injectable()
 export class HousesService {
     private URL_PUSH_CONSUMPTION = "http://consumption-manager:3008/add-detailed-consumption"
-    private URL_TIME_SLOT = "http://scheduler:3008/schedule"
-    private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3008/subscription"
+    private URL_PUSH_PRODUCTION = "http://production-manager:3006/add-production"
+
+    private URL_TIME_SLOT = "http://scheduler:3002/schedule"
+    private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/client"
+    private URL_REGISTER_NEW_PRODUCER = "http://registry-manager:3003/subscription/producer"
+
     private allHouse:Map<string,House> = new Map();
     private currentDate : Date;
 
@@ -19,6 +23,7 @@ export class HousesService {
     doTick(date:Date){
         this.currentDate = date;
         this.pushAllHouseConsumption();
+        this.pushAllHouseProduction();
     }
 
     getTotalConsumption(houseID:string){
@@ -52,18 +57,37 @@ export class HousesService {
         }
     }
 
+    async pushProduction(house:House){
+        var jsonHouseDetailed = [];
+        for(let object of house.getAllObject()){
+            var consumption = object.getCurrentConsumption(this.currentDate)
+            if(consumption<0){
+                jsonHouseDetailed.push({idHouse:house.getHouseId(),dateConsumption:this.currentDate,objectName:object.getName(),consumption:-object.getCurrentConsumption(this.currentDate)})
+            }
+        }
+        this.http.post(this.URL_PUSH_PRODUCTION,{param:jsonHouseDetailed}).subscribe({
+            next : (response)=> console.log(response),
+            error : (error)=> console.error(error),
+        }
+        );
+    }
+
+    public pushAllHouseProduction(){
+        for(let houseEntry of this.allHouse){
+            if(houseEntry[1].getProducerId()){
+                this.pushConsumption(houseEntry[1])
+            }
+        }
+    }
+
+    public async registryNewProducter(clientName:string):Promise<string>{
+        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { producer_id: clientName }))).data
+    }
 
     public async registryNewClient(clientName:string):Promise<string>{
         return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, { client_name: clientName }))).data
     }
 
-    public async addNewHouse(clientName:string):Promise<string>{
-        var clientId= await this.registryNewClient(clientName);
-        var newHouse = new House(clientName,clientId);
-        this.allHouse.set(clientId,newHouse)
-        return clientId;
-
-    }
 
     public async requestTimeSLot(object: ScheduledHouseObject):Promise<any>{
         var timeSlot:{start:string,end:string} = await firstValueFrom(this.http.get(this.URL_TIME_SLOT,{params:{time:object.getTimeChargeNeed(),consumption:object.getMaxConsumption()}})).then((response)=>response.data)
@@ -73,7 +97,13 @@ export class HousesService {
 
     public getHouse(clientId:string):House{
         return this.allHouse.get(clientId);
+    }
+    public addHouse(house:House){
+        return this.allHouse.set(house.getHouseId(),house);
+    }
 
+    public getCurrentDate():Date{
+        return this.currentDate;
     }
 }
 

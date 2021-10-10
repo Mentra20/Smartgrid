@@ -3,6 +3,7 @@ import { AbstractHouseObject, BasicHouseObject, ScheduledHouseObject } from 'src
 import { HousesService } from 'src/services/houses/houses.service';
 import { Response } from 'express'
 import { HouseObjectPipe } from 'src/pipes/house-object.pipe';
+import { House } from 'src/models/house';
 @Controller('house-editor')
 export class HouseEditorController {
 
@@ -11,9 +12,25 @@ export class HouseEditorController {
     }
 
     @Post("add-house")
-    public addHouse(@Body() house:string){
-        return this.housesService.addNewHouse(house);
+    public async addHouse(@Body('client_name') clientName:string){
+        var clientId= await this.housesService.registryNewClient(clientName);
+        var newHouse = new House(clientName,clientId);
+        this.housesService.addHouse(newHouse)
+        return clientId;
     }
+
+    @Post(":id_house/become-producer")
+    public async becomeProducer(@Param("id_house") houseId:string,@Res() res: Response){
+        var house= this.housesService.getHouse(houseId);
+        if(house.getProducerId()){
+            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
+            return;
+        }
+        var producerId = await this.housesService.registryNewProducter(house.getClientName());
+        house.setProducerId(producerId);
+        return producerId;
+    }
+
 
     @Post(":id_house/add-object")
     public addObject(@Param("id_house") houseId:string, @Body("object",new HouseObjectPipe()) object:AbstractHouseObject,@Res() res: Response){
@@ -42,23 +59,6 @@ export class HouseEditorController {
         }
     }
 
-    @Post(":id_house/scheduled-object/:object_name/requestTimeSlot")
-    public needSchedulObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Res() res: Response){
-        var currentHouse = this.housesService.getHouse(houseId);
-        var currentObject = currentHouse?.getObject(objectName)
-        if(!currentHouse ||!currentObject){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
-            return;
-        }
-        if(currentObject instanceof ScheduledHouseObject){
-            return this.housesService.requestTimeSLot(currentObject);
-        }
-        else{
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
-            return ;
-        }
-
-    }
 
     @Post(":id_house/:object_name/consumption")
     public changeConsumption(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("consumption") consumption:number,@Res() res: Response){
