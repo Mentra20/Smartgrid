@@ -25,7 +25,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 5 - Le producteur reçoit un id  
 6 - On vérifie que la consommation est égale à la production  
 7 - Un object paramètrable est branché  
-8 - Il reçoit un planning de consommation  
+8 - On demande un planning de consommation  
 9 - On peut voir que l’objet consomme à l‘heure donnée depuis smartGrid
 10 - On peut voir que la production n’est plus égale à la consommation, on demande aux producteurs de s’adapter 
 11 - On vérifie que la production s’est bien adaptée  

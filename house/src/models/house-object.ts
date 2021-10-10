@@ -44,7 +44,7 @@ export class BasicHouseObject extends AbstractHouseObject{
 
 export class ScheduledHouseObject extends AbstractHouseObject {
     
-    private timeChargeNeed:number;
+    private timeChargeNeed:number = 5;//5h par défaut
     private timeSlot:TimeSlotsList = new TimeSlotsList;
 
     constructor(name: string,private maxConsumption:number){
