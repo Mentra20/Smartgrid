@@ -156,10 +156,8 @@ async function main() {
     await checkCarCons(houseID9);
 
     // STEP 5
-
-    var peakReq = {date:globalDate,ID:communityID};
     console.log("On vérifie si il y a un pic dans la communauté "+communityID+ " à la date du "+globalDate);
-    reponse = await doRequest({url:"http://consumption-verifier:3007/consumption-peak", qs:peakReq, method:"GET"});
+    response = await doRequest({url:"http://consumption-verifier:3007/consumption-peak", qs:peakReq, method:"GET"});
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: "+JSON.stringify(peakReq)+" => [return]:"+response.body);
     console.log("Pic : "+response.body);
     console.log("\n");console.log("\n");
@@ -186,7 +184,7 @@ async function checkObject(id){
 
 async function askSchedule(houseID,objectName){
     console.log("On demande un planning de consommation :");
-    response = await doRequest({url:"http://house:3000/manage-schedul-object/"+houseID+"/scheduled-object/"+objectName+"/requestTimeSlot", method:"POST"});
+    var response = await doRequest({url:"http://house:3000/manage-schedul-object/"+houseID+"/scheduled-object/"+objectName+"/requestTimeSlot", method:"POST"});
     console.log("[service]:house; [route]:manage-schedul-object/"+houseID+"/scheduled-object/"+objectName+"/requestTimeSlot"+"; [params]:_ => [return]: "+response.body);
     console.log("On reçoit le planning suivant :"+response.body);
     console.log("\n");
@@ -207,8 +205,8 @@ async function addObject(id, object) {
 
 async function doTick(){
     globalDate = globalDate.setMinutes(globalDate.getMinutes()+10);
-    response = await doRequest({url:"http://house:3000/tick/", form:{date:globalDate}, method:"POST"});
-    response = await doRequest({url:"http://supplier:3000/tick/", form:{date:globalDate}, method:"POST"});
+    await doRequest({url:"http://house:3000/tick/", form:{date:globalDate}, method:"POST"});
+    await doRequest({url:"http://supplier:3000/tick/", form:{date:globalDate}, method:"POST"});
 }
 
 async function waitTick(iterationNumber){
