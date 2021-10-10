@@ -43,7 +43,7 @@ export class DetailedConsumptionController {
     @Get('get-detailed-consumption')
     async getDetailedConsumption(@Query('date') dateString:string, @Query('houseID') houseID:string, @Query('objectName') objectName:string) {
         var date = new Date(dateString);
-        var detailedConsumption:DetailedConsumption = await this.detailedConsumptionService.getDetailedConsumptionByDate(houseID,date,objectName);
+        var detailedConsumption:DetailedConsumption = (await this.detailedConsumptionService.getDetailedConsumptionByDate(houseID,date,objectName));
         console.log("[get-detailed-consumption][getDetailedConsumption] Get date : "+date+" and house ID "+houseID+" and objectName "+objectName);
 
         console.log("house consumption of "+objectName+" for houseID "+ houseID +" at date "+date+" is "+detailedConsumption.consumption);

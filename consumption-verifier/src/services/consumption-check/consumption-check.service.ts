@@ -9,8 +9,8 @@ export class ConsumptionCheckService {
     private URL_supplier_change: string;
 
     constructor(private http:HttpService) {
-        this.URL_consumption_manager = "http://consumption-manager:3008/get-total-consumption";
-        this.URL_supplier_get = "http://production-manager:3006/getproduction";
+        this.URL_consumption_manager = "http://consumption-db:3009/get-total-consumption";
+        this.URL_supplier_get = "http://production-db:3001/getproduction";
         this.URL_supplier_change = "http://supplier:3005/change-production";
     }
 

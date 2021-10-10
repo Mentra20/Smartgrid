@@ -29,7 +29,12 @@ export class DetailedConsumptionService {
         )
     }
 
-    public getDetailedConsumptionByDate(houseID:string, consumptionDate:Date, objectName:string){
-        return this.detailedConsumptionRepository.findOne({where:{houseID:houseID, consumptionDate: Between(new Date(consumptionDate.getTime()-1000),new Date(consumptionDate.getTime()+1000)), objectName:objectName}});
+    public async getDetailedConsumptionByDate(houseID:string, consumptionDate:Date, objectName:string){
+        return await this.detailedConsumptionRepository.findOne({where:
+            {
+                houseID:houseID, 
+                consumptionDate: Between(new Date(consumptionDate.getTime()-1000),new Date(consumptionDate.getTime()+1000)), 
+                objectName:objectName
+            }});
     }
 }

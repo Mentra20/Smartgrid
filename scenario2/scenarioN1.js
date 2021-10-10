@@ -101,7 +101,7 @@ async function main(){
     console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
 
-    response = await doRequest({url:"http://consumption-verify:3007/consumption-check", qs:dateReq, method:"GET"});
+    response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
     console.log("[service]:registry-manager; [route]:consumption-check; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("La consommation est-elle égale à la production ? : "+response.body);
 
@@ -131,7 +131,7 @@ async function main(){
 
     //STEP 9 
     console.log("\n\n================= STEP 9 =================")
-    await waitTick(36);//6h (temps mini de début de conso)
+    await waitTick(2);//20m (temps mini de début de conso)
     await sleep(2000);
 
     var detailedObject = {
@@ -167,7 +167,9 @@ async function main(){
     //STEP 11 
     console.log("\n\n================= STEP 11 =================")
 
-    doTick();
+    await doTick();
+    await sleep(5000);
+
     dateReq = {date:globalDate};
 
     console.log("\nOn vérifie que la production s’est bien adaptée :");

@@ -14,7 +14,7 @@ export class ScheduleController {
   getSchedule(
     @Query('ID') houseID: number,
     @Query('consumptionTime') consumptionTime,
-  ): Date[] {
+  ) {
     console.log(
       '[schedule][getSchedule] houseID:number ' + houseID + ' => string[]',
     );
