@@ -8,10 +8,12 @@ export class SubscriptionController {
     constructor(private SubscriptionService: SubscriptionService){}
 
     @Post("clientSubscribe")
-    clientSubscribe(@Body("clientName") clientName:string){
-        console.log("[subscription/ip][clientSubscribe] clientName:string "+ clientName + " => void");
+    async clientSubscribe(@Body("clientName") clientName:string):Promise<string>{
+        console.log("[subscription][clientSubscribe] clientName:string "+ clientName + " => void");
         console.log("New client registration.\n");
-        return this.SubscriptionService.subscribeClient(clientName);
+        var response = await this.SubscriptionService.subscribeClient(clientName)
+        console.log("[subscription][clientSubscribe] return :"+ response)
+        return response;
     }
 
     @Post("updateClientConnection")

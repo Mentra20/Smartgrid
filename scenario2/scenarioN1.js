@@ -4,6 +4,7 @@ var request = require('request');
 function doRequest(req) {
     return new Promise(function (resolve, reject) {
         request(req, function (error, res, body) {
+            console.log(body)
             resolve({error, res, body});
         });
     });
@@ -22,7 +23,7 @@ async function main(){
     response = await doRequest({url:"http://client-database:3004/client-registry/allHouses", method:"GET"});
     console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body);
     console.log("Les maisons inscrites : "+response.body);
-
+    
     // STEP 1
     var client = {client_name:"Jean-Paul"};
     var mixeur = {object:{name:"Mixeur",maxConsumption:500,enabled:true}, type:"BASIC"}
@@ -47,7 +48,8 @@ async function main(){
     response = await doRequest({url:"http://house:3000/consumption/global", qs:{houseID:houseID}, method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:houseID:"+houseID+" => [return]:"+response.body);
     console.log("La consommation globale de la maison : "+response.body);
-
+    await waitTick(1);
+    /*
     //STEP 4 
     console.log("On regarde les producteurs actuellement inscrits : ");
     response = await doRequest({url:"http://producer-database:3010/producer-registry/allProducers", method:"GET"});
@@ -73,7 +75,7 @@ async function main(){
     console.log("Le producteur reçoit un ID : "+producerID);
 
     //STEP 6
-    waitTick(6);
+    await waitTick(6);
     var dateReq = {date:globalDate};
 
     console.log("On vérifie que la consommation est égale à la production à la date du "+globalDate);
@@ -92,7 +94,7 @@ async function main(){
 
     //STEP 7 
     var objectName = "voiture";
-    var voiture = {object:{name:objectName,maxConsumption:2000,enabled:true}, type:"SCHEDULED"}
+    var voiture = {object:{name:objectName,maxConsumption:2000}, type:"SCHEDULED"}
 
     console.log("Un object paramètrable est branché");
     response = await doRequest({url:"http://house:3000/house-editor/house/"+houseID+"/add-object", form:voiture, method:"POST"});
@@ -148,10 +150,12 @@ async function main(){
     response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
     console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
+    */
 }
 
 async function beforeStep(){
     //------ BEFORE STEPS ------
+    /*
     var response;
     var mixeur = {object:{name:"Mixeur",maxConsumption:500,enabled:true}, type:"BASIC"}
     //On inscrit des maisons et ajout des objets
@@ -170,12 +174,13 @@ async function beforeStep(){
     //On inscrit un producteur et on fixe sa production
     var producer = {producer_name:"EDF", production:1000};
     response = await doRequest({url:"http://supplier:3005/supplier-editor/add-supplier", form:producer, method:"POST"});
+    */
 }
 
 async function doTick(){
-    globalDate = globalDate.setMinutes(globalDate.getMinutes()+10);
-    response = await doRequest({url:"http://house:3000/tick/", form:{date:globalDate}, method:"POST"});
-    response = await doRequest({url:"http://supplier:3000/tick/", form:{date:globalDate}, method:"POST"});
+    globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+10));
+    response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
+    response = await doRequest({url:"http://supplier:3000/tick", form:{date:globalDate}, method:"POST"});
 }
 
 async function waitTick(iterationNumber){

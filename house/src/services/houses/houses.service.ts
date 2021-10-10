@@ -11,8 +11,8 @@ export class HousesService {
     private URL_PUSH_PRODUCTION = "http://production-manager:3006/add-production"
 
     private URL_TIME_SLOT = "http://scheduler:3002/schedule"
-    private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/client"
-    private URL_REGISTER_NEW_PRODUCER = "http://registry-manager:3003/subscription/producer"
+    private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/clientSubscribe"
+    private URL_REGISTER_NEW_PRODUCER = "http://registry-manager:3003/subscription/producerSubscribe"
 
     private allHouse:Map<string,House> = new Map();
     private currentDate : Date;
@@ -41,9 +41,10 @@ export class HousesService {
         for(let object of house.getAllObject()){
             var consumption = object.getCurrentConsumption(this.currentDate)
             if(consumption>0){
-                jsonHouseDetailed.push({idHouse:house.getHouseId(),dateConsumption:this.currentDate,objectName:object.getName(),consumption:object.getCurrentConsumption(this.currentDate)})
+                jsonHouseDetailed.push({houseID:house.getHouseId(),consumptionDate:this.currentDate,objectName:object.getName(),consumption:consumption})
             }
         }
+        console.log(`PUSH to ${this.URL_PUSH_CONSUMPTION}: ${JSON.stringify({param:jsonHouseDetailed})}`)
         this.http.post(this.URL_PUSH_CONSUMPTION,{param:jsonHouseDetailed}).subscribe({
             next : (response)=> console.log(response),
             error : (error)=> console.error(error),
@@ -62,7 +63,7 @@ export class HousesService {
         for(let object of house.getAllObject()){
             var consumption = object.getCurrentConsumption(this.currentDate)
             if(consumption<0){
-                jsonHouseDetailed.push({idHouse:house.getHouseId(),dateConsumption:this.currentDate,objectName:object.getName(),consumption:-object.getCurrentConsumption(this.currentDate)})
+                jsonHouseDetailed.push({houseID:house.getHouseId(),consumptionDate:this.currentDate,objectName:object.getName(),consumption:-consumption})
             }
         }
         this.http.post(this.URL_PUSH_PRODUCTION,{param:jsonHouseDetailed}).subscribe({
@@ -81,11 +82,13 @@ export class HousesService {
     }
 
     public async registryNewProducter(clientName:string):Promise<string>{
-        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { producer_id: clientName }))).data
+        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { producerName: clientName }))).data
     }
 
     public async registryNewClient(clientName:string):Promise<string>{
-        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, { client_name: clientName }))).data
+        var response = (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, { clientName: clientName })));
+        console.log(response.data);
+        return response.data
     }
 
 

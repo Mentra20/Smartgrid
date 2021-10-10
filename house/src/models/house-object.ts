@@ -1,9 +1,12 @@
 import { TimeSlots, TimeSlotsList } from "./time-slots";
 
 export abstract class AbstractHouseObject {
+    private name:string
     constructor(
-        private name:string
-        ){}
+        name:string
+        ){
+            this.name =name;
+        }
 
     public abstract getCurrentConsumption(date:Date);
 
@@ -16,20 +19,22 @@ export abstract class AbstractHouseObject {
 
 }
 export class BasicHouseObject extends AbstractHouseObject{
-    private enbled = true;
+    private enabled = true;
+    private maxConsumption:number;
 
-    constructor(name: string,private maxConsumption:number){
+    constructor(name: string,maxConsumption:number){
         super(name)
+        this.maxConsumption = maxConsumption
     }
 
 
     public setEnabled(isEnabled: boolean) {
-        this.enbled=isEnabled
+        this.enabled=isEnabled
     }
 
 
     public getCurrentConsumption(date: Date) {
-        return this.enbled? this.maxConsumption:0;
+        return this.enabled? this.maxConsumption:0;
     }
 
 
@@ -46,9 +51,11 @@ export class ScheduledHouseObject extends AbstractHouseObject {
     
     private timeChargeNeed:number = 5;//5h par défaut
     private timeSlot:TimeSlotsList = new TimeSlotsList;
+    protected maxConsumption:number
 
-    constructor(name: string,private maxConsumption:number){
+    constructor(name: string, maxConsumption:number){
         super(name)
+        this.maxConsumption = maxConsumption;
     }
 
 

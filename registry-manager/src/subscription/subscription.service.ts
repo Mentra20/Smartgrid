@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, Injectable } from '@nestjs/common';
-import { catchError } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class SubscriptionService {
@@ -14,9 +14,9 @@ export class SubscriptionService {
     ID_Community = 1;
     nbHouseInCommunity = 0;
 
-    async subscribeClient(clientName:string) {
+    async subscribeClient(clientName:string):Promise<string>{
         console.log("Client registred info : " + clientName);
-        return await this.generateClientSubscription(clientName);
+        return this.generateClientSubscription(clientName);
     }
 
     async updateSubscription(idHouse:number, newClientName:string){
@@ -55,17 +55,10 @@ export class SubscriptionService {
         return id_producer;
     }
 
-    private async generateClientSubscription(clientName:string):Promise<number>{
+    private async generateClientSubscription(clientName:string):Promise<string>{
         var community_ID = this.giveCommunityID();
-        var message = {clientName, community_ID};
-        var client_id;
-        
-        this.http.post(this.URL_SubscribeClientDB, message).subscribe(
-            {
-                next: (value) => {console.log("Data stored\n"); client_id = value}, 
-                error: (error) => console.log(error)
-            }
-        )
+        var message = {clientName, communityID:community_ID};
+        var client_id = (await firstValueFrom(this.http.post(this.URL_SubscribeClientDB, message))).data;
         return client_id;
     }
 

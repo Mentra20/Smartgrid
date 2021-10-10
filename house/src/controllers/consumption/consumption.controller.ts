@@ -7,7 +7,7 @@ export class ConsumptionController {
     constructor(private readonly housesService: HousesService) {}
 
     @Get("global")
-    getConsumption(@Query("houseId") houseId:string): number {
+    getConsumption(@Query("houseID") houseId:string): number {
         var consumption = this.housesService.getTotalConsumption(houseId);
         console.log("[consumption/global][getConsumption] houseId:string " +houseId + " => number ");
         console.log("controller consumption global: "+consumption)

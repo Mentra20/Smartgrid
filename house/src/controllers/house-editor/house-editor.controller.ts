@@ -13,14 +13,18 @@ export class HouseEditorController {
 
     @Post("add-house")
     public async addHouse(@Body('client_name') clientName:string){
+        console.log("[HouseEditorController][addHouse] Param : clientname="+clientName)
         var clientId= await this.housesService.registryNewClient(clientName);
         var newHouse = new House(clientName,clientId);
         this.housesService.addHouse(newHouse)
+        console.log("[HouseEditorController][addHouse] return : clientid="+clientId)
         return clientId;
     }
 
     @Post("house/:id_house/become-producer")
     public async becomeProducer(@Param("id_house") houseId:string,@Res() res: Response){
+        console.log("[HouseEditorController][becomeProducer] Param : houseId="+houseId)
+
         var house= this.housesService.getHouse(houseId);
         if(house.getProducerId()){
             res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
@@ -28,18 +32,24 @@ export class HouseEditorController {
         }
         var producerId = await this.housesService.registryNewProducter(house.getClientName());
         house.setProducerId(producerId);
-        return producerId;
+        console.log("[HouseEditorController][becomeProducer] return : houseId="+producerId)
+        res.status(HttpStatus.OK).send(producerId);
+        return ;
     }
 
 
     @Post("house/:id_house/add-object")
-    public addObject(@Param("id_house") houseId:string, @Body("object",new HouseObjectPipe()) object:AbstractHouseObject,@Res() res: Response){
+    public addObject(@Param("id_house") houseId:string, @Body("",new HouseObjectPipe()) object:AbstractHouseObject,@Res() res: Response){
+        console.log(`[HouseEditorController][addObject] Param : ${JSON.stringify({houseId,object})}`)
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){
             res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
-        currentHouse.addHouseObject(Object.assign(BasicHouseObject,object))
+        currentHouse.addHouseObject(object)
+        console.log("[HouseEditorController][addObject] return void")
+        res.status(HttpStatus.OK).send();
+        return
     }
 
     @Post("house/:id_house/basic-object/:object/enabled")
@@ -56,6 +66,7 @@ export class HouseEditorController {
         }
         else{
             currentObject.setEnabled(enabled);
+            res.status(HttpStatus.OK).send();
         }
     }
 
@@ -69,6 +80,7 @@ export class HouseEditorController {
             return;
         }
         currentObject.changeMaxConsumption(consumption);
+        res.status(HttpStatus.OK).send();
     }
 
     @Get("house/:id_house/get_all_object")
