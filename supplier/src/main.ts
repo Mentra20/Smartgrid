@@ -7,7 +7,7 @@ async function bootstrap() {
   
   const config = new DocumentBuilder()
     .setTitle('Supplier')
-    .setDescription('The House-object API description')
+    .setDescription('The Supplier API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();

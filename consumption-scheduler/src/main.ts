@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   const config = new DocumentBuilder()
-    .setTitle('Scheduler')
-    .setDescription('The House-object API description')
+    .setTitle('consumption-scheduler')
+    .setDescription('The consumption-scheduler API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();

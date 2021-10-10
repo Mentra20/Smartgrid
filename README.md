@@ -148,9 +148,13 @@ Après ce changement, on vérifie de nouveau s’il y a un pic et on remarque qu
 
 ## Port
 - 127.0.0.1 house=3000  
+- 127.0.0.1 production-db=3001
 - 127.0.0.1 consumption-scheduler=3002  
 - 127.0.0.1 registry-manager=3003   
+- 127.0.0.1 client-database=3004  
 - 127.0.0.1 supplier=3005  
-- 127.0.0.1 dataservice=3006  
+- 127.0.0.1 production-manager=3006 
 - 127.0.0.1 consumption-verifier=3007  
 - 127.0.0.1 consumption-manager=3008  
+- 127.0.0.1 consumption-db=3009 
+- 127.0.0.1 producer-database=3010  

@@ -3,14 +3,14 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 
-export const DEFAULT_PORT:string="3020";
+export const DEFAULT_PORT:string="3001";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   const config = new DocumentBuilder()
-    .setTitle('House')
-    .setDescription('The House-object API description')
+    .setTitle('productionDB')
+    .setDescription('The productionDB API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();

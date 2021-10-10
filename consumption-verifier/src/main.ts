@@ -7,7 +7,7 @@ async function bootstrap() {
   
   const config = new DocumentBuilder()
     .setTitle('Consumption-verifier')
-    .setDescription('The House-object API description')
+    .setDescription('The Consumption-verifier API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();
