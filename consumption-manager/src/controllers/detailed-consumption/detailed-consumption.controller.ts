@@ -3,7 +3,7 @@ import { DetailedConsumption } from 'src/models/detailed-consumption';
 import { DetailedConsumptionService } from 'src/services/detailed-consumption/detailed-consumption.service';
 
 
-@Controller('/')
+@Controller('')
 export class DetailedConsumptionController {
 
     constructor(private detailedConsumptionService: DetailedConsumptionService){}
@@ -37,5 +37,17 @@ export class DetailedConsumptionController {
         console.log("new detailed consumptions added")
 
         this.detailedConsumptionService.pushClientConsumption(houseID,consumptionDate,clientConsumptionSum);
+    }
+
+
+    @Get('get-detailed-consumption')
+    async getDetailedConsumption(@Query('date') date:Date, @Query('houseID') houseID:string, @Query('objectName') objectName:string) {
+
+        var detailedConsumption:DetailedConsumption = await this.detailedConsumptionService.getDetailedConsumptionByDate(houseID,date,objectName);
+        console.log("[get-detailed-consumption][getDetailedConsumption] Get date : "+date.toDateString+" and house ID "+houseID+" and objectName "+objectName);
+
+        console.log("house consumption of "+objectName+" for houseID "+ houseID +" at date "+date+" is "+detailedConsumption.consumption);
+
+        return detailedConsumption.consumption;
     }
 }
