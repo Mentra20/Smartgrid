@@ -214,3 +214,9 @@ async function waitTick(iterationNumber){
         await doTick();
     }
 }
+
+async function beforeStep(){
+    var scheduleStart = {dayDate:globalDate}
+    doRequest({url: "http://consumption-scheduler:3002/schedule", form: scheduleStart, method: "POST"});
+}
+
