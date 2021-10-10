@@ -4,10 +4,10 @@ import { catchError } from 'rxjs';
 
 @Injectable()
 export class SubscriptionService {
-    private URL_SubscribeClientDB = "http://client-registry:3004/subscribe";
-    private URL_UpdateClientDB = "http://client-registry:3004/updateClientConnection";
-    private URL_SubscribeProducerDB = "http://producer-registry:3010/subscribe";
-    private URL_UpdateProducerDB = "http://producer-registry:3010/updateProducerName";
+    private URL_SubscribeClientDB = "http://client-database:3004/client-registry/subscribe";
+    private URL_UpdateClientDB = "http://client-database:3004/client-registry/updateClientConnection";
+    private URL_SubscribeProducerDB = "http://producer-database:3010/producer-registry/subscribe";
+    private URL_UpdateProducerDB = "http://producer-database:3010/producer-registry/updateProducerName";
 
     constructor(private http:HttpService){}
 

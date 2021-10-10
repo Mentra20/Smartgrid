@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { Producer } from 'src/models/Producer';
 import { ProducerRegistryService } from 'src/services/producer-registry/producer-registry.service';
 
@@ -13,7 +13,7 @@ export class ProducerRegistryController {
     }
 
     @Get("producer")
-    getHouse(@Body("producerID") producerID:number): Promise<Producer> {
+    getHouse(@Query("producerID") producerID:number): Promise<Producer> {
         return this.producerRegistryService.getProducer(producerID);
     }
     
