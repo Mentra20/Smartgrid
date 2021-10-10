@@ -28,4 +28,8 @@ export class DetailedConsumptionService {
             }
         )
     }
+
+    public getDetailedConsumptionByDate(houseID:string, consumptionDate:Date, objectName:string){
+        return this.detailedConsumptionRepository.findOne({where:{houseID:houseID, consumptionDate:consumptionDate, objectName:objectName}});
+    }
 }

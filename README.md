@@ -23,13 +23,12 @@ Les containers de nos services sont re-créés entre chaque scénario.
 3 - Le client peut voir sa consommation  
 4 - Un producteur s’inscrit à la smartgrid  
 5 - Le producteur reçoit un id  
-6 - On peut vérifier que la consommation est égale à la production  
-7 - Un object paramétrable est branché  
+6 - On vérifie que la consommation est égale à la production  
+7 - Un object paramètrable est branché  
 8 - Il reçoit un planning de consommation  
-9 - On peut voir que l’objet consomme à l‘heure donnée dans consumption-detailed  
-10 - On peut voir que la production n’est plus égale à la consommation  
-11 - On demande aux suppliers de s’adapter  
-12 - On vérifie que la consommation s’est adaptée  
+9 - On peut voir que l’objet consomme à l‘heure donnée depuis smartGrid
+10 - On peut voir que la production n’est plus égale à la consommation, on demande aux producteurs de s’adapter 
+11 - On vérifie que la production s’est bien adaptée  
 
 **Scénario 2 : Gestion de la consommation et pic de consommation dans une communauté**  
 
