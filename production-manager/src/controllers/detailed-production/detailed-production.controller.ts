@@ -16,7 +16,7 @@ export class DetailedProductionController {
     {
         //TODO: verifier si le client existe dans la DB
         console.log("[production-manager/add-detailed-production][addDetailedProduction] objectsProductions:any[] "+ objectsProductions +" => void")
-        console.log("new detailed productions")
+        console.log("new detailed production")
 
         var production = objectsProductions.production;
         var id_producer = objectsProductions.id_producer;
