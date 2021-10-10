@@ -29,12 +29,12 @@ export class ProductionController {
     }
 
     @Get('getproduction')
-    getProduction(@Query('date') date:Date) {
+    async getProduction(@Query('date') date:Date) {
         var productionSum=0;
-        var ProductionList = this.productionService.getProductionByDate(date);
+        var ProductionList = await this.productionService.getProductionByDate(date);
         console.log("[getproduction][getProduction] Get date : "+date.toDateString+" and return Production list : "+ProductionList);
         for (var elem of ProductionList){
-            productionSum+=elem;
+            productionSum+=elem.production;
         }
         return productionSum;
     }
