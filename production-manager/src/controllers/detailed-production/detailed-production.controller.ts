@@ -7,11 +7,11 @@ export class DetailedProductionController {
 
     constructor(private DetailledProductionServices: DetailedProductionService){}
 
-    @Post('add-detailed-production')
+    @Post('add-production')
     addDetailedProduction(
         @Body("param") objectsProductions:{
             id_producer:string, 
-            productionDate:Date, 
+            productionDate:string, 
             production:number})
     {
         //TODO: verifier si le client existe dans la DB
@@ -20,7 +20,7 @@ export class DetailedProductionController {
 
         var production = objectsProductions.production;
         var id_producer = objectsProductions.id_producer;
-        var productionDate = objectsProductions.productionDate;
+        var productionDate = new Date(objectsProductions.productionDate);
 
         this.DetailledProductionServices.pushProduction(id_producer,productionDate,production);
     }

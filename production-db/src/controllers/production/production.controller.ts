@@ -12,7 +12,7 @@ export class ProductionController {
     pushProduction(
         @Body("param") productionReceived:{
             id_producer:string, 
-            productionDate:Date, 
+            productionDate:string, 
             production:number})
     {
         console.log("[production-db/push-production][pushProduction] production:any "+ productionReceived +" => void")
@@ -20,7 +20,7 @@ export class ProductionController {
 
         var production = new Production();
         production.id_producer = productionReceived.id_producer;
-        production.productionDate = productionReceived.productionDate;
+        production.productionDate = new Date(productionReceived.productionDate);
         production.production = productionReceived.production;
 
         this.productionService.addProductionToDB(production);
@@ -29,10 +29,11 @@ export class ProductionController {
     }
 
     @Get('getproduction')
-    async getProduction(@Query('date') date:Date) {
+    async getProduction(@Query('date') dateString:string) {
+        var date = new Date(dateString)
         var productionSum=0;
         var ProductionList = await this.productionService.getProductionByDate(date);
-        console.log("[getproduction][getProduction] Get date : "+date.toDateString+" and return Production list : "+ProductionList);
+        console.log("[getproduction][getProduction] Get date : "+date.toDateString()+" and return Production list : "+ProductionList);
         for (var elem of ProductionList){
             productionSum+=elem.production;
         }

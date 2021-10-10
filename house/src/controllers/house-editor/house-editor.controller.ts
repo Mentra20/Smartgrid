@@ -22,65 +22,56 @@ export class HouseEditorController {
     }
 
     @Post("house/:id_house/become-producer")
-    public async becomeProducer(@Param("id_house") houseId:string,@Res() res: Response){
+    public async becomeProducer(@Param("id_house") houseId:string){
         console.log("[HouseEditorController][becomeProducer] Param : houseId="+houseId)
 
         var house= this.housesService.getHouse(houseId);
         if(house.getProducerId()){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
         var producerId = await this.housesService.registryNewProducter(house.getClientName());
         house.setProducerId(producerId);
         console.log("[HouseEditorController][becomeProducer] return : houseId="+producerId)
-        res.status(HttpStatus.OK).send(producerId);
         return ;
     }
 
 
     @Post("house/:id_house/add-object")
-    public addObject(@Param("id_house") houseId:string, @Body("",new HouseObjectPipe()) object:AbstractHouseObject,@Res() res: Response){
+    public addObject(@Param("id_house") houseId:string, @Body("",new HouseObjectPipe()) object:AbstractHouseObject){
         console.log(`[HouseEditorController][addObject] Param : ${JSON.stringify({houseId,object})}`)
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
         currentHouse.addHouseObject(object)
         console.log("[HouseEditorController][addObject] return void")
-        res.status(HttpStatus.OK).send();
         return
     }
 
     @Post("house/:id_house/basic-object/:object/enabled")
-    public enabledObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("enabled") enabled:boolean,@Res() res: Response){
+    public enabledObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("enabled") enabled:boolean){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName)
         if(!currentHouse ||!currentObject){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
         if(!(currentObject instanceof BasicHouseObject)){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return ;
         }
         else{
             currentObject.setEnabled(enabled);
-            res.status(HttpStatus.OK).send();
         }
     }
 
 
     @Post("house/:id_house/:object_name/consumption")
-    public changeConsumption(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("consumption") consumption:number,@Res() res: Response){
+    public changeConsumption(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("consumption") consumption:number){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName);
         if(!currentHouse ||!currentObject){
-            res.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).send();
             return;
         }
         currentObject.changeMaxConsumption(consumption);
-        res.status(HttpStatus.OK).send();
     }
 
     @Get("house/:id_house/get_all_object")

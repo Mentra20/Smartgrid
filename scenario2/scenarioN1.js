@@ -4,7 +4,6 @@ var request = require('request');
 function doRequest(req) {
     return new Promise(function (resolve, reject) {
         request(req, function (error, res, body) {
-            console.log(body)
             resolve({error, res, body});
         });
     });
@@ -53,32 +52,32 @@ async function main(){
 
     
     //STEP 4 
-    console.log("On regarde les producteurs actuellement inscrits : ");
+    console.log("\nOn regarde les producteurs actuellement inscrits : ");
     response = await doRequest({url:"http://producer-database:3010/producer-registry/allProducers", method:"GET"});
     console.log("[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]:"+response.body);
     console.log("Les producteurs inscrits : "+response.body);
 
     var producer = {producerName:"ENGIE",production:1000}
 
-    console.log("On nouveau producteur souhaite s'inscrire : ");
+    console.log("\nUn nouveau producteur souhaite s'inscrire : ");
     response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
     console.log("[service]:supplier; [route]:supplier-editor/add-supplier; [params]:"+JSON.stringify(producer)+ " => [return]:"+response.body);
     var producerID = response.body;
 
-    console.log("Le producteur est inscrits : ");
+    console.log("\nLe producteur est inscrits : ");
     response = await doRequest({url:"http://producer-database:3010/producer-registry/allProducers", method:"GET"});
     console.log("[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]:"+response.body);
     console.log("Les producteurs inscrits : "+response.body);
 
     
     //STEP 5
-    console.log("Le producteur reçoit un ID : "+producerID);
+    console.log("\nLe producteur reçoit un ID : "+producerID);
 
     //STEP 6
     await waitTick(6);
     var dateReq = {date:globalDate};
 
-    console.log("On vérifie que la consommation est égale à la production à la date du "+globalDate);
+    console.log("\nOn vérifie que la consommation est égale à la production à la date du "+globalDate);
 
     response = await doRequest({url:"http://consumption-db:3009/get-total-consumption", qs:dateReq, method:"GET"});
     console.log("[service]:consumption-db; [route]:get-total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
@@ -96,7 +95,7 @@ async function main(){
     var objectName = "voiture";
     var voiture = {object:{name:objectName,maxConsumption:2000}, type:"SCHEDULED"}
 
-    console.log("Un object paramètrable est branché");
+    console.log("\nUn object paramètrable est branché");
     response = await doRequest({url:"http://house:3000/house-editor/house/"+houseID+"/add-object", form:voiture, method:"POST"});
     console.log("[service]:house; [route]:house-editor/house/"+houseID+"/add-object"+"; [params]: "+JSON.stringify(voiture)+" => [return]:_");
 
