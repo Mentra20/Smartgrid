@@ -11,7 +11,7 @@ export class ConsumptionController {
     pushHouseConsumption(
         @Body("param") houseConsumptionReceived:{
             houseID:string, 
-            consumptionDate:Date, 
+            consumptionDate:string, 
             consumption:number})
     {
         console.log("[consumption-db/push-house-consumption][pushHouseConsumption] houseConsumption:any "+ houseConsumptionReceived +" => void")
@@ -19,7 +19,7 @@ export class ConsumptionController {
 
         var houseConsumption = new HouseConsumption();
         houseConsumption.houseID = houseConsumptionReceived.houseID;
-        houseConsumption.consumptionDate = houseConsumptionReceived.consumptionDate;
+        houseConsumption.consumptionDate = new Date(houseConsumptionReceived.consumptionDate);
         houseConsumption.consumption = houseConsumptionReceived.consumption;
 
         this.consumptionService.addHouseConsumptionToDB(houseConsumption);
@@ -28,11 +28,11 @@ export class ConsumptionController {
     }
 
     @Get('get-total-consumption')
-    async getTotalConsumption(@Query('date') date:Date) {
+    async getTotalConsumption(@Query('date') date:string) {
         var consumptionSum=0;
-        var consumptionList:HouseConsumption[] = await this.consumptionService.getTotalConsumptionByDate(date);
+        var consumptionList:HouseConsumption[] = await this.consumptionService.getTotalConsumptionByDate(new Date(date));
 
-        console.log("[get-total-consumption][getTotalConsumption] Get date : "+date.toDateString);
+        console.log("[get-total-consumption][getTotalConsumption] Get date : "+new Date(date));
         
         for (var houseCons of consumptionList){
             consumptionSum+=houseCons.consumption;
@@ -42,10 +42,10 @@ export class ConsumptionController {
     }
 
     @Get('get-house-consumption')
-    async getHouseConsumption(@Query('date') date:Date, @Query('houseID') houseID:string) {
+    async getHouseConsumption(@Query('date') date:string, @Query('houseID') houseID:string) {
 
-        var houseConsumption:HouseConsumption = await this.consumptionService.getHouseConsumptionByDate(date,houseID);
-        console.log("[get-house-consumption][getHouseConsumption] Get date : "+date.toDateString+" and house ID");
+        var houseConsumption:HouseConsumption = await this.consumptionService.getHouseConsumptionByDate(new Date(date),houseID);
+        console.log("[get-house-consumption][getHouseConsumption] Get date : "+new Date(date)+" and house ID");
 
         console.log("house consumption of ID +"+houseID+" at date "+date+" is "+houseConsumption.consumption);
 
@@ -53,8 +53,9 @@ export class ConsumptionController {
     }
 
     @Get('get-community-consumption')
-    async getCommunityConsumption(@Query('date') date:Date, @Query('housesID') housesID:any[]) {
-        console.log("[get-community-consumption][getCommunityConsumption] Get date : "+date.toDateString+" and houses ID "+housesID);
+    async getCommunityConsumption(@Query('date') dateStr:string, @Query('housesID') housesID:any[]) {
+        var date = new Date(dateStr);
+        console.log("[get-community-consumption][getCommunityConsumption] Get date : "+date+" and houses ID "+housesID);
         var communitySum = 0;
         
         for (var houseID of housesID){

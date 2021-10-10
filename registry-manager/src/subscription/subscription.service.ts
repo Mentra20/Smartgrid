@@ -43,15 +43,7 @@ export class SubscriptionService {
     }
    
     private async generateProducerSubscription(producerName: string):Promise<number> {
-        var id_producer;
-
-        this.http.post(this.URL_SubscribeProducerDB, producerName).subscribe(
-            {
-                next: (value) => {console.log("Data stored\n"); id_producer = value}, 
-                error: (error) => console.log(error)
-            }
-        )
-        
+        var id_producer = (await firstValueFrom(this.http.post(this.URL_SubscribeProducerDB, {producerName}))).data;
         return id_producer;
     }
 

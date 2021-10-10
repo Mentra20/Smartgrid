@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HouseConsumption } from 'src/models/house-consumption';
-import { Repository } from 'typeorm';
+import { Between, Equal, LessThanOrEqual, Repository ,MoreThanOrEqual} from 'typeorm';
 
 @Injectable()
 export class ConsumptionService {
@@ -15,11 +15,11 @@ export class ConsumptionService {
     }
 
     public getTotalConsumptionByDate(date:Date){
-        return this.houseConsumptionRepository.find({where:{consumptionDate:date}});
+        return this.houseConsumptionRepository.find({where:{consumptionDate: Between(new Date(date.getTime()-10000),new Date(date.getTime()+10000))}});
     }
 
     public getHouseConsumptionByDate(date:Date,houseID:string){
         //It's unique
-        return this.houseConsumptionRepository.findOne({where:{houseID:houseID,consumptionDate:date}});
+        return this.houseConsumptionRepository.findOne({where:{houseID:houseID,consumptionDate:Between(new Date(date.getTime()-10000),new Date(date.getTime()+10000))}});
     }
 }

@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { response } from 'express';
 import { Producer } from 'src/models/Producer';
 import { ProducerRegistryService } from 'src/services/producer-registry/producer-registry.service';
 
@@ -18,9 +19,11 @@ export class ProducerRegistryController {
     }
     
     @Post("subscribe")
-    producerSubscribe(@Body("producerName") producerName:string):Promise<number>{
+    producerSubscribe(@Body("producerName") producerName:string):Promise<string>{
         console.log("[producer-registry][producerSubscribe] producerName:string "+ producerName + "=> void");
-        return this.producerRegistryService.subscribeProducer(producerName);
+        var reponse = this.producerRegistryService.subscribeProducer(producerName)
+        console.log("connard : "+response)
+        return reponse;
     }
 
     @Post("updateProducerName")

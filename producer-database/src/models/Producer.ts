@@ -3,8 +3,8 @@ import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 @Entity()
 export class Producer {
 
-    @PrimaryGeneratedColumn()
-    id_producer: number;
+    @PrimaryGeneratedColumn("uuid")
+    id_producer: string;
 
     @Column()
     id_company: string;

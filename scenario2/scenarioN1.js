@@ -51,28 +51,26 @@ async function main(){
     
     //await waitTick(1);
 
-    /*
+    
     //STEP 4 
     console.log("On regarde les producteurs actuellement inscrits : ");
     response = await doRequest({url:"http://producer-database:3010/producer-registry/allProducers", method:"GET"});
     console.log("[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]:"+response.body);
     console.log("Les producteurs inscrits : "+response.body);
 
-    var production = {production:1000};
-    var producer = {producer_name:"ENGIE"}
+    var producer = {producerName:"ENGIE",production:1000}
 
     console.log("On nouveau producteur souhaite s'inscrire : ");
-    response = await doRequest({url:"http://supplier:3005/supplier-editor/add-supplier", form:producer, method:"POST"});
+    response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
     console.log("[service]:supplier; [route]:supplier-editor/add-supplier; [params]:"+JSON.stringify(producer)+ " => [return]:"+response.body);
     var producerID = response.body;
-
-    response = await doRequest({url:"http://supplier:3005/supplier-editor/supplier/"+producerID+"/set-production", form:production, method:"POST"});
 
     console.log("Le producteur est inscrits : ");
     response = await doRequest({url:"http://producer-database:3010/producer-registry/allProducers", method:"GET"});
     console.log("[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]:"+response.body);
     console.log("Les producteurs inscrits : "+response.body);
 
+    
     //STEP 5
     console.log("Le producteur reçoit un ID : "+producerID);
 
@@ -152,7 +150,7 @@ async function main(){
     response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
     console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
-    */
+    
 }
 
 async function beforeStep(){

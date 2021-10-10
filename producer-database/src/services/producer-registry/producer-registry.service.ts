@@ -18,7 +18,7 @@ export class ProducerRegistryService {
         return await this.producerRepository.find();
     }
 
-    async subscribeProducer(producerName:string):Promise<number> {
+    async subscribeProducer(producerName:string):Promise<string> {
         return await this.generateProducerSubscription(producerName);
     }
 
@@ -32,7 +32,7 @@ export class ProducerRegistryService {
         return;
     }
 
-    private async generateProducerSubscription(producerName:string):Promise<number> {
+    private async generateProducerSubscription(producerName:string):Promise<string> {
         let producer = new Producer();
         producer.id_company = producerName;
 
