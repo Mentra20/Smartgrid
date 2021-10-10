@@ -14,7 +14,7 @@ export class DetailedProductionService {
     public pushProduction(id_producer:string, productionDate:Date, production:number){
     
         var message = {id_producer:id_producer, productionDate:productionDate,production:production}
-        this.http.post("http://production-db:3020/push-production", {param:message}).subscribe(
+        this.http.post("http://production-db:3001/push-production", {param:message}).subscribe(
             {
                 next: (value) => console.log("production send to ProductionDB") , 
                 error: (error) => console.log(error)

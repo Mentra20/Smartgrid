@@ -8,16 +8,16 @@ export class SubscriptionController {
     constructor(private SubscriptionService: SubscriptionService){}
 
     @Post("clientSubscribe")
-    clientSubscribe(@Body("ip") ip:string, @Body("port") port:string){
-        console.log("[subscription/ip][clientSubscribe] ip:string "+ ip +" port:string "+ port +" => void");
+    clientSubscribe(@Body("clientName") clientName:string){
+        console.log("[subscription/ip][clientSubscribe] clientName:string "+ clientName + " => void");
         console.log("New client registration.\n");
-        return this.SubscriptionService.subscribeClient(ip,port);
+        return this.SubscriptionService.subscribeClient(clientName);
     }
 
     @Post("updateClientConnection")
-    updateConnexion(@Body("idHouse") idHouse:number, @Body("ip") newIp:string, @Body("port") newPort:string){
+    updateConnexion(@Body("idHouse") idHouse:number, @Body("clientName") clientName:string){
         //console.log("[subscription/ip][clientSubscribe] ip:string "+ ip +" port:string "+ port +" => void")
-        return this.SubscriptionService.updateSubscription(idHouse,newIp,newPort);
+        return this.SubscriptionService.updateSubscription(idHouse, clientName);
     }
 
     @Post("producerSubscribe")

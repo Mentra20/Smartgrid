@@ -32,7 +32,7 @@ export class ProducerRegistryService {
         return;
     }
 
-    private async generateProducerSubscription(producerName:string){
+    private async generateProducerSubscription(producerName:string):Promise<number> {
         let producer = new Producer();
         producer.id_company = producerName;
 
