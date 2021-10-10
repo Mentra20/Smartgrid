@@ -47,8 +47,8 @@ export class ConsumptionPeakService {
         })
     }
 
-    private async getCommunity(ID:number) {
-        return await firstValueFrom(this.http.get(this.URL_client_community), {params: ID}).then((body)=> {
+    private async getCommunity(communityID:number) {
+        return await firstValueFrom(this.http.get(this.URL_client_community), {params: communityID}).then((body)=> {
             var community = body.data;
 
             for (var house of community) {
