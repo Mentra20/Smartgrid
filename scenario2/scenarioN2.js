@@ -206,7 +206,7 @@ async function addObject(id, object) {
 async function doTick(){
     globalDate = globalDate.setMinutes(globalDate.getMinutes()+10);
     await doRequest({url:"http://house:3000/tick/", form:{date:globalDate}, method:"POST"});
-    await doRequest({url:"http://supplier:3000/tick/", form:{date:globalDate}, method:"POST"});
+    await doRequest({url:"http://supplier:3005/tick/", form:{date:globalDate}, method:"POST"});
 }
 
 async function waitTick(iterationNumber){
