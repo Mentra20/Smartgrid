@@ -187,11 +187,11 @@ async function checkCarCons(houseID) {
         houseID: houseID,
         objectName: "Car"
     }
-    console.log("\nOn peut voir que l’objet consomme à la date "+globalDate+" depuis smartGrid");
-    response = await doRequest({url:"http://consumption-manager:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
+    console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
+    response = await doRequest({ url: "http://consumption-manager:3008/get-detailed-consumption", qs: detailedObject, method: "GET" });
     sleep(3000);
-    console.log("[service]:consumption-manager; [route]:get-detailed-consumption; [params]: "+JSON.stringify(detailedObject)+" => [return]:"+response.body);
-    console.log("La consommation de l'objet "+detailedObject.objectName+" de la maison d'ID "+houseID+" à la date du "+globalDate+" est : "+response.body);
+    console.log("[service]:consumption-manager; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body);
+    console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body);
 }
 
 async function checkObject(houseID) {
