@@ -11,9 +11,6 @@ async function doRequest(req) {
 var globalDate = new Date();
 
 async function main() {
-    console.log("\n\n================= ================= SCENARIO2 ================= =================")
-    console.log("\n");
-    console.log("\n");
     console.log("Scénario 2 : pic dans une communauté");
 
     //await beforeStep();
@@ -74,10 +71,8 @@ async function main() {
     console.log("\n");
 
     // STEP 2
-    console.log("\n\n================= STEP 2 =================")
-    console.log("\n");
-    console.log("\n");
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
+
     console.log("On ajoute un objet non programmable a chaque maison");
     await addObject(houseID1, mixeur);
     await addObject(houseID2, mixeur);
@@ -146,9 +141,7 @@ async function main() {
 
     // STEP 3
 
-    console.log("\n\n================= STEP 3 =================")
-    console.log("\n");
-    console.log("\n");
+
     var communityReq = { houseID: houseID1 };
     console.log("On regarde la communauté de la maison 1");
     reponse = await doRequest({ url: "http://client-database:3004/client-registry/house", qs: communityReq, method: "GET" });
@@ -166,10 +159,6 @@ async function main() {
     console.log("\n");
 
     // STEP 4
-
-    console.log("\n\n================= STEP 4 =================")
-    console.log("\n");
-    console.log("\n");
     console.log("On vérifie que tous les objets planifiables ont été shutdown");
     console.log("\n");
 
@@ -184,9 +173,6 @@ async function main() {
     await checkCarCons(houseID9);
 
     // STEP 5
-    console.log("\n\n================= STEP 5 =================")
-    console.log("\n");
-    console.log("\n");
     console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
     response = await doRequest({ url: "http://consumption-verifier:3007/consumption-peak", qs: peakReq, method: "GET" });
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
@@ -201,11 +187,11 @@ async function checkCarCons(houseID) {
         houseID: houseID,
         objectName: "Car"
     }
-    console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
-    response = await doRequest({ url: "http://consumption-manager:3008/get-detailed-consumption", qs: detailedObject, method: "GET" });
+    console.log("\nOn peut voir que l’objet consomme à la date "+globalDate+" depuis smartGrid");
+    response = await doRequest({url:"http://consumption-manager:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
     sleep(2500);
-    console.log("[service]:consumption-manager; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body);
-    console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body);
+    console.log("[service]:consumption-manager; [route]:get-detailed-consumption; [params]: "+JSON.stringify(detailedObject)+" => [return]:"+response.body);
+    console.log("La consommation de l'objet "+objectName+" de la maison d'ID "+houseID+" à la date du "+globalDate+" est : "+response.body);
 
 }
 
@@ -299,9 +285,6 @@ function sleep(ms) {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
-}
-
-main();
 }
 
 main();
