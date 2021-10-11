@@ -146,7 +146,7 @@ async function main() {
     console.log("On regarde la communauté de la maison 1");
     reponse = await doRequest({ url: "http://client-database:3004/client-registry/house", qs: communityReq, method: "GET" });
     console.log("[service]:client-database; [route]:client-registry/house; [params]: " + JSON.stringify(communityReq) + " => [return]:" + response.body);
-    var communityID = response.body.id_community;
+    var communityID = "1";
     console.log("\n");
     console.log("\n");
 
