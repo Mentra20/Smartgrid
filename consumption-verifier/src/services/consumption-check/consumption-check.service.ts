@@ -23,8 +23,9 @@ export class ConsumptionCheckService {
             return true;
         } 
         else {
+            if (consumption>production){
             console.log("bad consumption, produce : " + production + ", require : " + consumption);
-            this.productionNeedToChange(consumption-production);//TODO attention au negative
+            this.productionNeedToChange(consumption-production);}//TODO attention au negative
             return false;
         }
     }
