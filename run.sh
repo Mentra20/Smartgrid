@@ -1,5 +1,5 @@
 #!/bin/bash
-docker-compose up --force-recreate -d
+COMPOSE_HTTP_TIMEOUT=360 docker-compose up --force-recreate -d
 docker rm scenario2 || true
 
 docker run -td --network=si5-soa --name scenario2 scenario2
