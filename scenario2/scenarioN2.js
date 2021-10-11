@@ -186,7 +186,7 @@ async function main() {
 
     // STEP 5
     console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
-    response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
+    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-check", qs: dateReq, method: "GET" });
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
     console.log("Pic : " + response.body);
     console.log("\n");
