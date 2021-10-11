@@ -7,7 +7,7 @@ async function bootstrap() {
   
   const config = new DocumentBuilder()
     .setTitle('Registry-manager')
-    .setDescription('The House-object API description')
+    .setDescription('The Registry-manager API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();

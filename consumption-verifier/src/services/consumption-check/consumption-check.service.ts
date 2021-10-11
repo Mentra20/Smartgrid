@@ -9,8 +9,8 @@ export class ConsumptionCheckService {
     private URL_supplier_change: string;
 
     constructor(private http:HttpService) {
-        this.URL_consumption_manager = "http://consumption-manager:3008/total-consumption";
-        this.URL_supplier_get = "http://supplier:3005/get-production";
+        this.URL_consumption_manager = "http://consumption-db:3009/get-total-consumption";
+        this.URL_supplier_get = "http://production-db:3001/getproduction";
         this.URL_supplier_change = "http://supplier:3005/change-production";
     }
 
@@ -23,8 +23,9 @@ export class ConsumptionCheckService {
             return true;
         } 
         else {
+            if (consumption>production){
             console.log("bad consumption, produce : " + production + ", require : " + consumption);
-            this.productionNeedToChange(consumption);
+            this.productionNeedToChange(consumption-production);}//TODO attention au negative
             return false;
         }
     }

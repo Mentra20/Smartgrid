@@ -1,51 +1,68 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, Injectable } from '@nestjs/common';
-import { catchError } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class SubscriptionService {
-    private URL_DATASERVICE_REGISTRY = "http://dataservice:3006/fromregistry"
+    private URL_SubscribeClientDB = "http://client-database:3004/client-registry/subscribe";
+    private URL_UpdateClientDB = "http://client-database:3004/client-registry/updateClientConnection";
+    private URL_SubscribeProducerDB = "http://producer-database:3010/producer-registry/subscribe";
+    private URL_UpdateProducerDB = "http://producer-database:3010/producer-registry/updateProducerName";
 
     constructor(private http:HttpService){}
 
-    IDCommunityCount = 0;
-    IDHouseCount = 0;
+    ID_Community = 1;
+    nbHouseInCommunity = 0;
 
-    async subscribeClient(ip:string,port:string):Promise<{ ID_House: number; ID_Community: number; }>{
-        console.log("registred info : "+ip+":"+port)
-        var URL_House = "http://"+ip+":"+port;
-        await this.checkURL(URL_House);
-        return await this.generateSubscription(URL_House);
+    async subscribeClient(clientName:string):Promise<string>{
+        console.log("Client registred info : " + clientName);
+        return this.generateClientSubscription(clientName);
     }
 
-    async updateSubscription(idHouse:number,newIp:string,newPort:string){
-        var URL_House = "http://"+newIp+":"+newPort;
-        var message = {ID_House:idHouse,URL_House}
-        await this.http.post(this.URL_DATASERVICE_REGISTRY,message)
+    async updateSubscription(idHouse:number, newClientName:string){
+        var message = {idHouse, newClientName};
+
+        await this.http.post(this.URL_UpdateClientDB, message).subscribe( {
+            next: (value) => console.log("Data updated.\n"),
+            error: (error) => console.log(error)
+        })
         return;
     }
 
-    
-    private async checkURL(URL_House:string){
-        await this.http.get(URL_House).pipe(
-            catchError(e => {
-                console.log("bad ip")
-              throw new HttpException(e.response.data, e.response.status);
-            })
-        )
+    async subscribeProducer(producerName:string) {
+        console.log("Producer registered info : " + producerName);
+        return await this.generateProducerSubscription(producerName);
     }
 
-    private async generateSubscription(URL_House:string){
-        var ID_Community= this.IDCommunityCount++;
-        var ID_House = this.IDHouseCount++;
-        var message = {ID_Community, ID_House,URL_House}
-        this.http.post(this.URL_DATASERVICE_REGISTRY, message).subscribe(
-            {
-                next: (value) => console.log("data stored") , 
-                error: (error) => console.log(error)
-            }
-        )
-        return {ID_House , ID_Community};
+    async updateProducerName(idProducer:number, newProducerName:string) {
+        var message = {idProducer, newProducerName};
+        await this.http.post(this.URL_UpdateProducerDB, message).subscribe({
+            next: (value) => console.log("Data stored\n"),
+            error: (error) => console.log(error)
+        })
+    }
+   
+    private async generateProducerSubscription(producerName: string):Promise<number> {
+        var id_producer = (await firstValueFrom(this.http.post(this.URL_SubscribeProducerDB, {producerName}))).data;
+        return id_producer;
     }
 
+    private async generateClientSubscription(clientName:string):Promise<string>{
+        var community_ID = this.giveCommunityID();
+        var message = {clientName, communityID:community_ID};
+        var client_id = (await firstValueFrom(this.http.post(this.URL_SubscribeClientDB, message))).data;
+        return client_id;
+    }
+
+    private giveCommunityID():number {
+        if (this.nbHouseInCommunity < 10) {
+            this.nbHouseInCommunity++;
+            return this.ID_Community;
+        }
+        else {
+            this.ID_Community++;
+            this.nbHouseInCommunity = 1;
+            return this.ID_Community;
+        }
+    }
 }
