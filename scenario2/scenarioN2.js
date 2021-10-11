@@ -26,8 +26,8 @@ async function main() {
     console.log("Les maisons inscrites : " + response.body);
     console.log("\n");
     console.log("\n");
-
-    // STEP 1
+    console.log("\n\n================= STEP 1 =================")
+        // STEP 1
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
     sleep(1000);
@@ -70,8 +70,10 @@ async function main() {
     console.log("Les maisons inscrites : " + response.body);
     console.log("\n");
     console.log("\n");
-
-    // STEP 2
+    console.log("\n");
+    console.log("\n");
+    console.log("\n\n================= STEP 2 =================")
+        // STEP 2
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
 
     console.log("On ajoute un objet non programmable a chaque maison");
@@ -141,7 +143,9 @@ async function main() {
 
 
     // STEP 3
-
+    console.log("\n");
+    console.log("\n");
+    console.log("\n\n================= STEP 3 =================")
 
     var communityReq = { houseID: houseID1 };
     console.log("On regarde la communauté de la maison 1");
@@ -159,7 +163,10 @@ async function main() {
     console.log("\n");
     console.log("\n");
 
-    // STEP 4
+    console.log("\n");
+    console.log("\n");
+    console.log("\n\n================= STEP 4 =================")
+        // STEP 4
     console.log("On vérifie que tous les objets planifiables ont été shutdown");
     console.log("\n");
 
@@ -172,10 +179,13 @@ async function main() {
     await checkCarCons(houseID7);
     await checkCarCons(houseID8);
     await checkCarCons(houseID9);
-    var communityID = "1";
+    console.log("\n");
+    console.log("\n");
+    console.log("\n\n================= STEP 5 =================")
+
     // STEP 5
     console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
-    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-check", qs: peakReq, method: "GET" });
+    response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
     console.log("Pic : " + response.body);
     console.log("\n");
