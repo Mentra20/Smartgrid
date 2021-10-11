@@ -11,7 +11,7 @@ async function doRequest(req) {
 var globalDate = new Date();
 
 async function main() {
-    var communityID = 1;
+
     console.log("Scénario 2 : pic dans une communauté");
 
     //await beforeStep();
@@ -149,20 +149,20 @@ async function main() {
 
     var communityReq = { houseID: houseID1 };
     console.log("On regarde la communauté de la maison 1");
-    reponse = await doRequest({ url: "http://client-database:3004/client-registry/house", qs: communityReq, method: "GET" });
-    console.log("[service]:client-database; [route]:client-registry/house; [params]: " + JSON.stringify(communityReq) + " => [return]:" + response.body);
-
+    response = await doRequest({ url: "http://client-database:3004/client-registry/house", qs: communityReq, method: "GET" });
+    console.log("[service]:client-database; [route]:client-registry/house; [params]: " + JSON.stringify(communityReq) + " => [return]:" + JSON.parse(response.body));
+    var communityID= JSON.parse(response.body).id_community;
     console.log("\n");
     console.log("\n");
 
     var peakReq = { date: globalDate, ID: communityID };
-    var dateReq ={date:peakReq.date};
     console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
-    reponse = await doRequest({ url: "http://consumption-verifier:3007/consumption-peak", qs: peakReq, method: "GET" });
+    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-peak", qs: peakReq, method: "GET" });
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
     console.log("Pic : " + response.body);
     console.log("\n");
     console.log("\n");
+    var test = response.body;
 
     console.log("\n");
     console.log("\n");
@@ -185,8 +185,9 @@ async function main() {
     console.log("\n\n================= STEP 5 =================")
 
     // STEP 5
+
     console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
-    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-check", qs: dateReq, method: "GET" });
+    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-check", qs: peakReq, method: "GET" });
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
     console.log("Pic : " + response.body);
     console.log("\n");
