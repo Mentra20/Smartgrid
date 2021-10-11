@@ -156,6 +156,7 @@ async function main() {
     console.log("\n");
 
     var peakReq = { date: globalDate, ID: communityID };
+    var dateReq ={date:peakReq.date};
     console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
     reponse = await doRequest({ url: "http://consumption-verifier:3007/consumption-peak", qs: peakReq, method: "GET" });
     console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);

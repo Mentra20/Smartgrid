@@ -9,6 +9,9 @@ echo "==========================================================================
 echo "---------------------------- Scenario1 ----------------------------"
 
 docker exec scenario2 sh -c 'node ./scenarioN1.js'
+docker stop smartrix-21-22-soa-21-22-i_database_1
+docker rm -f -v smartrix-21-22-soa-21-22-i_database_1
+docker start smartrix-21-22-soa-21-22-i_database_1
 docker exec scenario2 sh -c 'node ./scenarioN2.js'
 
 docker-compose stop
