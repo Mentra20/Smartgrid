@@ -11,11 +11,11 @@ import { AppController } from './app.controller';
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'consumption-adder',
-            brokers: ['localhost:9092'],
+            clientId: 'my-kafka-consumer-id',
+            brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'my-kafka-consumer-2',
+            groupId: 'my-kafka-consumer-group',
             allowAutoTopicCreation: true
             
           }
