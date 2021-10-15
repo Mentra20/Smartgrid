@@ -17,7 +17,7 @@ export class DetailedConsumptionController {
             consumption:number}[])
     {
         //TODO: verifier si le client existe dans la DB
-        console.log("[consumption-manager/add-detailed-consumption][addDetailedConsumption] objectsConsumptions:any[] "+ objectsConsumptions +" => void")
+        console.log("[consumption-detailed/add-detailed-consumption][addDetailedConsumption] objectsConsumptions:any[] "+ objectsConsumptions +" => void")
         console.log("new detailed consumptions")
         
         if(!objectsConsumptions?.length) return;

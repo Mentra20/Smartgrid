@@ -80,11 +80,11 @@ services:
     depends_on:
       - "database"
 
-  consumption-manager:
-    container_name: consumption-manager
-    image: consumption-manager:1.0.0
+  consumption-detailed:
+    container_name: consumption-detailed
+    image: consumption-detailed:1.0.0
     build:
-      context: ./consumption-manager
+      context: ./consumption-detailed
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:

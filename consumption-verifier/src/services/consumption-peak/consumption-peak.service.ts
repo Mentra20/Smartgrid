@@ -14,7 +14,7 @@ export class ConsumptionPeakService {
   constructor(private http: HttpService) {
     this.max_production = 5000; //Valeur à modifier
     this.URL_consumption_community =
-      'http://consumption-manager:3008/get-community-consumption';
+      'http://consumption-detailed:3008/get-community-consumption';
     this.URL_client_community =
       'http://client-database:3004/client-registry/community';
     this.URL_adapt_consumption =
