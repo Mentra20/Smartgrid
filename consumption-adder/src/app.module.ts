@@ -10,12 +10,12 @@ import { AdderController } from './adder.controller';
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'consumption-adder-client',
+            clientId: 'consumption-adder',
             brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'consumption-adder-consumer',
-            allowAutoTopicCreation: true 
+            groupId: 'consumption-adder',
+            allowAutoTopicCreation: true,
           }
         }
       },

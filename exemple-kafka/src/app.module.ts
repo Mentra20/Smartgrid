@@ -15,8 +15,9 @@ import { AppController } from './app.controller';
             brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'my-kafka-consumer-group',
-            allowAutoTopicCreation: true
+            groupId: 'consumer-test',
+            allowAutoTopicCreation: true,
+            sessionTimeout: 30000,
             
           }
         }

@@ -1,7 +1,7 @@
 import { Controller, Inject } from '@nestjs/common';
-import { ClientKafka, MessagePattern } from '@nestjs/microservices';
+import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('adder')
+@Controller()
 export class AdderController {
 
     constructor(@Inject("CONSUMPTION_ADDER") private client:ClientKafka)
@@ -15,12 +15,13 @@ export class AdderController {
     }
 
     @MessagePattern("consumption.raw.detailed")
-    withEmit(detailedConsumptions: 
-        {
+    withEmit(@Payload() detailedConsumptionsMSG:any){
+        var detailedConsumptions:{
             houseID:string, 
             consumptionDate:string, 
-            object:{objectName:string, consumption:number}[] 
-        }) {
+            object:{objectName:string, consumption:number}[]
+        }
+        = detailedConsumptionsMSG.value;
 
         //RECEIVED
         console.log("I receive the detailed consumption from kafka : "+ JSON.stringify(detailedConsumptions));
