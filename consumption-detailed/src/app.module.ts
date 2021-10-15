@@ -1,15 +1,28 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DetailedConsumption } from './models/detailed-consumption';
 import { DetailedConsumptionService } from './services/detailed-consumption/detailed-consumption.service';
 import { DetailedConsumptionController } from './controllers/detailed-consumption/detailed-consumption.controller';
+import { ClientsModule,Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    HttpModule,
+    ClientsModule.register([
+      {
+        name: 'CONSUMPTION_DETAILED',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'consumption-detailed',
+            brokers: ['kafka:9092'],
+          },
+          consumer: {
+            groupId: 'consumption-detailed',
+            allowAutoTopicCreation: true,
+          }
+        }
+      },
+    ]),
     TypeOrmModule.forFeature([DetailedConsumption]),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -22,7 +35,7 @@ import { DetailedConsumptionController } from './controllers/detailed-consumptio
       synchronize: true,
     }),
   ],
-  controllers: [AppController, DetailedConsumptionController],
-  providers: [AppService, DetailedConsumptionService],
+  controllers: [DetailedConsumptionController],
+  providers: [DetailedConsumptionService],
 })
 export class AppModule {}
