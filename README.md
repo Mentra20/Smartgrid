@@ -82,7 +82,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - 127.0.0.1 supplier=3005  
 - 127.0.0.1 production-manager=3006 
 - 127.0.0.1 consumption-verifier=3007  
-- 127.0.0.1 consumption-manager=3008  
+- 127.0.0.1 consumption-detailed=3008  
 - 127.0.0.1 consumption-db=3009 
 - 127.0.0.1 producer-database=3010  
 - 127.0.0.1 producers=3011

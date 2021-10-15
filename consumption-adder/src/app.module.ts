@@ -1,30 +1,27 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AppController } from './app.controller';
-
+import { AdderController } from './adder.controller';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'KAFKA_EXAMPLE',
+        name: 'CONSUMPTION_ADDER',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'my-kafka-client-id',
+            clientId: 'consumption-adder',
             brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'consumer-test',
+            groupId: 'consumption-adder',
             allowAutoTopicCreation: true,
-            sessionTimeout: 30000,
-            
           }
         }
       },
     ]),
   ],
-  controllers: [AppController],
+  controllers: [AdderController],
   providers: [],
 })
 export class AppModule {}
