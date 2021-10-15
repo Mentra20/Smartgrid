@@ -1,10 +1,27 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
+  app.connectMicroservice({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        clientId: 'consumption-detailed',
+        brokers: ['localhost:9092'],
+      },
+      consumer: {
+        groupId: 'consumption-detailed',
+        allowAutoTopicCreation: true
+        
+      }
+    }
+  })
+  await app.startAllMicroservices();
+
   const config = new DocumentBuilder()
     .setTitle('Consumption-detailed')
     .setDescription('The Consumption-detailed API description')

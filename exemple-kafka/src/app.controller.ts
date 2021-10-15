@@ -37,7 +37,7 @@ export class AppController {
     @Get("adder-test")
     adderTest() {
         console.log("I emit adder message")
-        this.client.emit('consumption.raw.detailed',{houseID:"hello", consumptionDate:"pas parse de toute facon",
+        this.client.emit('consumption.raw.detailed',{houseID:"hello", consumptionDate:"2021-10-02T02:00",
         object:[{objectName:"Mixeur", consumption:100},{objectName:"Frigo", consumption:500}]})
     }
     

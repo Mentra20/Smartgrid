@@ -11,11 +11,11 @@ export class AdderController {
         this.client.subscribeToResponseOf("consumption.raw.detailed");
         await this.client.connect();
 
-        console.log("Consumption-adder ready")
+        console.log("consumption-adder connected on bus")
     }
 
     @MessagePattern("consumption.raw.detailed")
-    withEmit(@Payload() detailedConsumptionsMSG:any){
+    SumDetailedConsumption(@Payload() detailedConsumptionsMSG:any){
         var detailedConsumptions:{
             houseID:string, 
             consumptionDate:string, 
