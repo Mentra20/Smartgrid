@@ -10,5 +10,5 @@ export class HouseConsumption {
     consumptionDate: Date;
 
     @Column("double precision")
-    consumption: number;
+    totalConsumption: number;
 }

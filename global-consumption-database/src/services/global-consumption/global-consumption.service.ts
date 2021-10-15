@@ -1,14 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HouseConsumption } from 'src/models/house-consumption';
-import { Between, Equal, LessThanOrEqual, Repository ,MoreThanOrEqual} from 'typeorm';
+import { Repository, Between } from 'typeorm';
 
 @Injectable()
-export class ConsumptionService {
-
+export class GlobalConsumptionService {   
     constructor(
         @InjectRepository(HouseConsumption)
         private houseConsumptionRepository: Repository<HouseConsumption>){}
+
+    public async addClientConsumptionToDB(totalClientConsumption: any) {
+        let houseConsumption = new HouseConsumption();
+        houseConsumption.houseID = totalClientConsumption.houseID;
+        houseConsumption.consumptionDate = totalClientConsumption.consumptionDate;
+        houseConsumption.totalConsumption = totalClientConsumption.consumption;
+
+        await this.houseConsumptionRepository.save(houseConsumption);
+        console.log("Client " + houseConsumption.houseID + " had a consumption of " + houseConsumption.totalConsumption + "kW the " + houseConsumption.consumptionDate + ".");
+    }
 
     public addHouseConsumptionToDB(houseConsumption:HouseConsumption){
         this.houseConsumptionRepository.save(houseConsumption);
