@@ -24,7 +24,7 @@ export class GlobalConsumptionController {
         }
         = totalClientConsumptionMSG.value;
 
-        console.log("Global consumption database received the total client " + totalClientConsumption.houseID + " consumption from Kafka : " + JSON.stringify(totalClientConsumption) + " W.");
+        console.log("Global consumption database received the total client " + totalClientConsumption.houseID + " consumption from Kafka : " + JSON.stringify(totalClientConsumption));
 
         this.globalConsumptionService.addClientConsumptionToDB(totalClientConsumption);
     }
