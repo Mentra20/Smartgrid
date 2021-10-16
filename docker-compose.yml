@@ -65,7 +65,7 @@ services:
       - "database"
 
   global-consumption-database:
-    container_name: global-consumption-databse
+    container_name: global-consumption-database
     image: global-consumption-database:1.0.0
     build:
       context: ./global-consumption-database
