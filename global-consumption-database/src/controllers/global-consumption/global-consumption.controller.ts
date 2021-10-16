@@ -24,7 +24,7 @@ export class GlobalConsumptionController {
         }
         = totalClientConsumptionMSG;
 
-        console.log("Global consumption database received the total client " + totalClientConsumption.houseID + " consumption from Kafka : " + JSON.stringify(totalClientConsumption) + " kW.");
+        console.log("Global consumption database received the total client " + totalClientConsumption.houseID + " consumption from Kafka : " + JSON.stringify(totalClientConsumption) + " W.");
 
         this.globalConsumptionService.addClientConsumptionToDB(totalClientConsumption);
     }
@@ -39,7 +39,7 @@ export class GlobalConsumptionController {
         for (var houseCons of consumptionList){
             consumptionSum += houseCons.totalConsumption;
         }
-        console.log("Total consumption at date " + date + " is " + consumptionSum + " kW.");
+        console.log("Total consumption at date " + date + " is " + consumptionSum + " W.");
         return consumptionSum;
     }
 
@@ -49,7 +49,7 @@ export class GlobalConsumptionController {
         var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(new Date(date),houseID);
         console.log("[get-house-consumption][getHouseConsumption] Get date : " + new Date(date) + " and house ID");
 
-        console.log("house consumption of ID +" + houseID + " at date " + date + " is " + houseConsumption.totalConsumption + " kW.");
+        console.log("house consumption of ID +" + houseID + " at date " + date + " is " + houseConsumption.totalConsumption + " W.");
 
         return houseConsumption.totalConsumption;
     }
@@ -67,7 +67,7 @@ export class GlobalConsumptionController {
 
         var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(date,houseID);
 
-        console.log("community consumption at date " + date + " is " + communitySum + " kW.");
+        console.log("community consumption at date " + date + " is " + communitySum + " W.");
 
         return communitySum;
     }
