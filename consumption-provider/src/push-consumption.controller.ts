@@ -14,7 +14,7 @@ export class PushConsumptionController {
             object:{objectName:string, consumption:number}[]})
     {
         //TODO: verifier si le client existe dans la DB
-        console.log("[consumption-provider][addDetailedConsumption] detailedConsumptions:any[] "+ detailedConsumptions +" => void")
+        console.log("[consumption-provider][add-detailed-consumption] detailedConsumptions:any[] "+ detailedConsumptions +" => void")
         
         this.pushConsumptionService.pushConsumptionToBus(detailedConsumptions);
     }
