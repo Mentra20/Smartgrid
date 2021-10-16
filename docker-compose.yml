@@ -64,22 +64,6 @@ services:
     depends_on:
       - "database"
 
-  consumption-db:
-    container_name: consumption-db
-    image: consumption-db:1.0.0
-    build:
-      context: ./consumption-db
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3009:3009
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
-    depends_on:
-      - "database"
-
   consumption-detailed:
     container_name: consumption-detailed
     image: consumption-detailed:1.0.0
@@ -184,7 +168,7 @@ services:
     container_name: global-production-database
     image: global-production-database:1.0.0
     build:
-      context: ./glboal-production-database
+      context: ./global-production-database
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
