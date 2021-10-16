@@ -15,7 +15,7 @@ export class GlobalProductionController {
         await this.client.connect();
         console.log("Global production database connected to the bus.");
         }        
-        @MessagePattern("production-raw-global") 
+        @MessagePattern("production.raw.global") 
         addClientConsumptionToDB(@Payload() totalProductionMSG:any) {
         var productionReceived:{
             id_producer:string, 
