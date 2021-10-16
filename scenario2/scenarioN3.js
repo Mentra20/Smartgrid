@@ -9,6 +9,7 @@ function doRequest(req) {
     });
 }
 
+var globalDate = new Date();
 
 async function main(){
     console.log("Scénario 3 : objets de production et utilisation des producteurs de l'électricité en trop\n");
@@ -54,14 +55,20 @@ async function main(){
     console.log("\n\n================= STEP 3 =================")
 
     console.log("\nOn vérifie que la maison consomme toujours "+ houseID);
-    const reqQs = {houseID:houseID};
+    var reqQs = {houseID:houseID};
     response = await doRequest({url:"http://house:3000/consumption/global", qs:reqQs , method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:"+houseID+" => [return]:"+response.body);
     console.log("La consommation de la maison est bien positive : "+response.body);
 
     // STEP 4
     console.log("\n\n================= STEP 4 =================")
-    console.log("\n On accède à la db de production avec l'id de production de la maison et vérifier qu'on a rien");
+    console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production n'est pas en accès");
+    await waitTick(5);
+    reqQs = {date:globalDate,producerID:houseProdID};
+    response = await doRequest({url:"http://global-production-database:3001/global-production/get-producer-production", qs:reqQs , method:"GET"});
+    console.log("[service]:global-production-database; [route]:global-production/get-producer-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body);
+    console.log("On voit bien qu'il n'y a pas eu de production pour cette maison" + response.body);
+
 
     // STEP 5
     console.log("\n\n================= STEP 5 =================")
@@ -76,7 +83,7 @@ async function main(){
 
     // STEP 6
     console.log("\n\n================= STEP 6 =================")
-
+    reqQs = {houseID:houseID};
     console.log("\nOn vérifie que la maison à un excès de production "+ houseID);
     response = await doRequest({url:"http://house:3000/consumption/global", qs:reqQs , method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:"+houseID+" => [return]:"+response.body);
@@ -84,7 +91,29 @@ async function main(){
 
     // STEP 7
     console.log("\n\n================= STEP 7 =================")
-    //TODO accéder à la db de production avec l'id de production de la maison et vérifier qu'on a rien
+    console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production est en accès");
+    await waitTick(5);
+    reqQs = {date:globalDate,producerID:houseProdID};
+    response = await doRequest({url:"http://global-production-database:3001/global-production/get-producer-production", qs:reqQs , method:"GET"});
+    console.log("[service]:global-production-database; [route]:global-production/get-producer-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body);
+    console.log("On voit bien qu'il a une production pour cette maison" + response.body);
 
 
+}
+
+async function doTick(){
+    globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+10));
+    await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
+    await doRequest({url:"http://supplier:3005/tick", form:{date:globalDate}, method:"POST"});
+}
+
+async function waitTick(iterationNumber){
+    for(var i=0 ; i<iterationNumber; i++){
+        await doTick();
+    }
+}
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }

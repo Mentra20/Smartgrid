@@ -16,4 +16,8 @@ export class ProductionService {
     public async getProductionByDate(date:Date):Promise<Production[]>{
         return this.productionRepository.find({where:{productionDate:Between(new Date(date.getTime()-1000),new Date(date.getTime()+1000))}});
     }
+
+    public async getProducerProductionByDate(date:Date,producerID:string):Promise<Production>{
+        return this.productionRepository.find({where:{id_producer:producerID,productionDate:Between(new Date(date.getTime()-1000),new Date(date.getTime()+1000))}});
+    }
 }
