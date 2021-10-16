@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ProductionService } from 'src/services/production/production.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
@@ -14,6 +13,7 @@ export class ProductionServiceStorage {
         console.log("Production registred with info name : " + producerName);
         return this.dictProducer[producerName];
         }
+    
     setProduction(newProduction:number){
         console.log("Production set with production value : " + newProduction);
         for(var key in this.dictProducer) {
@@ -30,7 +30,6 @@ export class ProductionServiceStorage {
         this.dictProducer[producerName]={id_producer:reponse,production:production};
         return reponse;
     }
-
     
     async pushProduction(producerName:string,date:string){
         var jsonProduction = {id_producer:this.dictProducer[producerName].id_producer,productionDate:new Date(date),production:this.dictProducer[producerName].production};
@@ -39,6 +38,7 @@ export class ProductionServiceStorage {
             error : (error)=> console.error(error),
         })
     }
+    
     async pushAllProduction(date:string){
         for(var key in this.dictProducer) {
             this.pushProduction(key,date);

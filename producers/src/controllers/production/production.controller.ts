@@ -12,11 +12,11 @@ export class ProductionController {
     }
 
     @Get('change-production')
-    changeProductionAndReturnIt(@Query('consumption') consumption:number): number {
-        console.log("[change-production][changeProductionAndReturnIt] consumption:number "+consumption+" => number")
-        this.productionServiceStorage.setProduction(+consumption);
-        return consumption;
+    changeProductionAndReturnIt(@Query('newProduction') newProduction:number) {
+        console.log("[change-production][changeProductionAndReturnIt] consumption:number "+newProduction+" => number")
+        this.productionServiceStorage.setProduction(+newProduction);
     }
+    
     @Post('add-supplier')
     async addProducter(@Body('producerName') producerName:string,@Body('production') production:number): Promise<number> {
         console.log("[add-supplier][addProducter] production:number "+production+" => number")

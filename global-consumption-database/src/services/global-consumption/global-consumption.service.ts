@@ -16,7 +16,7 @@ export class GlobalConsumptionService {
         houseConsumption.totalConsumption = totalClientConsumption.consumption;
 
         await this.houseConsumptionRepository.save(houseConsumption);
-        console.log("Client " + houseConsumption.houseID + " had a consumption of " + houseConsumption.totalConsumption + "kW the " + houseConsumption.consumptionDate + ".");
+        console.log("Client " + houseConsumption.houseID + " had a consumption of " + houseConsumption.totalConsumption + " W the " + houseConsumption.consumptionDate + ".");
     }
 
     public getTotalConsumptionByDate(date:Date){
