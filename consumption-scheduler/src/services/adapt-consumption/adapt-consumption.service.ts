@@ -13,7 +13,7 @@ export class AdaptConsumptionService {
   postAdaptConsumption(communityID: number) {
     firstValueFrom(
       this.http.get(this.URL_DATASERVICE_REGISTRY, {
-        params: { comunityID: communityID },
+        params: { communityID: communityID },
       }),
     ).then((body) => {
       const houses: any[] = body.data;
