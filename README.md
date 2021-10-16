@@ -86,3 +86,4 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - 127.0.0.1 global-consumption-database=3009 
 - 127.0.0.1 producer-database=3010  
 - 127.0.0.1 producers=3011
+- 127.0.0.1 consumption-provider=3012
