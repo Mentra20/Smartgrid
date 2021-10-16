@@ -22,7 +22,7 @@ export class HouseEditorController {
     }
 
     @Post("house/:id_house/become-producer")
-    public async becomeProducer(@Param("id_house") houseId:string){
+    public async becomeProducer(@Param("id_house") houseId:string) : Promise<string>{
         console.log("[HouseEditorController][becomeProducer] Param : houseId="+houseId)
 
         var house= this.housesService.getHouse(houseId);
@@ -32,7 +32,7 @@ export class HouseEditorController {
         var producerId = await this.housesService.registryNewProducter(house.getClientName());
         house.setProducerId(producerId);
         console.log("[HouseEditorController][becomeProducer] return : houseId="+producerId)
-        return ;
+        return producerId;
     }
 
 

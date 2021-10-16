@@ -201,14 +201,14 @@ async function checkCarCons(houseID) {
         objectName: "Car"
     }
     console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
-    response = await doRequest({url:"http://consumption-detailed:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
+    var response = await doRequest({url:"http://consumption-detailed:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
     sleep(3000);
     console.log("[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body);
     console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body);
 }
 
-async function checkObject(houseID) {
-    response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
+export default async function checkObject(houseID) {
+    await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     sleep(2000);
     console.log("[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body);
     console.log("On constate qu'il a bien été ajouté :" + response.body);
@@ -228,7 +228,7 @@ async function askSchedule(houseID, objectName) {
 async function addObject(houseID, nameObject) {
     console.log("\nUn object paramètrable est branché");
     await sleep(2000);
-    response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
+    var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
     console.log("[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_");
 }
 
@@ -283,8 +283,8 @@ async function beforeStep() {
 }
 async function doTick() {
     globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes() + 10));
-    response = await doRequest({ url: "http://house:3000/tick", form: { date: globalDate }, method: "POST" });
-    response = await doRequest({ url: "http://supplier:3005/tick", form: { date: globalDate }, method: "POST" });
+    await doRequest({ url: "http://house:3000/tick", form: { date: globalDate }, method: "POST" });
+    await doRequest({ url: "http://supplier:3005/tick", form: { date: globalDate }, method: "POST" });
 }
 
 async function waitTick(iterationNumber) {
