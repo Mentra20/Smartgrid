@@ -1,32 +1,28 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AppController } from './app.controller';
-
+import { ConsumptionPeakController } from './consumption-peak/consumption-peak.controller';
+import { ConsumptionPeakService } from './consumption-peak/consumption-peak.service';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'KAFKA_EXAMPLE',
+        name: 'CONSUMPTION_PEAK',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'my-kafka-client-id',
+            clientId: 'consumption-peak',
             brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'consumer-test',
+            groupId: 'consumption-peak',
             allowAutoTopicCreation: true,
-            sessionTimeout: 30000,
-            
           }
         }
       },
     ]),
-    HttpModule,
   ],
-  controllers: [AppController],
-  providers: [],
+  controllers: [ConsumptionPeakController],
+  providers: [ConsumptionPeakService],
 })
 export class AppModule {}
