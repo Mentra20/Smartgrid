@@ -22,7 +22,7 @@ export class GlobalConsumptionController {
             consumptionDate:string,
             consumption:number
         }
-        = totalClientConsumptionMSG;
+        = totalClientConsumptionMSG.value;
 
         console.log("Global consumption database received the total client consumption from Kafka : " + JSON.stringify(totalClientConsumption));
 
