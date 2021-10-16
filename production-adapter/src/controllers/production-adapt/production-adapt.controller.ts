@@ -15,7 +15,7 @@ export class ProductionAdaptController {
 
     @MessagePattern("production.adapt")
     changeProduction(@Payload() productionAdaptMSG:any) {
-        var amountToAdd = productionAdaptMSG;
+        var amountToAdd = productionAdaptMSG.value;
         console.log("Producer adapter received the amount of kW producers need to supply : " + amountToAdd + " kW.");
         this.productionAdaptService.adaptProduction(amountToAdd);
     }
