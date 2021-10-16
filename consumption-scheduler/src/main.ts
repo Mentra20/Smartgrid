@@ -1,10 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
+  app.connectMicroservice({
+    name: 'CONSUMPTION_SCHEDULER',
+    transport: Transport.KAFKA,
+    options: {
+      consumer: {
+        groupId: 'consumption-scheduler',
+        allowAutoTopicCreation: true,
+      },
+    },
+  });
+  await app.startAllMicroservices();
+
   const config = new DocumentBuilder()
     .setTitle('consumption-scheduler')
     .setDescription('The consumption-scheduler API description')
