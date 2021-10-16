@@ -9,7 +9,6 @@ export class GlobalProductionController {
     constructor(private productionService:ProductionService,
         @Inject("GLOBAL_PRODUCTION_DB") private client:ClientKafka){}
 
-
     async onModuleInit() {
         this.client.subscribeToResponseOf("production.raw.global");
         await this.client.connect();
@@ -20,7 +19,7 @@ export class GlobalProductionController {
         var productionReceived:{
             id_producer:string, 
             productionDate:string, 
-            production:number} = totalProductionMSG;
+            production:number} = totalProductionMSG.value;
     
 
         console.log("Global production database received the total production from Kafka : " + JSON.stringify(productionReceived));
