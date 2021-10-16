@@ -19,10 +19,6 @@ export class GlobalConsumptionService {
         console.log("Client " + houseConsumption.houseID + " had a consumption of " + houseConsumption.totalConsumption + "kW the " + houseConsumption.consumptionDate + ".");
     }
 
-    public addHouseConsumptionToDB(houseConsumption:HouseConsumption){
-        this.houseConsumptionRepository.save(houseConsumption);
-    }
-
     public getTotalConsumptionByDate(date:Date){
         return this.houseConsumptionRepository.find({where:{consumptionDate: Between(new Date(date.getTime()-1000),new Date(date.getTime()+1000))}});
     }

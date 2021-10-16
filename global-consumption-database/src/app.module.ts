@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GlobalConsumptionController } from './controllers/global-consumption/global-consumption.controller';
 import { GlobalConsumptionService } from './services/global-consumption/global-consumption.service';
@@ -36,7 +34,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     },
   ]),
 ],
-  controllers: [AppController, GlobalConsumptionController],
-  providers: [AppService, GlobalConsumptionService],
+  controllers: [GlobalConsumptionController],
+  providers: [GlobalConsumptionService],
 })
 export class AppModule {}

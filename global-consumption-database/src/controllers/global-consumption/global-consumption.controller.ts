@@ -16,7 +16,7 @@ export class GlobalConsumptionController {
     }
 
     @MessagePattern("consumption.client") 
-    addClientConsumptionToDB(@Payload totalClientConsumptionMSG:any) {
+    addClientConsumptionToDB(@Payload() totalClientConsumptionMSG:any) {
         var totalClientConsumption:{
             houseID:string,
             consumptionDate:string,
