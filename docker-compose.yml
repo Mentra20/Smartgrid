@@ -64,11 +64,11 @@ services:
     depends_on:
       - "database"
 
-  consumption-db:
-    container_name: consumption-db
-    image: consumption-db:1.0.0
+  global-consumption-database:
+    container_name: global-consumption-databse
+    image: global-consumption-database:1.0.0
     build:
-      context: ./consumption-db
+      context: ./global-consumption-database
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
@@ -224,12 +224,11 @@ services:
     volumes:
       - /usr/src/app
 
-
-  supplier:
-    container_name: supplier
-    image: supplier:1.0.0
+  producers:
+    container_name: producers
+    image: producers:1.0.0
     build:
-      context: ./supplier
+      context: ./producers
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
