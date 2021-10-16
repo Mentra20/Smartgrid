@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class ProductionServiceStorage {
     private URL_RegisteryManager = "http://registry-manager:3003/subscription/producerSubscribe";
-    private URL_PUSH_PRODUCTION = "http://production-manager:3006/add-production"
+    private URL_PUSH_PRODUCTION = "http://production-provider:3006/add-production"
     constructor(private http:HttpService){}
     dictProducer = {}
 

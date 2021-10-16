@@ -8,7 +8,7 @@ import { ScheduledHouseObject } from 'src/models/house-object';
 @Injectable()
 export class HousesService {
     private URL_PUSH_CONSUMPTION = "http://consumption-detailed:3008/add-detailed-consumption"
-    private URL_PUSH_PRODUCTION = "http://production-manager:3006/add-production"
+    private URL_PUSH_PRODUCTION = "http://production-provider:3006/add-production"
 
     private URL_TIME_SLOT = "http://consumption-scheduler:3002/schedule"
     private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/clientSubscribe"
