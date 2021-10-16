@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DetailedConsumption } from 'src/models/detailed-consumption';
 import { Between, Repository } from 'typeorm';
-import { HttpService } from '@nestjs/axios';
 
 
 @Injectable()
@@ -11,22 +10,32 @@ export class DetailedConsumptionService {
     constructor(
         @InjectRepository(DetailedConsumption)
         private detailedConsumptionRepository: Repository<DetailedConsumption>,
-        private http:HttpService
     ){}
 
-    public addDetailedConsumptionToDB(detailedConsumption:DetailedConsumption){
-        this.detailedConsumptionRepository.save(detailedConsumption);
+    public async storeAllDetailedConsumptionInDB(detailedConsumptions:{
+        houseID:string, 
+        consumptionDate:string, 
+        object:{objectName:string, consumption:number}[]
+    }){
+        var houseID = detailedConsumptions.houseID;
+        var consumptionDate = detailedConsumptions.consumptionDate;
+
+        for(let detailedCons of detailedConsumptions.object){
+
+            var detailedConsumptionDB = new DetailedConsumption();
+            detailedConsumptionDB.houseID = houseID;
+            detailedConsumptionDB.consumptionDate = new Date(consumptionDate);
+
+            detailedConsumptionDB.objectName = detailedCons.objectName;
+            detailedConsumptionDB.consumption = detailedCons.consumption;
+
+            await this.addDetailedConsumptionInDB(detailedConsumptionDB);
+            console.log("new detailed consumption added : "+JSON.stringify(detailedConsumptionDB))
+        }
     }
 
-    public pushClientConsumption(houseID:string, consumptionDate:Date, clientConsumption:number){
-    
-        var message = {houseID:houseID, consumptionDate:consumptionDate,consumption:clientConsumption}
-        this.http.post("http://consumption-db:3009/push-house-consumption", {param:message}).subscribe(
-            {
-                next: (value) => console.log("client consumption send to ConsumptionDB") , 
-                error: (error) => console.log(error)
-            }
-        )
+    public addDetailedConsumptionInDB(detailedConsumption:DetailedConsumption){
+        this.detailedConsumptionRepository.save(detailedConsumption);
     }
 
     public async getDetailedConsumptionByDate(houseID:string, consumptionDate:Date, objectName:string){
