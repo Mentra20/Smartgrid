@@ -6,30 +6,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.connectMicroservice({
-    name:"CONSUMPTION_VERIFIER",
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        clientId: 'consumption-verifier',
-        brokers: ['kafka:9092'],
-      },
-      consumer: {
-        groupId: 'consumption-verifier',
-        allowAutoTopicCreation: true
-        
-      }
-    }
-  })
-  app.connectMicroservice({
     name:"CONSUMPTION_FRAME",
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: 'consumption-verifier',
+        clientId: 'consumption-frame',
         brokers: ['kafka:9092'],
       },
       consumer: {
-        groupId: 'consumption-verifier',
+        groupId: 'consumption-frame',
         allowAutoTopicCreation: true
         
       }

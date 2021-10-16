@@ -16,6 +16,8 @@ export class ElectricityFrameService {
     constructor (@Inject('CONSUMPTION_FRAME') private client:ClientKafka){}
 
     receiveConsumption(consumptionClient:{houseID:string,consumptionDate:Date,consumption:number}){
+        this.currentTick=this.currentTick ||consumptionClient.consumptionDate;
+        console.log()
         //si il arrive trop tard on lignore
         if(this.startDateFrame>consumptionClient.consumptionDate){
             console.log(`[ignore] consumption arrived too late: ${consumptionClient}`);
@@ -25,6 +27,7 @@ export class ElectricityFrameService {
     }
 
     receiveProduction(productionProducer:{id_producer:string,consumptionDate:Date,consumption:number}){
+        this.currentTick=this.currentTick ||productionProducer.consumptionDate;
         //si il arrive trop tard on lignore
         if(this.startDateFrame>productionProducer.consumptionDate){
             console.log(`[ignore] production arrived too late: ${productionProducer}`);
@@ -35,6 +38,9 @@ export class ElectricityFrameService {
 
     doTick(date:Date){
         this.currentTick = date;
+        if(!this.startDateFrame || this.currentTick<this.startDateFrame ){
+            this.startDateFrame = date
+        }
         if(this.endFrame()){
             this.consumptionAdapt();
             this.resetFrame();
@@ -50,6 +56,7 @@ export class ElectricityFrameService {
         var productionFrameTotal = this.productionFrame;
         var startDateFrame = this.startDateFrame;
         var endDateFrame = new Date(this.startDateFrame.getTime()+AVERAGE_FRAME_TIME_MS);
+        console.log("send new frame "+{consumptionFrameTotal,productionFrameTotal,startDateFrame,endDateFrame})
 
         this.client.emit('electricity.frame',{consumptionFrameTotal,productionFrameTotal,startDateFrame,endDateFrame})
     }

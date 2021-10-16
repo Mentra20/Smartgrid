@@ -1,3 +1,4 @@
+import { HttpService } from '@nestjs/axios';
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ClientKafka, Ctx, EventPattern, KafkaContext, MessagePattern, Payload, ServerKafka, Transport } from '@nestjs/microservices';
 import { throws } from 'assert';
@@ -8,7 +9,7 @@ export class AppController {
 
 
 
-    constructor(@Inject("KAFKA_EXAMPLE") private client:ClientKafka){
+    constructor(@Inject("KAFKA_EXAMPLE") private client:ClientKafka,private http : HttpService){
     }
 
     async onModuleInit() {
@@ -21,6 +22,38 @@ export class AppController {
         await this.client.connect();
         console.log("im ready")
       }
+
+    
+    @Get("test-frame")
+    async testFrame() {
+        var currentDate = new Date()
+        this.http.post("http://localhost:3007/clock/tick",{date:currentDate}).subscribe()
+        console.log("I emit test to frame")
+        this.client.emit('consumption.client',{houseID:"hello",consumptionDate:new Date(),consumption:100})
+        this.client.emit('consumption.client',{houseID:"hello2",consumptionDate:new Date(),consumption:100})
+        this.client.emit('consumption.client',{houseID:"hello3",consumptionDate:new Date(),consumption:100})
+
+        this.client.emit('production.raw.global',{id_producer:"prod1",consumptionDate:new Date(),consumption:300})
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+          })
+        this.http.post("http://localhost:3007/clock/tick",{date:new Date(currentDate.getTime()+1000*60*5)}).subscribe()
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+          })
+        this.http.post("http://localhost:3007/clock/tick",{date:new Date(currentDate.getTime()+1000*60*10)}).subscribe()
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+          })
+        this.http.post("http://localhost:3007/clock/tick",{date:new Date(currentDate.getTime()+1000*60*15)}).subscribe()
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+          })
+
+
+
+    }
 
     @Get("with-response")
     sendEvent() {
