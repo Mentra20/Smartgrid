@@ -1,50 +1,42 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { DetailedConsumption } from 'src/models/detailed-consumption';
 import { DetailedConsumptionService } from 'src/services/detailed-consumption/detailed-consumption.service';
-
+import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('')
 export class DetailedConsumptionController {
 
-    constructor(private detailedConsumptionService: DetailedConsumptionService){}
+    constructor(
+        private detailedConsumptionService: DetailedConsumptionService,
+        @Inject("CONSUMPTION_DETAILED") private client:ClientKafka){}
 
-    @Post('add-detailed-consumption')
-    addDetailedConsumption(
-        @Body("param") objectsConsumptions:{
-            houseID:string, 
-            consumptionDate:string, 
-            objectName:string, 
-            consumption:number}[])
-    {
-        //TODO: verifier si le client existe dans la DB
-        console.log("[consumption-detailed/add-detailed-consumption][addDetailedConsumption] objectsConsumptions:any[] "+ objectsConsumptions +" => void")
-        console.log("new detailed consumptions")
-        
-        if(!objectsConsumptions?.length) return;
+    async onModuleInit() {
+        this.client.subscribeToResponseOf("consumption.raw.detailed");
+        await this.client.connect();
 
-        var clientConsumptionSum = 0;
-        var houseID = objectsConsumptions[0].houseID;
-        var consumptionDate = objectsConsumptions[0].consumptionDate;
-
-        for(let object of objectsConsumptions){
-
-            var detailedConsumption = Object.assign(new DetailedConsumption(),{...object});
-
-            this.detailedConsumptionService.addDetailedConsumptionToDB(detailedConsumption);
-
-            clientConsumptionSum += detailedConsumption.consumption;
-        }
-        console.log("new detailed consumptions added")
-
-        this.detailedConsumptionService.pushClientConsumption(houseID,new Date(consumptionDate),clientConsumptionSum);
+        console.log("consumption-detailed connected on bus")
     }
 
+    @MessagePattern("consumption.raw.detailed")
+    async StoreDetailedConsumption(@Payload() detailedConsumptionsMSG:any){
+        console.log("[detailed-consumption][StoreDetailedConsumption] detailedConsumptionsMSG:any "+ detailedConsumptionsMSG +" => void")
+
+        var detailedConsumptions:{
+            houseID:string, 
+            consumptionDate:string, 
+            object:{objectName:string, consumption:number}[]
+        }
+        = detailedConsumptionsMSG.value;
+
+        await this.detailedConsumptionService.storeAllDetailedConsumptionInDB(detailedConsumptions);
+        console.log("detailed consumptions are store in DB");
+    }
 
     @Get('get-detailed-consumption')
     async getDetailedConsumption(@Query('date') dateString:string, @Query('houseID') houseID:string, @Query('objectName') objectName:string) {
         var date = new Date(dateString);
         var detailedConsumption:DetailedConsumption = (await this.detailedConsumptionService.getDetailedConsumptionByDate(houseID,date,objectName));
-        console.log("[get-detailed-consumption][getDetailedConsumption] Get date : "+date+" and house ID "+houseID+" and objectName "+objectName);
+        console.log("[detailed-consumption][get-detailed-consumption] Get date : "+date+" and house ID "+houseID+" and objectName "+objectName);
 
         console.log("house consumption of "+objectName+" for houseID "+ houseID +" at date "+date+" is "+detailedConsumption.consumption);
 
