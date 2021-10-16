@@ -162,7 +162,6 @@ async function main() {
     console.log("Pic : " + response.body);
     console.log("\n");
     console.log("\n");
-    var test = response.body;
 
     console.log("\n");
     console.log("\n");
@@ -235,7 +234,7 @@ async function addObject(houseID, nameObject) {
 async function doTick() {
     globalDate = globalDate.setMinutes(globalDate.getMinutes() + 10);
     await doRequest({ url: "http://house:3000/tick/", form: { date: globalDate }, method: "POST" });
-    await doRequest({ url: "http://supplier:3005/tick/", form: { date: globalDate }, method: "POST" });
+    await doRequest({ url: "http://producers:3005/tick/", form: { date: globalDate }, method: "POST" });
 }
 
 async function waitTick(iterationNumber) {
@@ -275,7 +274,7 @@ async function beforeStep() {
 
     //On inscrit un producteur et on fixe sa production
     var producer = { producerName: "EDF", production: 1000 }
-    response = await doRequest({ url: "http://supplier:3005/add-supplier", form: producer, method: "POST" });
+    response = await doRequest({ url: "http://producers:3005/add-supplier", form: producer, method: "POST" });
     await sleep(2000)
 
     var producer = { producerName: "ENGIE", production: 1000 }
@@ -283,8 +282,10 @@ async function beforeStep() {
 }
 async function doTick() {
     globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes() + 10));
+
     await doRequest({ url: "http://house:3000/tick", form: { date: globalDate }, method: "POST" });
     await doRequest({ url: "http://supplier:3005/tick", form: { date: globalDate }, method: "POST" });
+
 }
 
 async function waitTick(iterationNumber) {
