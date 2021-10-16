@@ -180,11 +180,11 @@ services:
     depends_on:
       - "database"
 
-  production-db:
-    container_name: production-db
-    image: production-db:1.0.0
+  global-production-database:
+    container_name: global-production-database
+    image: global-production-database:1.0.0
     build:
-      context: ./production-db
+      context: ./glboal-production-database
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
