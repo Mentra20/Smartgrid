@@ -23,7 +23,7 @@ export class RequestManagerService {
   getHousesIDFromCommunityID(communityID: number):Promise<any[]> {
     return firstValueFrom(
       this.http.get(this.URL_DATASERVICE_REGISTRY, {
-        params: { comunityID: communityID },
+        params: { communityID: communityID },
       }),
     ).then((body) => {
       var housesID = []

@@ -30,6 +30,7 @@ export class ManageSchedulObjectController {
     
     @Post(":id_house/scheduled-object-stop-all")
     public stopAllScheduledObject(@Param("id_house") houseId:string,@Res() res: Response){
+        console.log("On stop les objet plannifier pour la maison : "+houseId)
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){
             return;

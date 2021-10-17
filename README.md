@@ -37,8 +37,8 @@ Les containers de nos services sont re-créés entre chaque scénario.
 3 - On regarde la consommation totale de toutes les maisons  
 4 - On regarde la consommation dans la communauté  
 5 - On détecte un pic de consommation dans cette communautée  
-6 - On demande au object panifiable d'arrêter de charger  
-7 - On remarque qu’il n’y a plus de pic   
+6 - On demande aux objets planifiables d'arrêter de charger  
+7 - On remarque qu’il n’y a plus de pic  
 
 **Scénario 3 : Achat de la production supplémentaire d'une maison**
 

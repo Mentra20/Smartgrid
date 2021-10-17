@@ -7,8 +7,11 @@ export class ClientRegistryController {
   constructor(private clientRegistryService: ClientRegistryService) {}
 
   @Get('community')
-  getCommunity(@Query('communityID') communityID: number): Promise<Client[]> {
-    return this.clientRegistryService.getCommunity(communityID);
+  getCommunity(@Query('communityID') communityID: string): Promise<Client[]> {
+    console.log("[ClientRegistryController][getCommunity] params: communityID:"+communityID)
+    var value = this.clientRegistryService.getCommunity(+communityID);
+    console.log("[ClientRegistryController][getCommunity] return: "+JSON.stringify(value))
+    return value
   }
 
   @Get('house')

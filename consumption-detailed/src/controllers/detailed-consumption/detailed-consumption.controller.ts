@@ -38,8 +38,8 @@ export class DetailedConsumptionController {
         var detailedConsumption:DetailedConsumption = (await this.detailedConsumptionService.getDetailedConsumptionByDate(houseID,date,objectName));
         console.log("[detailed-consumption][get-detailed-consumption] Get date : "+date+" and house ID "+houseID+" and objectName "+objectName);
 
-        console.log("house consumption of "+objectName+" for houseID "+ houseID +" at date "+date+" is "+detailedConsumption.consumption);
+        console.log("house consumption of "+objectName+" for houseID "+ houseID +" at date "+date+" is "+(detailedConsumption?.consumption||0));
 
-        return detailedConsumption.consumption;
+        return detailedConsumption?.consumption||0;
     }
 }

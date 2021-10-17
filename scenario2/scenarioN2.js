@@ -23,6 +23,8 @@ var globalDate = new Date();
 async function main() {
     const consumer = kafka.consumer({ groupId: 'scenario2' })
     await consumer.connect()
+    await consumer.subscribe({ topic: 'consumption.peak', })
+
 
     console.log("Scénario 2 : pic dans une communauté");
 
@@ -36,10 +38,8 @@ async function main() {
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
     console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body);
     console.log("Les maisons inscrites : " + response.body);
-    console.log("\n");
-    console.log("\n");
     console.log("\n\n================= STEP 1 =================")
-        // STEP 1
+    // STEP 1
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
 
@@ -52,29 +52,11 @@ async function main() {
     var client4 = { client_name: "Jean-Baptiste" };
     var houseID4 = await addHouse(client4);
 
-    var client5 = { client_name: "Jean-Charles" };
-    var houseID5 = await addHouse(client5);
-
-    var client6 = { client_name: "Jean-Claude" };
-    var houseID6 = await addHouse(client6);
-
-    var client7 = { client_name: "Jean-Eudes" };
-    var houseID7 = await addHouse(client7);
-
-    var client8 = { client_name: "Jean-François" };
-    var houseID8 = await addHouse(client8);
-
-    var client9 = { client_name: "Jean-Jacques" };
-    var houseID9 = await addHouse(client9);
-
     console.log("On regarde les maisons qui sont inscrites : ");
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
     console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body);
     console.log("Les maisons inscrites : " + response.body);
-    console.log("\n");
-    console.log("\n");
-    console.log("\n");
-    console.log("\n");
+
     console.log("\n\n================= STEP 2 =================")
         // STEP 2
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
@@ -84,26 +66,16 @@ async function main() {
     await addObject(houseID2, mixeur);
     await addObject(houseID3, mixeur);
     await addObject(houseID4, mixeur);
-    await addObject(houseID5, mixeur);
-    await addObject(houseID6, mixeur);
-    await addObject(houseID7, mixeur);
-    await addObject(houseID8, mixeur);
-    await addObject(houseID9, mixeur);
     console.log("\n");
 
 
-    var car = { object: { name: "Car", maxConsumption: 1050 }, type: "SCHEDULED" }
+    var car = { object: { name: "Car", maxConsumption: 4000 }, type: "SCHEDULED" }
 
     console.log("On ajoute un objet programmable a chaque maison");
     await addObject(houseID1, car);
     await addObject(houseID2, car);
     await addObject(houseID3, car);
     await addObject(houseID4, car);
-    await addObject(houseID5, car);
-    await addObject(houseID6, car);
-    await addObject(houseID7, car);
-    await addObject(houseID8, car);
-    await addObject(houseID9, car);
     console.log("\n");
 
     console.log("On regarde les objets des maisons : ");
@@ -116,102 +88,66 @@ async function main() {
     await checkObject(houseID3);
     console.log("Pour la maison 4 : ");
     await checkObject(houseID4);
-    console.log("Pour la maison 5 : ");
-    await checkObject(houseID5);
-    console.log("Pour la maison 6 : ");
-    await checkObject(houseID6);
-    console.log("Pour la maison 7 : ");
-    await checkObject(houseID7);
-    console.log("Pour la maison 8 : ");
-    await checkObject(houseID8);
-    console.log("Pour la maison 9 : ");
-    await checkObject(houseID9);
-    console.log("\n");
 
-
-
-    console.log("On demande un schedule pour les objets planifiables : ");
-    console.log("\n");
+    console.log("On demande un planing pour les objets planifiables : ");
     await askSchedule(houseID1, "Car");
     await askSchedule(houseID2, "Car");
     await askSchedule(houseID3, "Car");
     await askSchedule(houseID4, "Car");
-    await askSchedule(houseID5, "Car");
-    await askSchedule(houseID6, "Car");
-    await askSchedule(houseID7, "Car");
-    await askSchedule(houseID8, "Car");
-    await askSchedule(houseID9, "Car");
-    console.log("\n");
+
+    await waitTick(1);
 
 
 
     // STEP 3
-    console.log("\n");
-    console.log("\n");
+    await sleep(2000)
     console.log("\n\n================= STEP 3 =================")
-    await consumer.subscribe({ topic: 'consumption.peak', })
+
+    console.log("On regarde la consommation totale de toutes les maisons");
+    var response = await doRequest({ url: "http://request-manager:3007/total-consumption", qs: {date:globalDate}, method: "GET" });
+    console.log("[service]:request-manager; [route]:total-consumption; [params]: " + JSON.stringify({date:globalDate}) + " => [return]:" + JSON.parse(response.body));
+    console.log("Actuellement, la consommation totale est : "+response.body+"W");
+
+    await sleep(2000)
+    console.log("\n\n================= STEP 4 =================");
+    console.log("On regarde la consommation dans la communauté");
+
+    var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: {date:globalDate,communityID:1}, method: "GET" });
+    console.log("[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body));
+    console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+"W");
+
+    await sleep(2000)
+    console.log("\n\n================= STEP 5 =================");
+    console.log("On détecte un pic de consommation dans cette communautée");
+
     var topicListener = consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
-            main2(message)
-            consumer.stop()
-            consumer.disconnect()
-            
+            console.log("on a un pic de consommation dans la communauté : ")
+            console.log(message.value.toString())  
         }
       })
     await topicListener;
-    await waitTick(1)
+    await sleep(5000)
+    consumer.stop();
+    consumer.disconnect();
 
-}
+    await waitTick(2);
+    await sleep(2000)
 
-async function main2(message){
-    console.log(message.value.toString())
-
-
-    var communityReq = { houseID: houseID1 };
-    console.log("On regarde la communauté de la maison 1");
-    var response = await doRequest({ url: "http://client-database:3004/client-registry/house", qs: communityReq, method: "GET" });
-    console.log("[service]:client-database; [route]:client-registry/house; [params]: " + JSON.stringify(communityReq) + " => [return]:" + JSON.parse(response.body));
-    var communityID= JSON.parse(response.body).id_community;
-    console.log("\n");
-    console.log("\n");
-
-    var peakReq = { date: globalDate, ID: communityID };
-    console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
-    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-peak", qs: peakReq, method: "GET" });
-    console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
-    console.log("Pic : " + response.body);
-    console.log("\n");
-    console.log("\n");
-
-    console.log("\n");
-    console.log("\n");
-    console.log("\n\n================= STEP 4 =================")
-        // STEP 4
-    console.log("On vérifie que tous les objets planifiables ont été shutdown");
-    console.log("\n");
+    console.log("\n\n================= STEP 6 =================");
+    console.log("On demande au object panifiable d'arrêter de charger")
 
     await checkCarCons(houseID1);
     await checkCarCons(houseID2);
     await checkCarCons(houseID3);
     await checkCarCons(houseID4);
-    await checkCarCons(houseID5);
-    await checkCarCons(houseID6);
-    await checkCarCons(houseID7);
-    await checkCarCons(houseID8);
-    await checkCarCons(houseID9);
-    console.log("\n");
-    console.log("\n");
-    console.log("\n\n================= STEP 5 =================")
 
-    // STEP 5
-
-    console.log("On vérifie si il y a un pic dans la communauté " + communityID + " à la date du " + globalDate);
-    response = await doRequest({ url: "http://consumption-verifier:3007/consumption-check", qs: peakReq, method: "GET" });
-    console.log("[service]:consumption-db; [route]:consumption-peak; [params]: " + JSON.stringify(peakReq) + " => [return]:" + response.body);
-    console.log("Pic : " + response.body);
-    console.log("\n");
-    console.log("\n");
-    consumer.disconnect();
+    await sleep(2000)
+    console.log("\n\n================= STEP 7 =================");
+    console.log("On remarque qu’il n’y a plus de pic")
+    var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: {date:globalDate,communityID:1}, method: "GET" });
+    console.log("[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body));
+    console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+"W");
     
 }
 
@@ -223,7 +159,6 @@ async function checkCarCons(houseID) {
     }
     console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
     var response = await doRequest({url:"http://consumption-detailed:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
-    sleep(3000);
     console.log("[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body);
     console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body);
 }
@@ -231,8 +166,8 @@ async function checkCarCons(houseID) {
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log("[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body);
-    console.log("On constate qu'il a bien été ajouté :" + response.body);
-    console.log("\n");
+    console.log("On constate qu'ils ont bien été ajoutés :" + response.body);
+    console.log("");
 }
 
 async function askSchedule(houseID, objectName) {
@@ -240,13 +175,13 @@ async function askSchedule(houseID, objectName) {
     var response = await doRequest({ url: "http://house:3000/manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot", method: "POST" });
     console.log("[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body);
     console.log("On reçoit le planning suivant :" + response.body);
-    console.log("\n");
+    console.log("");
 }
 
 
 
 async function addObject(houseID, nameObject) {
-    console.log("\nUn object paramètrable est branché");
+    console.log("\nUn object est branché");
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
     console.log("[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_");
 }

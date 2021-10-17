@@ -8,6 +8,7 @@ export class RequestManagerController {
 
   @Get('community-consumption')
   async getCommunityConsumption(@Query('date') date:string,@Query('communityID') communityID: number):Promise<number> {
+    console.log("[RequestManagerController][getCommunityConsumption] params:"+JSON.stringify({date,communityID}))
     var housesID = await this.requestManagerService.getHousesIDFromCommunityID(communityID)
     console.log("Get houseID list : "+housesID);
 

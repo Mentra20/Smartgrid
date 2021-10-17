@@ -55,7 +55,7 @@ export class SubscriptionService {
     }
 
     private giveCommunityID():number {
-        if (this.nbHouseInCommunity < 10) {
+        if (this.nbHouseInCommunity < 3) {
             this.nbHouseInCommunity++;
             return this.ID_Community;
         }
