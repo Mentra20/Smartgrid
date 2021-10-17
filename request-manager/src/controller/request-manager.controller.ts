@@ -6,25 +6,41 @@ export class ControllerController {
     private readonly requestManagerService: RequestManagerService,
   ) {}
 
-  @Get('totalconsumptionfromcommunityid')
-  async getTotalConsumptionFromCommunityID(@Query('date') date:string,@Query('communityID') communityID: number):Promise<number> {
-    return this.requestManagerService.getTotalConsumptionFromCommunityID(date,await this.requestManagerService.getHousesIDFromCommunityID(communityID));
+  @Get('community-consumption')
+  async getCommunityConsumption(@Query('date') date:string,@Query('communityID') communityID: number):Promise<number> {
+    var housesID = await this.requestManagerService.getHousesIDFromCommunityID(communityID)
+    console.log("Get houseID list : "+housesID);
+
+    var communityCons = await this.requestManagerService.getCommunityConsumption(date,housesID);
+    console.log("Get community consumption : "+communityCons);
+    return communityCons;
   }
-  @Get('totalproductionfromdate')
-  getProductionFromDate(@Query('date') date:string):Promise<number> {
-    return this.requestManagerService.getTotalProductionDate(date);
+
+  @Get('total-production')
+  async getTotalProduction(@Query('date') date:string):Promise<number> {
+    var totalProd = await this.requestManagerService.getTotalProduction(date);
+    console.log("Get total production : "+totalProd);
+    return totalProd;
   }
-  @Get('totalconsumptionfromdate')
-  getConsumptionFromDate(@Query('date') date:string):Promise<number> {
-    return this.requestManagerService.getTotalConsumptionFromDate(date);
+
+  @Get('total-consumption')
+  async getTotalConsumption(@Query('date') date:string):Promise<number> {
+    var totalCons = await this.requestManagerService.getTotalConsumption(date);
+    console.log("Get total consumption : "+totalCons);
+    return totalCons;
   } 
-  @Get('global-house-consumption')
-  getGlobalConsumptionFromHouseID(@Query('date') date:string,@Query('houseID') houseID: string):Promise<number> {
-    return this.requestManagerService.getTotalConsumptionFromHouseID(date,houseID);
+
+  @Get('house-global-consumption')
+  async getHouseGlobalConsumption(@Query('date') date:string,@Query('houseID') houseID: string):Promise<number> {
+    var houseGlobalCons = await this.requestManagerService.getHouseGlobalConsumption(date,houseID);
+    console.log("Get house global consumption : "+houseGlobalCons);
+    return houseGlobalCons;
   }
-  @Get('detailedconsumptionfromdate')
-  getDetailedConsumption(@Query('date') dateString:string, @Query('houseID') houseID:string, @Query('objectName') objectName:string):Promise<number>{
-    return this.requestManagerService.getDetailedConsumption(dateString,houseID,objectName);
+  @Get('house-detailed-consumption')
+  async getHouseDetailedConsumption(@Query('date') dateString:string, @Query('houseID') houseID:string, @Query('objectName') objectName:string):Promise<number>{
+    var houseDetailedCons = await this.requestManagerService.getHouseDetailedConsumption(dateString,houseID,objectName);
+    console.log("Get house detailed consumption : "+houseDetailedCons);
+    return houseDetailedCons;
   }
 
 }
