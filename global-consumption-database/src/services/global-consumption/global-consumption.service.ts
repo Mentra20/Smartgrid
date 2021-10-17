@@ -13,7 +13,7 @@ export class GlobalConsumptionService {
         let houseConsumption = new HouseConsumption();
         houseConsumption.houseID = totalClientConsumption.houseID;
         houseConsumption.consumptionDate = totalClientConsumption.consumptionDate;
-        houseConsumption.totalConsumption = totalClientConsumption.consumption;
+        houseConsumption.totalConsumption = totalClientConsumption.totalConsumption;
 
         await this.houseConsumptionRepository.save(houseConsumption);
         console.log("Client " + houseConsumption.houseID + " had a consumption of " + houseConsumption.totalConsumption + " W the " + houseConsumption.consumptionDate + ".");

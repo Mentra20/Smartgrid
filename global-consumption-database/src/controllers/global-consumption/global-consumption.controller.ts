@@ -20,7 +20,7 @@ export class GlobalConsumptionController {
         var totalClientConsumption:{
             houseID:string,
             consumptionDate:string,
-            consumption:number
+            totalConsumption:number
         }
         = totalClientConsumptionMSG.value;
 
