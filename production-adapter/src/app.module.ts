@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ProductionAdaptController } from './controllers/production-adapt/production-adapt.controller';
@@ -20,6 +21,7 @@ import { ProductionAdaptService } from './services/production-adapt/production-a
       }
     },
   ]),
+  HttpModule,
 ],
   controllers: [ProductionAdaptController],
   providers: [ProductionAdaptService],
