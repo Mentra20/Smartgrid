@@ -23,6 +23,13 @@ export class RequestManagerController {
     return totalProd;
   }
 
+  @Get('detailed-production')
+  async getDetailedProduction(@Query('date') date:string,@Query('producerID') producerID:string):Promise<number> {
+    var detailedProd = await this.requestManagerService.getDetailedProduction(date,producerID);
+    console.log("Get detailed production : "+detailedProd);
+    return detailedProd;
+  } 
+
   @Get('total-consumption')
   async getTotalConsumption(@Query('date') date:string):Promise<number> {
     var totalCons = await this.requestManagerService.getTotalConsumption(date);

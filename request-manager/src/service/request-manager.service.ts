@@ -13,6 +13,9 @@ export class RequestManagerService {
   private URL_GLOBAL_PRODUCTION_MANAGER =
     'http://global-production-database:3001/global-production/get-production';
 
+  private URL_DETAILED_PRODUCTION_MANAGER =
+    'http://global-production-database:3001/global-production/get-producer-production';
+
   private URL_CONSUMPTION_DETAILED =
     'http://consumption-detailed:3008/get-detailed-consumption';
   constructor(private http: HttpService) { }
@@ -73,6 +76,16 @@ export class RequestManagerService {
     return firstValueFrom(
       this.http.get(this.URL_GLOBAL_PRODUCTION_MANAGER, {
         params: { date: date },
+      })
+    ).then((body) => {
+      return body.data || 0
+    });
+  }
+
+  getDetailedProduction(date: string, producerID:string):Promise<number> {
+    return firstValueFrom(
+      this.http.get(this.URL_DETAILED_PRODUCTION_MANAGER, {
+        params: { date: date, producerID:producerID },
       })
     ).then((body) => {
       return body.data || 0
