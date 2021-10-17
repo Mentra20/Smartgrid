@@ -17,14 +17,14 @@ export class ElectricityFrameController {
 
     @MessagePattern("consumption.client")
     consumptionClient(@Payload() message){
-        console.log("consumption receive "+JSON.stringify(message.value))
+        console.log("consumption receive "+JSON.stringify(message.value) + " W.")
         var value = message.value;
         this.frameService.receiveConsumption({houseID:value.houseID,consumptionDate:new Date(value.consumptionDate),consumption:+value.consumption})
     }
 
     @MessagePattern("production.raw.global")
     production(@Payload() message){
-        console.log("production receive :"+JSON.stringify(message.value))
+        console.log("production receive :"+JSON.stringify(message.value) + " W.")
 
         var value = message.value;
         this.frameService.receiveProduction({id_producer:value.id_producer,productionDate:new Date(value.productionDate),production:+value.production})

@@ -16,7 +16,7 @@ export class AdaptConsumptionService {
         params: { communityID: communityID },
       }),
     ).then((body) => {
-      console.log("on coupe les objet plannifier des maisons : "+JSON.stringify(body.data))
+      console.log("on coupe les objets plannifier des maisons : "+JSON.stringify(body.data))
       const houses: any[] = body.data;
       houses.forEach((house) =>
         this.http.post(

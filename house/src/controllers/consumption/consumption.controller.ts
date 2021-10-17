@@ -10,7 +10,7 @@ export class ConsumptionController {
     getConsumption(@Query("houseID") houseId:string): number {
         var consumption = this.housesService.getTotalConsumption(houseId);
         console.log("[consumption/global][getConsumption] houseId:string " +houseId + " => number ");
-        console.log("controller consumption global: "+consumption)
+        console.log("controller consumption global: "+consumption + " W.")
         return consumption;
     }
 
