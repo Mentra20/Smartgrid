@@ -32,8 +32,8 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 **Scénario 2 : Gestion de la consommation et pic de consommation dans une communauté**  
 
-1 - Plusieurs maisons dans une communautés et d'autres maisons dans d'autres communautés  
-2 - Plein d’objets planifiables et non planifiables dans les maisons de la communauté  
+1 - On a des maisons dans une communautés et d'autres dans une autre communautés  
+2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons de la communauté  
 3 - On regarde la consommation totale de toutes les maisons  
 4 - On regarde la consommation dans la communauté  
 5 - On détecte un pic de consommation dans cette communautée  

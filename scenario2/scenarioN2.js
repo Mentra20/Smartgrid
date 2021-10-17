@@ -6,7 +6,17 @@ const kafka = new Kafka({
     brokers: ['kafka:9092'],
   })
 
+// Reset
+ANSI_RESET = "\033[0m";  // Text Reset
 
+// Regular Colors
+ANSI_RED = "\033[0;31m";     // RED
+ANSI_GREEN = "\033[0;32m";   // GREEN
+ANSI_YELLOW = "\033[0;33m";  // YELLOW
+ANSI_BLUE = "\033[0;34m";    // BLUE
+ANSI_PURPLE = "\033[0;35m";  // PURPLE
+ANSI_CYAN = "\033[0;36m";    // CYAN
+ANSI_WHITE = "\033[0;37m";   // WHITE
 
 
 
@@ -26,7 +36,7 @@ async function main() {
     await consumer.subscribe({ topic: 'consumption.peak', })
 
 
-    console.log("Scénario 2 : pic dans une communauté");
+    console.log(ANSI_GREEN+"Scénario 2 : pic dans une communauté");
 
     //await beforeStep();
 
@@ -36,9 +46,11 @@ async function main() {
     var response;
     console.log("On regarde les maisons actuellement inscrites : ");
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
-    console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body);
+    console.log(ANSI_BLUE+"[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body+ANSI_RESET);
     console.log("Les maisons inscrites : " + response.body);
-    console.log("\n\n================= STEP 1 =================")
+
+    console.log(ANSI_GREEN+"\n\n================= STEP 1 ================="+ANSI_RESET)
+    console.log("On a des maisons dans une communautés et d'autres dans une autre communautés");
     // STEP 1
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
@@ -54,11 +66,12 @@ async function main() {
 
     console.log("On regarde les maisons qui sont inscrites : ");
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
-    console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body);
+    console.log(ANSI_BLUE+"[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body+ANSI_RESET);
     console.log("Les maisons inscrites : " + response.body);
 
-    console.log("\n\n================= STEP 2 =================")
-        // STEP 2
+    console.log(ANSI_GREEN+"\n\n================= STEP 2 ================="+ANSI_RESET)
+    console.log("On ajoute plein d’objets planifiables et non planifiables dans les maisons de la communauté");
+
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
 
     console.log("On ajoute un objet non programmable a chaque maison");
@@ -97,27 +110,24 @@ async function main() {
 
     await waitTick(1);
 
-
-
-    // STEP 3
     await sleep(2000)
-    console.log("\n\n================= STEP 3 =================")
+    console.log(ANSI_GREEN+"\n\n================= STEP 3 ================="+ANSI_RESET)
 
     console.log("On regarde la consommation totale de toutes les maisons");
     var response = await doRequest({ url: "http://request-manager:3007/total-consumption", qs: {date:globalDate}, method: "GET" });
-    console.log("[service]:request-manager; [route]:total-consumption; [params]: " + JSON.stringify({date:globalDate}) + " => [return]:" + JSON.parse(response.body));
+    console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-consumption; [params]: " + JSON.stringify({date:globalDate}) + " => [return]:" + JSON.parse(response.body)+ANSI_RESET);
     console.log("Actuellement, la consommation totale est : "+response.body+"W");
 
     await sleep(2000)
-    console.log("\n\n================= STEP 4 =================");
+    console.log(ANSI_GREEN+"\n\n================= STEP 4 ================="+ANSI_RESET);
     console.log("On regarde la consommation dans la communauté");
 
     var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: {date:globalDate,communityID:1}, method: "GET" });
-    console.log("[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body));
+    console.log(ANSI_BLUE+"[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body)+ANSI_RESET);
     console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+"W");
 
     await sleep(2000)
-    console.log("\n\n================= STEP 5 =================");
+    console.log(ANSI_GREEN+"\n\n================= STEP 5 ================="+ANSI_RESET);
     console.log("On détecte un pic de consommation dans cette communautée");
 
     var topicListener = consumer.run({
@@ -134,7 +144,7 @@ async function main() {
     await waitTick(2);
     await sleep(2000)
 
-    console.log("\n\n================= STEP 6 =================");
+    console.log(ANSI_GREEN+"\n\n================= STEP 6 ================="+ANSI_RESET);
     console.log("On demande au object panifiable d'arrêter de charger")
 
     await checkCarCons(houseID1);
@@ -143,10 +153,10 @@ async function main() {
     await checkCarCons(houseID4);
 
     await sleep(2000)
-    console.log("\n\n================= STEP 7 =================");
+    console.log(ANSI_GREEN+"\n\n================= STEP 7 ================="+ANSI_RESET);
     console.log("On remarque qu’il n’y a plus de pic")
     var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: {date:globalDate,communityID:1}, method: "GET" });
-    console.log("[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body));
+    console.log(ANSI_BLUE+"[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body)+ANSI_RESET);
     console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+"W");
     
 }
@@ -159,13 +169,13 @@ async function checkCarCons(houseID) {
     }
     console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
     var response = await doRequest({url:"http://consumption-detailed:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
-    console.log("[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body);
+    console.log(ANSI_BLUE+"[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body+ANSI_RESET);
     console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body);
 }
 
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
-    console.log("[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body);
+    console.log(ANSI_BLUE+"[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body+ANSI_RESET);
     console.log("On constate qu'ils ont bien été ajoutés :" + response.body);
     console.log("");
 }
@@ -173,7 +183,7 @@ async function checkObject(houseID) {
 async function askSchedule(houseID, objectName) {
     console.log("On demande un planning de consommation :");
     var response = await doRequest({ url: "http://house:3000/manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot", method: "POST" });
-    console.log("[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body);
+    console.log(ANSI_BLUE+"[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body+ANSI_RESET);
     console.log("On reçoit le planning suivant :" + response.body);
     console.log("");
 }
@@ -183,7 +193,7 @@ async function askSchedule(houseID, objectName) {
 async function addObject(houseID, nameObject) {
     console.log("\nUn object est branché");
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
-    console.log("[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_");
+    console.log(ANSI_BLUE+"[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_"+ANSI_RESET);
 }
 
 async function doTick() {
@@ -204,35 +214,9 @@ async function waitTick(iterationNumber) {
 async function addHouse(client) {
     console.log("Une nouvelle maison souhaite s'inscrire : ");
     var response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: client, method: "POST" });
-    console.log("[service]:house; [route]:house-editor/add-house; [params]:" + JSON.stringify(client) + " => [return]:" + response.body);
+    console.log(ANSI_BLUE+"[service]:house; [route]:house-editor/add-house; [params]:" + JSON.stringify(client) + " => [return]:" + response.body+ANSI_RESET);
     console.log("\n");
     return response.body;
-}
-async function beforeStep() {
-    var scheduleStart = { dayDate: globalDate }
-    doRequest({ url: "http://consumption-scheduler:3002/schedule", form: scheduleStart, method: "POST" });
-    var response;
-    var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
-        //On inscrit des maisons et ajout des objets
-    response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: { client_name: "Jean" }, method: "POST" });
-    var houseID1 = response.body;
-    response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID1 + "/add-object", form: mixeur, method: "POST" });
-
-    response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: { client_name: "Paul" }, method: "POST" });
-    var houseID2 = response.body;
-    response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID2 + "/add-object", form: mixeur, method: "POST" });
-
-    response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: { client_name: "Jacque" }, method: "POST" });
-    var houseID3 = response.body;
-    response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID3 + "/add-object", form: mixeur, method: "POST" });
-
-    //On inscrit un producteur et on fixe sa production
-    var producer = { producerName: "EDF", production: 1000 }
-    response = await doRequest({ url: "http://producers:3005/add-supplier", form: producer, method: "POST" });
-    await sleep(2000)
-
-    var producer = { producerName: "ENGIE", production: 1000 }
-
 }
 
 async function doTick(){
