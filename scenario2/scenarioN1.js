@@ -9,6 +9,19 @@ function doRequest(req) {
     });
 }
 
+// Reset
+ANSI_RESET = "\033[0m";  // Text Reset
+
+// Regular Colors
+ANSI_RED = "\033[0;31m";     // RED
+ANSI_GREEN = "\033[0;32m";   // GREEN
+ANSI_YELLOW = "\033[0;33m";  // YELLOW
+ANSI_BLUE = "\033[0;34m";    // BLUE
+ANSI_PURPLE = "\033[0;35m";  // PURPLE
+ANSI_CYAN = "\033[0;36m";    // CYAN
+ANSI_WHITE = "\033[0;37m";   // WHITE
+
+//Tick actuel
 var globalDate = new Date();
 
 async function main(){
@@ -20,35 +33,36 @@ async function main(){
 	var response;
     console.log("On regarde les maisons actuellement inscrites : ");
     response = await doRequest({url:"http://client-database:3004/client-registry/allHouses", method:"GET"});
-    console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body);
+    console.log(ANSI_BLUE+"[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body+ANSI_RESET);
     console.log("Les maisons inscrites : "+response.body);
     
     // STEP 1
-    console.log("\n\n================= STEP 1 =================")
+    console.log(ANSI_GREEN+"\n\n================= STEP 1 ================="+ANSI_RESET)
 
     var client = {client_name:"Jean-Paul"};
     var mixeur = {object:{name:"Mixeur",maxConsumption:500,enabled:true}, type:"BASIC"}
 
     console.log("\nUne nouvelle maison souhaite s'inscrire : ");
 	response = await doRequest({url:"http://house:3000/house-editor/add-house", form:client, method:"POST"});
-    console.log("[service]:house; [route]:house-editor/add-house; [params]:"+JSON.stringify(client)+" => [return]:"+response.body);
+    console.log(ANSI_BLUE+"[service]:house; [route]:house-editor/add-house; [params]:"+JSON.stringify(client)+" => [return]:"+response.body+ANSI_RESET);
     var houseID = response.body;
     
+    //ajout de l'object
     response = await doRequest({url:"http://house:3000/house-editor/house/"+houseID+"/add-object", form:mixeur, method:"POST"});
 
     console.log("\nLa maison est inscrite :");
     response = await doRequest({url:"http://client-database:3004/client-registry/allHouses", method:"GET"});
-    console.log("[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body);
+    console.log(ANSI_BLUE+"[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body+ANSI_RESET);
     console.log("Les maisons inscrites : "+response.body);
 
     // STEP 2
-    console.log("\n\n================= STEP 2 =================")
+    console.log(ANSI_GREEN+"\n\n================= STEP 2 ================="+ANSI_RESET)
 
     console.log("\nLa maison reçoit un ID : "+houseID);
 
     //STEP 3 
-    console.log("\n\n================= STEP 3 =================")
-
+    console.log(ANSI_GREEN+"\n\n================= STEP 3 ================="+ANSI_RESET)
+    /*
     console.log("\nLe client peut voir sa consommation");
     response = await doRequest({url:"http://house:3000/consumption/global", qs:{houseID:houseID}, method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:houseID:"+houseID+" => [return]:"+response.body);
@@ -177,7 +191,7 @@ async function main(){
     response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
     console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
-    
+    */
 }
 
 async function beforeStep(){
@@ -201,16 +215,18 @@ async function beforeStep(){
     //On inscrit un producteur et on fixe sa production
     var producer = {producerName:"EDF",production:1000}
     response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
-    await sleep(2000)
-    
-    var producer = {producerName:"ENGIE",production:1000}
-    
+    await sleep(2000);    
 }
 
 async function doTick(){
-    globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+10));
+    globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+2));
+    //Envoyer le tick à ceux qui en ont besoin.
     response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
     response = await doRequest({url:"http://supplier:3005/tick", form:{date:globalDate}, method:"POST"});
+    response = await doRequest({url:"http://electricity-frame:3007/clock/tick", form:{date:globalDate}, method:"POST"});
+
+    //Wait que tout s'envoie bien
+    await sleep(200);    
 }
 
 async function waitTick(iterationNumber){

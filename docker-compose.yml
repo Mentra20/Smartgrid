@@ -70,21 +70,17 @@ services:
     depends_on:
       - "database"
 
-  global-consumption-database:
-    container_name: global-consumption-database
-    image: global-consumption-database:1.0.0
+  consumption-adder:
+    container_name: consumption-adder
+    image: consumption-adder:1.0.0
     build:
-      context: ./global-consumption-database
+      context: ./consumption-adder
       dockerfile: ./Dockerfile
     command: npm run start:prod
-    ports:
-      - 3009:3009
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
-    depends_on:
-      - "database"
 
   consumption-detailed:
     container_name: consumption-detailed
@@ -95,6 +91,32 @@ services:
     command: npm run start:prod
     ports:
       - 3008:3008
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+  
+  consumption-peak:
+    container_name: consumption-peak
+    image: consumption-peak:1.0.0
+    build:
+      context: ./consumption-peak
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+
+  consumption-provider:
+    container_name: consumption-provider
+    image: consumption-provider:1.0.0
+    build:
+      context: ./consumption-provider
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3012:3012
     networks:
       - si5-soa
     volumes:
@@ -121,40 +143,54 @@ services:
       context: ./consumption-verifier
       dockerfile: ./Dockerfile
     command: npm run start:prod
-    ports:
-      - 3007:3007
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
 
-  consumption-adder:
-    container_name: consumption-adder
-    image: consumption-adder:1.0.0
+  electricity-frame:
+    container_name: electricity-frame
+    image: electricity-frame:1.0.0
     build:
-      context: ./consumption-adder
+      context: ./electricity-frame
       dockerfile: ./Dockerfile
     command: npm run start:prod
-    ports:
-      - 4000:4000
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
 
-  consumption-provider:
-    container_name: consumption-provider
-    image: consumption-provider:1.0.0
+  global-consumption-database:
+    container_name: global-consumption-database
+    image: global-consumption-database:1.0.0
     build:
-      context: ./consumption-provider
+      context: ./global-consumption-database
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3012:3012
+      - 3009:3009
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
+
+  global-production-database:
+    container_name: global-production-database
+    image: global-production-database:1.0.0
+    build:
+      context: ./global-production-database
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3001:3001
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
 
   house:
     container_name: house
@@ -186,21 +222,31 @@ services:
     depends_on:
       - "database"
 
-  global-production-database:
-    container_name: global-production-database
-    image: global-production-database:1.0.0
+  producers:
+    container_name: producers
+    image: producers:1.0.0
     build:
-      context: ./global-production-database
+      context: ./producers
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3001:3001
+      - 3005:3005
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
-    depends_on:
-      - "database"
+
+  production-adapter:
+    container_name: production-adapter
+    image: production-adapter:1.0.0
+    build:
+      context: ./production-adapter
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
 
   production-provider:
     container_name: production-provider
@@ -230,15 +276,15 @@ services:
     volumes:
       - /usr/src/app
 
-  producers:
-    container_name: producers
-    image: producers:1.0.0
+  request-manager:
+    container_name: request-manager
+    image: request-manager:1.0.0
     build:
-      context: ./producers
+      context: ./request-manager
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3005:3005
+      - 3007:3007
     networks:
       - si5-soa
     volumes:
