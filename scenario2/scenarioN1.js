@@ -61,11 +61,17 @@ async function main(){
     console.log("\nLa maison reçoit un ID : "+houseID);
 
     //STEP 3 
+    await waitTick(1);
     console.log(ANSI_GREEN+"\n\n================= STEP 3 ================="+ANSI_RESET)
     
-    console.log("\nLe client peut voir sa consommation");
+    console.log("\nLe client peut voir sa consommation depuis son boitier");
     response = await doRequest({url:"http://house:3000/consumption/global", qs:{houseID:houseID}, method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:houseID:"+houseID+" => [return]:"+response.body);
+    console.log("La consommation globale de la maison : "+response.body);
+
+    console.log("\nLe client peut voir sa consommation depuis le site web");
+    response = await doRequest({url:"http://request-manager:3007/house-global-consumption", qs:{date:globalDate,houseID:houseID}, method:"GET"});
+    console.log("[service]:request-manager; [route]:house-global-consumption; [params]:date:"+globalDate+" ,houseID:"+houseID+" => [return]:"+response.body);
     console.log("La consommation globale de la maison : "+response.body);
     
     //await waitTick(1);
@@ -107,17 +113,18 @@ async function main(){
 
     console.log("\nOn vérifie que la consommation est égale à la production à la date du "+globalDate);
 
-    response = await doRequest({url:"http://consumption-db:3009/get-total-consumption", qs:dateReq, method:"GET"});
-    console.log("[service]:consumption-db; [route]:get-total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    response = await doRequest({url:"http://request-manager:3007/total-consumption", qs:dateReq, method:"GET"});
+    console.log("[service]:request-manager; [route]:total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Consommation : "+response.body);
 
-    response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
-    console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
+    console.log("[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
 
-    response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
-    console.log("[service]:registry-manager; [route]:consumption-check; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
-    console.log("La consommation est-elle égale à la production ? : "+response.body);
+    // TODO: ecouter au bus
+    // response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
+    // console.log("[service]:registry-manager; [route]:consumption-check; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    // console.log("La consommation est-elle égale à la production ? : "+response.body);
 
     //STEP 7 
     console.log("\n\n================= STEP 7 =================")
@@ -155,8 +162,8 @@ async function main(){
     }
 
     console.log("\nOn peut voir que l’objet consomme à la date "+globalDate+" depuis smartGrid");
-    response = await doRequest({url:"http://consumption-detailed:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
-    console.log("[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: "+JSON.stringify(detailedObject)+" => [return]:"+response.body);
+    response = await doRequest({url:"http://request-manager:3007/house-detailed-consumption", qs:detailedObject, method:"GET"});
+    console.log("[service]:request-manager; [route]:house-detailed-consumption; [params]: "+JSON.stringify(detailedObject)+" => [return]:"+response.body);
     console.log("La consommation de l'objet "+objectName+" de la maison d'ID "+houseID+" à la date du "+globalDate+" est : "+response.body);
 
     //STEP 10
@@ -166,17 +173,18 @@ async function main(){
 
     console.log("\nOn peut voir que la production n’est plus égale à la consommation a la date du "+globalDate+", on demande aux producteurs de s’adapter :");
 
-    response = await doRequest({url:"http://consumption-db:3009/get-total-consumption", qs:dateReq, method:"GET"});
-    console.log("[service]:consumption-db; [route]:get-total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    response = await doRequest({url:"http://request-manager:3007/total-consumption", qs:dateReq, method:"GET"});
+    console.log("[service]:request-manager; [route]:total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Consommation : "+response.body);
 
-    response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
-    console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
+    console.log("[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
 
-    response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
-    console.log("[service]:registry-manager; [route]:consumption-check; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
-    console.log("La consommation est-elle égale à la production ? : "+response.body);
+    // TODO: ecouter au bus
+    // response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
+    // console.log("[service]:registry-manager; [route]:consumption-check; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    // console.log("La consommation est-elle égale à la production ? : "+response.body);
 
     //STEP 11 
     console.log("\n\n================= STEP 11 =================")
@@ -188,8 +196,8 @@ async function main(){
 
     console.log("\nOn vérifie que la production s’est bien adaptée :");
 
-    response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
-    console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
+    response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
+    console.log("[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
     
 }
@@ -214,7 +222,7 @@ async function beforeStep(){
 
     //On inscrit un producteur et on fixe sa production
     var producer = {producerName:"EDF",production:1000}
-    response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
+    response = await doRequest({url:"http://producers:3005/add-supplier", form:producer, method:"POST"});
     await sleep(2000);    
 }
 
@@ -226,7 +234,7 @@ async function doTick(){
     response = await doRequest({url:"http://electricity-frame:3015/clock/tick", form:{date:globalDate}, method:"POST"});
 
     //Wait que tout s'envoie bien
-    await sleep(200);    
+    await sleep(100);    
 }
 
 async function waitTick(iterationNumber){

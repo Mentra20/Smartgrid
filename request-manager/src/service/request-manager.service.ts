@@ -73,7 +73,7 @@ export class RequestManagerService {
     return firstValueFrom(
       this.http.get(this.URL_GLOBAL_PRODUCTION_MANAGER, {
         params: { date: date },
-      }),
+      })
     ).then((body) => {
       return body.data || 0
     });

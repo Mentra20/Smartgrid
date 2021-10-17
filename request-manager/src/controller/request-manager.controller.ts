@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { RequestManagerService } from 'src/service/request-manager.service';
-@Controller('request-manager')
-export class ControllerController {
+@Controller()
+export class RequestManagerController {
     constructor(
     private readonly requestManagerService: RequestManagerService,
   ) {}
