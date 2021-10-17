@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { PushConsumptionService } from './push-consumption.service';
 
-@Controller('')
+@Controller()
 export class PushConsumptionController {
 
     constructor(private pushConsumptionService: PushConsumptionService){}

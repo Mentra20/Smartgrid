@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConsumptionPeakController } from './consumption-peak/consumption-peak.controller';
@@ -21,6 +22,7 @@ import { ConsumptionPeakService } from './consumption-peak/consumption-peak.serv
         }
       },
     ]),
+    HttpModule,
   ],
   controllers: [ConsumptionPeakController],
   providers: [ConsumptionPeakService],

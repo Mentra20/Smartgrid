@@ -62,7 +62,7 @@ async function main(){
 
     //STEP 3 
     console.log(ANSI_GREEN+"\n\n================= STEP 3 ================="+ANSI_RESET)
-    /*
+    
     console.log("\nLe client peut voir sa consommation");
     response = await doRequest({url:"http://house:3000/consumption/global", qs:{houseID:houseID}, method:"GET"});
     console.log("[service]:house; [route]:consumption/global; [params]:houseID:"+houseID+" => [return]:"+response.body);
@@ -82,7 +82,7 @@ async function main(){
     var producer = {producerName:"ENGIE",production:1000}
 
     console.log("\nUn nouveau producteur souhaite s'inscrire : ");
-    response = await doRequest({url:"http://supplier:3005/add-supplier", form:producer, method:"POST"});
+    response = await doRequest({url:"http://producers:3005/add-supplier", form:producer, method:"POST"});
     console.log("[service]:supplier; [route]:add-supplier; [params]:"+JSON.stringify(producer)+ " => [return]:"+response.body);
     var producerID = response.body;
 
@@ -191,7 +191,7 @@ async function main(){
     response = await doRequest({url:"http://production-db:3001/getproduction", qs:dateReq, method:"GET"});
     console.log("[service]:production-db; [route]:getproduction; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
-    */
+    
 }
 
 async function beforeStep(){
@@ -223,7 +223,7 @@ async function doTick(){
     //Envoyer le tick à ceux qui en ont besoin.
     response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
     response = await doRequest({url:"http://supplier:3005/tick", form:{date:globalDate}, method:"POST"});
-    response = await doRequest({url:"http://electricity-frame:3007/clock/tick", form:{date:globalDate}, method:"POST"});
+    response = await doRequest({url:"http://electricity-frame:3015/clock/tick", form:{date:globalDate}, method:"POST"});
 
     //Wait que tout s'envoie bien
     await sleep(200);    

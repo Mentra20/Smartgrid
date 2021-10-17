@@ -18,6 +18,6 @@ export class ProductionService {
     }
 
     public async getProducerProductionByDate(date:Date,producerID:string):Promise<Production>{
-        return this.productionRepository.find({where:{id_producer:producerID,productionDate:Between(new Date(date.getTime()-1000),new Date(date.getTime()+1000))}});
+        return this.productionRepository.findOne({where:{id_producer:producerID,productionDate:Between(new Date(date.getTime()-1000),new Date(date.getTime()+1000))}});
     }
 }

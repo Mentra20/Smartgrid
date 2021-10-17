@@ -15,16 +15,16 @@ export class VerifierController {
 
     @MessagePattern('electricity.frame')
     verifyElectricity(@Payload() message){
-        var frame:{consumptionFrameTotal:[{houseID:string,consumptionClient:string}],productionFrameTotal:[{id_producer:string,consumptionClient:string}],startDateFrame:string,endDateFrame:string}= message.value;
+        var frame:{consumptionFrameTotal:[{houseID:string,consumption:string}],productionFrameTotal:[{id_producer:string,consumption:string}],startDateFrame:string,endDateFrame:string}= message.value;
         var sumConsumption = 0;
         var sumProduction = 0;
         for(var consumption of frame.consumptionFrameTotal){
-            sumConsumption +=Number(consumption.consumptionClient)
+            sumConsumption += +consumption.consumption
         }
         for(var production of frame.productionFrameTotal){
-            sumProduction +=Number(production.consumptionClient)
+            sumProduction += +production.consumption
         }
-
+        console.log("produciton : "+sumProduction+", consumption :"+sumConsumption)
         if(sumConsumption!=sumProduction){
             console.log("need adapt production : "+(sumConsumption-sumProduction))
             this.client.emit("production.adapt",sumConsumption-sumProduction)

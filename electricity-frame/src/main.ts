@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -22,17 +21,7 @@ async function bootstrap() {
   })
 
   await app.startAllMicroservices();
-  
-  const config = new DocumentBuilder()
-    .setTitle('Consumption-verifier')
-    .setDescription('The Consumption-verifier API description')
-    .setVersion('1.0')
-    .addTag('MVP')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
 
-  await app.listen(3007);
-  console.log("-------------------------- ELECTRICITY-FRAME -------------------------");
+  await app.listen(3015);
 }
 bootstrap();

@@ -5,7 +5,7 @@ import { ProductionAdaptService } from 'src/services/production-adapt/production
 @Controller('production-adapt')
 export class ProductionAdaptController {
     constructor(private readonly productionAdaptService: ProductionAdaptService,
-        @Inject("PRODUCTION_VERIFIER") private client:ClientKafka) {}
+        @Inject("PRODUCTION_ADAPTER") private client:ClientKafka) {}
     
     async onModuleInit() {
         this.client.subscribeToResponseOf("production.adapt");
@@ -15,7 +15,7 @@ export class ProductionAdaptController {
 
     @MessagePattern("production.adapt")
     changeProduction(@Payload() productionAdaptMSG:any) {
-        var amountToAdd = Number(productionAdaptMSG.value);
+        var amountToAdd = +productionAdaptMSG.value;
         console.log("Producer adapter received the amount of kW producers need to supply : " + amountToAdd + " W.");
         this.productionAdaptService.adaptProduction(amountToAdd);
     }

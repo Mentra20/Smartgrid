@@ -11,6 +11,7 @@ export class ElectricityFrameService {
 
     consumptionFrame:any[] = [];
     productionFrame:any[] = [];
+    nbTickInFrame = 0;
     startDateFrame:Date;
 
     constructor (@Inject('CONSUMPTION_FRAME') private client:ClientKafka){}
@@ -41,6 +42,7 @@ export class ElectricityFrameService {
         if(!this.startDateFrame || this.currentTick<this.startDateFrame ){
             this.startDateFrame = date
         }
+        this.nbTickInFrame++;
         if(this.endFrame()){
             this.consumptionAdapt();
             this.resetFrame();
@@ -54,6 +56,12 @@ export class ElectricityFrameService {
     private consumptionAdapt(){
         var consumptionFrameTotal = this.consumptionFrame;
         var productionFrameTotal = this.productionFrame;
+        for(var i in consumptionFrameTotal){
+            consumptionFrameTotal[i].consumption =  consumptionFrameTotal[i].consumption/this.nbTickInFrame
+        }
+        for(var i in productionFrameTotal){
+            productionFrameTotal[i].consumption =  productionFrameTotal[i].consumption/this.nbTickInFrame
+        }
         var startDateFrame = this.startDateFrame;
         var endDateFrame = new Date(this.startDateFrame.getTime()+AVERAGE_FRAME_TIME_MS);
         console.log("send new frame "+{consumptionFrameTotal,productionFrameTotal,startDateFrame,endDateFrame})
@@ -65,6 +73,7 @@ export class ElectricityFrameService {
         this.consumptionFrame = []
         this.productionFrame = []
         this.startDateFrame = this.currentTick;
+        this.nbTickInFrame=0
     }
 
 

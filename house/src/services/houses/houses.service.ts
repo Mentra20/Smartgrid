@@ -7,7 +7,7 @@ import { ScheduledHouseObject } from 'src/models/house-object';
 
 @Injectable()
 export class HousesService {
-    private URL_PUSH_CONSUMPTION = "http://consumption-detailed:3008/add-detailed-consumption"
+    private URL_PUSH_CONSUMPTION = "http://consumption-provider:3012/add-detailed-consumption"
     private URL_PUSH_PRODUCTION = "http://production-provider:3006/add-production"
 
     private URL_TIME_SLOT = "http://consumption-scheduler:3002/schedule"
@@ -45,9 +45,9 @@ export class HousesService {
             }
         }
         console.log(`PUSH to ${this.URL_PUSH_CONSUMPTION}: ${JSON.stringify({param:jsonHouseDetailed})}`)
-        this.http.post(this.URL_PUSH_CONSUMPTION,{param:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:jsonHouseDetailed}}).subscribe({
-            next : (response)=> console.log(response),
-            error : (error)=> console.error(error),
+        this.http.post(this.URL_PUSH_CONSUMPTION,{detailedConsumptions:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:jsonHouseDetailed}}).subscribe({
+            next : (response)=> console.log(response.data),
+            error : (error)=> console.error("error"),
         }
         );
     }

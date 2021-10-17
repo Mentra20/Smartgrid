@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { DetailedProductionService } from './detailed-production.service';
 import { DetailedProductionController } from './detailed-production.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         }
       },
     ]),
+    ConfigModule.forRoot(),
   ],
   controllers: [DetailedProductionController],
   providers: [DetailedProductionService],

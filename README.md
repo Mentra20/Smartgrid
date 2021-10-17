@@ -65,6 +65,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - log of service: `docker-compose logs -f --tail=1000 name-of-service`
 
 ## Utils
+
 - Create new nestJS project with cli: `nest new project-name`
 - Install dependency:  `npm install`
 - Run script in package.json: `npm run script-name`
@@ -74,20 +75,21 @@ Les containers de nos services sont re-créés entre chaque scénario.
 ## Route
 
 ## Port
-- 127.0.0.1 client-database=3004  
+
+- 127.0.0.1 client-database=3004
 - 127.0.0.1 consumption-adder=_  
 - 127.0.0.1 consumption-detailed=3008  
 - 127.0.0.1 consumption-peak=_  
 - 127.0.0.1 consumption-provider=3012
 - 127.0.0.1 consumption-scheduler=3002  
-- 127.0.0.1 consumption-verifier=_   
-- 127.0.0.1 electricity-frame=_  
-- 127.0.0.1 global-consumption-database=3009 
-- 127.0.0.1 global-production-database=3001 
+- 127.0.0.1 consumption-verifier=_  
+- 127.0.0.1 electricity-frame=3015  
+- 127.0.0.1 global-consumption-database=3009
+- 127.0.0.1 global-production-database=3001
 - 127.0.0.1 house=3000  
-- 127.0.0.1 producer-database=3010 
+- 127.0.0.1 producer-database=3010
 - 127.0.0.1 producers=3005  
 - 127.0.0.1 production-adapter=_
-- 127.0.0.1 production-provider=3006 
-- 127.0.0.1 registry-manager=3003   
+- 127.0.0.1 production-provider=3006
+- 127.0.0.1 registry-manager=3003
 - 127.0.0.1 request-manager=3007
