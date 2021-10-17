@@ -41,11 +41,11 @@ export class HousesService {
         for(let object of house.getAllObject()){
             var consumption = object.getCurrentConsumption(this.currentDate)
             if(consumption>0){
-                jsonHouseDetailed.push({houseID:house.getHouseId(),consumptionDate:this.currentDate,objectName:object.getName(),consumption:consumption})
+                jsonHouseDetailed.push({objectName:object.getName(),consumption:consumption})
             }
         }
         console.log(`PUSH to ${this.URL_PUSH_CONSUMPTION}: ${JSON.stringify({param:jsonHouseDetailed})}`)
-        this.http.post(this.URL_PUSH_CONSUMPTION,{param:jsonHouseDetailed}).subscribe({
+        this.http.post(this.URL_PUSH_CONSUMPTION,{param:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:jsonHouseDetailed}}).subscribe({
             next : (response)=> console.log(response),
             error : (error)=> console.error(error),
         }
@@ -63,10 +63,10 @@ export class HousesService {
         for(let object of house.getAllObject()){
             var consumption = object.getCurrentConsumption(this.currentDate)
             if(consumption<0){
-                jsonHouseDetailed.push({houseID:house.getHouseId(),consumptionDate:this.currentDate,objectName:object.getName(),consumption:-consumption})
+                jsonHouseDetailed.push({id_producer:house.getProducerId(),productionDate:this.currentDate,production:-consumption})
             }
         }
-        this.http.post(this.URL_PUSH_PRODUCTION,{param:jsonHouseDetailed}).subscribe({
+        this.http.post(this.URL_PUSH_PRODUCTION,{param:{production:jsonHouseDetailed}}).subscribe({
             next : (response)=> console.log(response),
             error : (error)=> console.error(error),
         }
