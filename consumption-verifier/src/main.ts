@@ -20,5 +20,6 @@ async function bootstrap() {
       }
     })
   await app.listen();
+  console.log("-------------------------- CONSUMPTION-VERIFIER -------------------------");
 }
 bootstrap();

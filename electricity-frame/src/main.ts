@@ -33,5 +33,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.listen(3007);
+  console.log("-------------------------- ELECTRICITY-FRAME -------------------------");
 }
 bootstrap();

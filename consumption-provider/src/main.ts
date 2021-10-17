@@ -27,5 +27,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.listen(3012);
+  console.log("-------------------------- CONSUMPTION-PROVIDER -------------------------");
 }
 bootstrap();

@@ -33,6 +33,7 @@ async function bootstrap() {
   var PORT = configurationService.get("PORT") || DEFAULT_PORT;
 
   await app.listen(PORT);
+  console.log("-------------------------- PRODUCTION-PROVIDER -------------------------");
 }
 
 

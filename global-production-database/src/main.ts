@@ -33,6 +33,7 @@ await app.startAllMicroservices();
 
 
   await app.listen(DEFAULT_PORT);
+  console.log("-------------------------- GLOBAL-PRODUCTION-DATABASE -------------------------");
 }
 
 
