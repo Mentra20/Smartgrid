@@ -67,12 +67,12 @@ async function main(){
     console.log("\nLe client peut voir sa consommation depuis son boitier");
     response = await doRequest({url:"http://house:3000/consumption/global", qs:{houseID:houseID}, method:"GET"});
     console.log(ANSI_BLUE+"[service]:house; [route]:consumption/global; [params]:houseID:"+houseID+" => [return]:"+response.body+ANSI_RESET);
-    console.log("La consommation globale de la maison : "+response.body);
+    console.log("La consommation globale de la maison : " + response.body + " W.");
 
     console.log("\nLe client peut voir sa consommation depuis le site web");
     response = await doRequest({url:"http://request-manager:3007/house-global-consumption", qs:{date:globalDate,houseID:houseID}, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:house-global-consumption; [params]:date:"+globalDate+" ,houseID:"+houseID+" => [return]:"+response.body+ANSI_RESET);
-    console.log("La consommation globale de la maison : "+response.body);
+    console.log("La consommation globale de la maison : " + response.body + " W.");
     
     
     //STEP 4 
@@ -90,7 +90,7 @@ async function main(){
     console.log(ANSI_BLUE+"[service]:supplier; [route]:add-supplier; [params]:"+JSON.stringify(producer)+ " => [return]:"+response.body+ANSI_RESET);
     var producerID = response.body;
 
-    console.log("\nLe producteur est inscrits : ");
+    console.log("\nLe producteur est inscrit : ");
     response = await doRequest({url:"http://producer-database:3010/producer-registry/allProducers", method:"GET"});
     console.log(ANSI_BLUE+"[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]:"+response.body+ANSI_RESET);
     console.log("Les producteurs inscrits : "+response.body);
@@ -113,11 +113,11 @@ async function main(){
 
     response = await doRequest({url:"http://request-manager:3007/total-consumption", qs:dateReq, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("Consommation : "+response.body);
+    console.log("Consommation : " + response.body + " W.");
 
     response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("Production : "+response.body);
+    console.log("Production : " + response.body + " W.");
 
     // TODO: ecouter au bus
     // response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
@@ -130,7 +130,7 @@ async function main(){
     var objectName = "voiture";
     var voiture = {object:{name:objectName,maxConsumption:2000}, type:"SCHEDULED"}
 
-    console.log("\nUn object paramètrable est branché");
+    console.log("\nUn objet paramètrable est branché");
     response = await doRequest({url:"http://house:3000/house-editor/house/"+houseID+"/add-object", form:voiture, method:"POST"});
     console.log(ANSI_BLUE+"[service]:house; [route]:house-editor/house/"+houseID+"/add-object"+"; [params]: "+JSON.stringify(voiture)+" => [return]:_"+ANSI_RESET);
 
@@ -162,7 +162,7 @@ async function main(){
     console.log("\nOn peut voir que l’objet consomme à la date "+globalDate+" depuis smartGrid");
     response = await doRequest({url:"http://request-manager:3007/house-detailed-consumption", qs:detailedObject, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:house-detailed-consumption; [params]: "+JSON.stringify(detailedObject)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("La consommation de l'objet "+objectName+" de la maison d'ID "+houseID+" à la date du "+globalDate+" est : "+response.body);
+    console.log("La consommation de l'objet "+objectName+" de la maison d'ID "+houseID+" à la date du "+globalDate+" est : "+response.body + " W.");
 
     //STEP 10
     console.log(ANSI_GREEN+"\n\n================= STEP 10 ================="+ANSI_RESET)
@@ -173,11 +173,11 @@ async function main(){
 
     response = await doRequest({url:"http://request-manager:3007/total-consumption", qs:dateReq, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-consumption; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("Consommation : "+response.body);
+    console.log("Consommation : "+response.body + " W.");
 
     response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("Production : "+response.body);
+    console.log("Production : "+response.body + " W.");
 
     // TODO: ecouter au bus
     // response = await doRequest({url:"http://consumption-verifier:3007/consumption-check", qs:dateReq, method:"GET"});
@@ -196,7 +196,7 @@ async function main(){
 
     response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("Production : "+response.body);
+    console.log("Production : "+response.body + " W.");
 }
 
 async function beforeStep(){

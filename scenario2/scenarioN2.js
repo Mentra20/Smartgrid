@@ -50,7 +50,7 @@ async function main() {
     console.log("Les maisons inscrites : " + response.body);
 
     console.log(ANSI_GREEN+"\n\n================= STEP 1 ================="+ANSI_RESET)
-    console.log("On a des maisons dans une communautés et d'autres dans une autre communautés");
+    console.log("On a des maisons dans une communauté et d'autres dans une autre communautés");
     // STEP 1
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
@@ -74,7 +74,7 @@ async function main() {
 
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
 
-    console.log("On ajoute un objet non programmable a chaque maison");
+    console.log("On ajoute un objet non programmable à chaque maison");
     await addObject(houseID1, mixeur);
     await addObject(houseID2, mixeur);
     await addObject(houseID3, mixeur);
@@ -84,7 +84,7 @@ async function main() {
 
     var car = { object: { name: "Car", maxConsumption: 4000 }, type: "SCHEDULED" }
 
-    console.log("On ajoute un objet programmable a chaque maison");
+    console.log("On ajoute un objet programmable à chaque maison");
     await addObject(houseID1, car);
     await addObject(houseID2, car);
     await addObject(houseID3, car);
@@ -116,7 +116,7 @@ async function main() {
     console.log("On regarde la consommation totale de toutes les maisons");
     var response = await doRequest({ url: "http://request-manager:3007/total-consumption", qs: {date:globalDate}, method: "GET" });
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:total-consumption; [params]: " + JSON.stringify({date:globalDate}) + " => [return]:" + JSON.parse(response.body)+ANSI_RESET);
-    console.log("Actuellement, la consommation totale est : "+response.body+"W");
+    console.log("Actuellement, la consommation totale est : "+response.body+" W.");
 
     await sleep(2000)
     console.log(ANSI_GREEN+"\n\n================= STEP 4 ================="+ANSI_RESET);
@@ -124,7 +124,7 @@ async function main() {
 
     var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: {date:globalDate,communityID:1}, method: "GET" });
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body)+ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+"W");
+    console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+" W.");
 
     await sleep(2000)
     console.log(ANSI_GREEN+"\n\n================= STEP 5 ================="+ANSI_RESET);
@@ -157,7 +157,7 @@ async function main() {
     console.log("On remarque qu’il n’y a plus de pic")
     var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: {date:globalDate,communityID:1}, method: "GET" });
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({date:globalDate,communityID:1}) + " => [return]:" + JSON.stringify(response.body)+ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+"W");
+    console.log("Actuellement, la consommation de la communauté '1' est : "+response.body+" W.");
     
 }
 
@@ -170,7 +170,7 @@ async function checkCarCons(houseID) {
     console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
     var response = await doRequest({url:"http://consumption-detailed:3008/get-detailed-consumption", qs:detailedObject, method:"GET"});
     console.log(ANSI_BLUE+"[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body+ANSI_RESET);
-    console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body);
+    console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body + " W.");
 }
 
 async function checkObject(houseID) {
