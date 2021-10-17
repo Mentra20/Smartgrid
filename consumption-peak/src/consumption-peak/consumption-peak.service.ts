@@ -26,7 +26,7 @@ export class ConsumptionPeakService {
     }
 
     public async constructCommunityMap(consumptionFrame:{houseID:string,consumption:string}[]):Promise<Map<string, number>>{
-        var communityConsumption = new Map();
+        var communityConsumption = new Map<string,number>();
 
         for(let clientCons of consumptionFrame){
             var clientInfo = await this.getClientInfo(clientCons.houseID);
@@ -36,10 +36,10 @@ export class ConsumptionPeakService {
             if(communityConsumption.has(currentCommunityID)){
                 communityConsumption.set(
                     currentCommunityID, 
-                    communityConsumption.get(currentCommunityID) + clientCons.consumption);
+                    communityConsumption.get(currentCommunityID) + +clientCons.consumption);
             }
             else{//New community consumption
-                communityConsumption.set(currentCommunityID, clientCons.consumption);
+                communityConsumption.set(currentCommunityID, +clientCons.consumption);
             }
         }
         console.log("Construct map :"+communityConsumption);
