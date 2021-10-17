@@ -59,18 +59,20 @@ export class HousesService {
     }
 
     async pushProduction(house:House){
-        var jsonHouseDetailed = [];
+        var production = 0;
         for(let object of house.getAllObject()){
             var consumption = object.getCurrentConsumption(this.currentDate)
             if(consumption<0){
-                jsonHouseDetailed.push({id_producer:house.getProducerId(),productionDate:this.currentDate,production:-consumption})
+                production+= -consumption;
             }
         }
-        this.http.post(this.URL_PUSH_PRODUCTION,{production:jsonHouseDetailed}).subscribe({
-            next : (response)=> console.log(response),
-            error : (error)=> console.error(error),
+        if(production>0){
+            this.http.post(this.URL_PUSH_PRODUCTION,{production:{id_producer:house.getProducerId(),productionDate:this.currentDate,production}}).subscribe({
+                next : (response)=> console.log(response),
+                error : (error)=> console.error(error),
+            }
+            );
         }
-        );
     }
 
     public pushAllHouseProduction(){

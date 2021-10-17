@@ -1,4 +1,3 @@
-import checkObject from "./scenarioN2";
 var request = require('request');
 
 function doRequest(req) {
@@ -62,8 +61,9 @@ async function main(){
 
     // STEP 4
     console.log("\n\n================= STEP 4 =================")
-    console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production n'est pas en accès");
+    console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production n'est pas accessible");
     await waitTick(5);
+    await sleep(1000);
     reqQs = {date:globalDate,producerID:houseProdID};
     response = await doRequest({url:"http://global-production-database:3001/global-production/get-producer-production", qs:reqQs , method:"GET"});
     console.log("[service]:global-production-database; [route]:global-production/get-producer-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body);
@@ -93,18 +93,26 @@ async function main(){
     console.log("\n\n================= STEP 7 =================")
     console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production est en accès");
     await waitTick(5);
+    await sleep(1000);
     reqQs = {date:globalDate,producerID:houseProdID};
     response = await doRequest({url:"http://global-production-database:3001/global-production/get-producer-production", qs:reqQs , method:"GET"});
     console.log("[service]:global-production-database; [route]:global-production/get-producer-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body);
-    console.log("On voit bien qu'il a une production pour cette maison" + response.body);
+    console.log("On voit bien qu'il a une production pour cette maison : " + response.body);
 
 
 }
 
 async function doTick(){
-    globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+10));
-    await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
-    await doRequest({url:"http://supplier:3005/tick", form:{date:globalDate}, method:"POST"});
+    globalDate = new Date(globalDate.getTime()+1*60*1000);
+    //Envoyer le tick à ceux qui en ont besoin.
+    response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
+    response = await doRequest({url:"http://producers:3005/tick", form:{date:globalDate}, method:"POST"});
+    await sleep(200);    
+
+    response = await doRequest({url:"http://electricity-frame:3015/clock/tick", form:{date:globalDate}, method:"POST"});
+
+    //Wait que tout s'envoie bien
+    await sleep(200);    
 }
 
 async function waitTick(iterationNumber){
@@ -117,3 +125,11 @@ function sleep(ms) {
         setTimeout(resolve, ms);
     });
 }
+
+async function checkObject(houseID) {
+    var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
+    console.log("[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body);
+    console.log("On a les objet suivant :" + response.body);
+}
+
+main()
