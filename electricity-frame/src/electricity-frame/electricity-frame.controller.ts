@@ -27,7 +27,7 @@ export class ElectricityFrameController {
         console.log("production receive :"+JSON.stringify(message.value))
 
         var value = message.value;
-        this.frameService.receiveProduction({id_producer:value.id_producer,consumptionDate:new Date(value.consumptionDate),consumption:+value.consumption})
+        this.frameService.receiveProduction({id_producer:value.id_producer,productionDate:new Date(value.productionDate),production:+value.production})
     }
 
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 
-const AVERAGE_FRAME_TIME_MIN = 5 //fenetre de 5 minute
+const AVERAGE_FRAME_TIME_MIN = 1 //fenetre de 1 minute
 const AVERAGE_FRAME_TIME_MS = AVERAGE_FRAME_TIME_MIN*60*1000;
 
 @Injectable()
@@ -11,69 +11,49 @@ export class ElectricityFrameService {
 
     consumptionFrame:any[] = [];
     productionFrame:any[] = [];
-    nbTickInFrame = 0;
-    startDateFrame:Date;
+
 
     constructor (@Inject('CONSUMPTION_FRAME') private client:ClientKafka){}
 
     receiveConsumption(consumptionClient:{houseID:string,consumptionDate:Date,consumption:number}){
         this.currentTick=this.currentTick ||consumptionClient.consumptionDate;
         console.log()
-        //si il arrive trop tard on lignore
-        if(this.startDateFrame>consumptionClient.consumptionDate){
-            console.log(`[ignore] consumption arrived too late: ${consumptionClient}`);
-            return;
-        }
-        this.consumptionFrame.push({houseID: consumptionClient.houseID,consumption: consumptionClient.consumption});
+
+        this.consumptionFrame.push({houseID: consumptionClient.houseID,consumptionDate:consumptionClient.consumptionDate,consumption: consumptionClient.consumption/AVERAGE_FRAME_TIME_MIN});
     }
 
-    receiveProduction(productionProducer:{id_producer:string,consumptionDate:Date,consumption:number}){
-        this.currentTick=this.currentTick ||productionProducer.consumptionDate;
-        //si il arrive trop tard on lignore
-        if(this.startDateFrame>productionProducer.consumptionDate){
-            console.log(`[ignore] production arrived too late: ${productionProducer}`);
-            return;
-        }
-        this.productionFrame.push({id_producer:productionProducer.id_producer,consumption:productionProducer.consumption});
+    receiveProduction(productionProducer:{id_producer:string,productionDate:Date,production:number}){
+        this.currentTick=this.currentTick ||productionProducer.productionDate;
+
+        this.productionFrame.push({id_producer:productionProducer.id_producer,production:productionProducer.production/AVERAGE_FRAME_TIME_MIN,productionDate:productionProducer.productionDate});
     }
 
     doTick(date:Date){
         this.currentTick = date;
-        if(!this.startDateFrame || this.currentTick<this.startDateFrame ){
-            this.startDateFrame = date
-        }
-        this.nbTickInFrame++;
-        if(this.endFrame()){
-            this.consumptionAdapt();
-            this.resetFrame();
-        }
+        this.clearFrame();
+        this.consumptionAdapt();
     }
 
-    endFrame():boolean{
-        return this.currentTick.getTime()-this.startDateFrame.getTime()>AVERAGE_FRAME_TIME_MS;
-    }
 
     private consumptionAdapt(){
         var consumptionFrameTotal = this.consumptionFrame;
         var productionFrameTotal = this.productionFrame;
         for(var i in consumptionFrameTotal){
-            consumptionFrameTotal[i].consumption =  consumptionFrameTotal[i].consumption/this.nbTickInFrame
+            consumptionFrameTotal[i].consumption =  consumptionFrameTotal[i].consumption
         }
         for(var i in productionFrameTotal){
-            productionFrameTotal[i].consumption =  productionFrameTotal[i].consumption/this.nbTickInFrame
+            productionFrameTotal[i].consumption =  productionFrameTotal[i].consumption
         }
-        var startDateFrame = this.startDateFrame;
-        var endDateFrame = new Date(this.startDateFrame.getTime()+AVERAGE_FRAME_TIME_MS);
-        console.log("send new frame "+{consumptionFrameTotal,productionFrameTotal,startDateFrame,endDateFrame})
+        var startDateFrame = new Date(this.currentTick.getTime()-AVERAGE_FRAME_TIME_MS);
+        var endDateFrame = new Date(this.currentTick.getTime());
+        console.log("send new frame "+JSON.stringify({consumptionFrameTotal,productionFrameTotal,startDateFrame,endDateFrame}))
 
         this.client.emit('electricity.frame',{consumptionFrameTotal,productionFrameTotal,startDateFrame,endDateFrame})
     }
 
-    private resetFrame(){
-        this.consumptionFrame = []
-        this.productionFrame = []
-        this.startDateFrame = this.currentTick;
-        this.nbTickInFrame=0
+    private clearFrame(){
+        this.consumptionFrame=this.consumptionFrame.filter((elt)=>elt.consumptionDate.getTime()>this.currentTick.getTime()-AVERAGE_FRAME_TIME_MS)
+        this.productionFrame=this.productionFrame.filter((elt)=>elt.productionDate.getTime()>this.currentTick.getTime()-AVERAGE_FRAME_TIME_MS)
     }
 
 

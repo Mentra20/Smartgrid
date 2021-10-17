@@ -36,7 +36,7 @@ export class GlobalProductionController {
         console.log("new production added")
     }
 
-    @Get('getproduction')
+    @Get('get-production')
     async getProduction(@Query('date') dateString: string) {
         var date = new Date(dateString)
         var productionSum = 0;

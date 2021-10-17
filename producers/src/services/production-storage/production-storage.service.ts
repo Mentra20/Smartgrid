@@ -33,9 +33,10 @@ export class ProductionServiceStorage {
     
     async pushProduction(producerName:string,date:string){
         var jsonProduction = {id_producer:this.dictProducer[producerName].id_producer,productionDate:new Date(date),production:this.dictProducer[producerName].production};
-        this.http.post(this.URL_PUSH_PRODUCTION,{param:jsonProduction}).subscribe({
-            next : (response)=> console.log(response),
-            error : (error)=> console.error(error),
+        console.log("push to production provider : "+JSON.stringify(jsonProduction))
+        this.http.post(this.URL_PUSH_PRODUCTION,{production:jsonProduction}).subscribe({
+            next : (response)=> console.log(response.data),
+            error : (error)=> console.error("error :("),
         })
     }
     

@@ -29,7 +29,7 @@ async function main(){
     console.log("Scénario 1 : inscription, object paramétrable et adaptation de la production avec la consommation\n");
 
     await beforeStep();
-
+    
 	var response;
     console.log("On regarde les maisons actuellement inscrites : ");
     response = await doRequest({url:"http://client-database:3004/client-registry/allHouses", method:"GET"});
@@ -152,7 +152,7 @@ async function main(){
 
     //STEP 9 
     console.log("\n\n================= STEP 9 =================")
-    await waitTick(2);//20m (temps mini de début de conso)
+    await waitTick(1);//20m (temps mini de début de conso)
     await sleep(2000);
 
     var detailedObject = {
@@ -189,7 +189,7 @@ async function main(){
     //STEP 11 
     console.log("\n\n================= STEP 11 =================")
 
-    await doTick();
+    await waitTick(1);
     await sleep(5000);
 
     dateReq = {date:globalDate};
@@ -199,6 +199,7 @@ async function main(){
     response = await doRequest({url:"http://request-manager:3007/total-production", qs:dateReq, method:"GET"});
     console.log("[service]:request-manager; [route]:total-production; [params]: "+JSON.stringify(dateReq)+" => [return]:"+response.body);
     console.log("Production : "+response.body);
+    
     
 }
 
@@ -224,17 +225,20 @@ async function beforeStep(){
     var producer = {producerName:"EDF",production:1000}
     response = await doRequest({url:"http://producers:3005/add-supplier", form:producer, method:"POST"});
     await sleep(2000);    
+    await waitTick(20); //premier tick pour commencer a avoir des données
 }
 
 async function doTick(){
-    globalDate = new Date(globalDate.setMinutes(globalDate.getMinutes()+2));
+    globalDate = new Date(globalDate.getTime()+1*60*1000);
     //Envoyer le tick à ceux qui en ont besoin.
     response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
-    response = await doRequest({url:"http://supplier:3005/tick", form:{date:globalDate}, method:"POST"});
+    response = await doRequest({url:"http://producers:3005/tick", form:{date:globalDate}, method:"POST"});
+    await sleep(200);    
+
     response = await doRequest({url:"http://electricity-frame:3015/clock/tick", form:{date:globalDate}, method:"POST"});
 
     //Wait que tout s'envoie bien
-    await sleep(100);    
+    await sleep(200);    
 }
 
 async function waitTick(iterationNumber){

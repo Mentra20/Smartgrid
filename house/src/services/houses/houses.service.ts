@@ -66,7 +66,7 @@ export class HousesService {
                 jsonHouseDetailed.push({id_producer:house.getProducerId(),productionDate:this.currentDate,production:-consumption})
             }
         }
-        this.http.post(this.URL_PUSH_PRODUCTION,{param:{production:jsonHouseDetailed}}).subscribe({
+        this.http.post(this.URL_PUSH_PRODUCTION,{production:jsonHouseDetailed}).subscribe({
             next : (response)=> console.log(response),
             error : (error)=> console.error(error),
         }

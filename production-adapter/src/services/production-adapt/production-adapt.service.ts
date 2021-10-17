@@ -9,7 +9,7 @@ export class ProductionAdaptService {
     constructor(private http:HttpService) {}
 
     adaptProduction(amountToAdd: any) {
-        return firstValueFrom(this.http.get(this.URL_PRODUCERS_ADAPT, {params: {amountToAdd}})).then((body)=> {
+        return firstValueFrom(this.http.get(this.URL_PRODUCERS_ADAPT, {params: {newProduction:amountToAdd}})).then((body)=> {
             console.log("Production adapter told the producers to change their production.");
         });
     }

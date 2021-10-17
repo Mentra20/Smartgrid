@@ -15,7 +15,7 @@ export class DetailedProductionController {
             production:number})
     {
         //TODO: verifier si le client existe dans la DB
-        console.log("[production-provider][add-production] objectsProductions:any[] "+ objectProduction +" => void")
+        console.log("[production-provider][add-production] objectsProductions:any[] "+ JSON.stringify(objectProduction) +" => void")
 
         this.DetailledProductionServices.pushProduction(objectProduction);
     }

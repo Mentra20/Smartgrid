@@ -23,5 +23,6 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   await app.listen(3015);
+  console.log("---------------------- Eectricity Frame ------------------------")
 }
 bootstrap();
