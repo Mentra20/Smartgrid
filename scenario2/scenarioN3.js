@@ -48,7 +48,7 @@ async function main(){
     console.log(ANSI_BLUE+"[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:"+response.body+ANSI_RESET);
     console.log("Les maisons inscrites : "+response.body);
 
-    console.log("\nOn  regarde les objets de la maison :" );
+    console.log("\nOn regarde les objets de la maison :" );
     await checkObject(houseID);
 
     // STEP 2
@@ -59,27 +59,27 @@ async function main(){
     console.log("\nOn ajoute à la maison "+ houseID +" l'objet de production : " + JSON.stringify(objProd) );
     await doRequest({url:"http://house:3000/house-editor/house/"+houseID+"/add-object", form:objProd, method:"POST"});
 
-    console.log("\nOn  regarde les objets de la maison :" );
+    console.log("\nOn regarde les objets de la maison :" );
     await checkObject(houseID);
 
     // STEP 3
     console.log(ANSI_GREEN+"\n\n================= STEP 3 ================="+ANSI_RESET)
 
-    console.log("\nOn vérifie que la maison consomme toujours "+ houseID);
+    console.log("\nOn vérifie que la maison" + houseID + " consomme toujours");
     var reqQs = {houseID:houseID};
     response = await doRequest({url:"http://house:3000/consumption/global", qs:reqQs , method:"GET"});
     console.log(ANSI_BLUE+"[service]:house; [route]:consumption/global; [params]:"+houseID+" => [return]:"+response.body+ANSI_RESET);
-    console.log("La consommation de la maison est bien positive : "+response.body);
+    console.log("La consommation de la maison est bien positive : "+response.body + " W.");
 
     // STEP 4
     console.log(ANSI_GREEN+"\n\n================= STEP 4 ================="+ANSI_RESET)
-    console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production n'est pas accessible");
+    console.log("\n On accède à la DB de production avec l'id de production de la maison et on vérifie que la production n'est pas accessible");
     await waitTick(5);
     await sleep(1000);
     reqQs = {date:globalDate,producerID:houseProdID};
     response = await doRequest({url:"http://request-manager:3007/detailed-production", qs:reqQs , method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:detailed-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("On voit bien qu'il n'y a pas eu de production pour cette maison" + response.body);
+    console.log("On voit bien qu'il n'y a pas eu de production pour cette maison" + response.body + " W.");
 
 
     // STEP 5
@@ -96,20 +96,20 @@ async function main(){
     // STEP 6
     console.log(ANSI_GREEN+"\n\n================= STEP 6 ================="+ANSI_RESET)
     reqQs = {houseID:houseID};
-    console.log("\nOn vérifie que la maison à un excès de production "+ houseID);
+    console.log("\nOn vérifie que la maison a un excès de production "+ houseID);
     response = await doRequest({url:"http://house:3000/consumption/global", qs:reqQs , method:"GET"});
     console.log(ANSI_BLUE+"[service]:house; [route]:consumption/global; [params]:"+houseID+" => [return]:"+response.body+ANSI_RESET);
-    console.log("La consommation de la maison n'est plus positive : "+response.body);
+    console.log("La consommation de la maison n'est plus positive : "+response.body + " W.");
 
     // STEP 7
     console.log(ANSI_GREEN+"\n\n================= STEP 7 ================="+ANSI_RESET)
-    console.log("\n On accède à la db de production avec l'id de production de la maison et on vérifie que la production est en accès");
+    console.log("\n On accède à la DB de production avec l'id de production de la maison et on vérifie que la production est en accès");
     await waitTick(5);
     await sleep(1000);
     reqQs = {date:globalDate,producerID:houseProdID};
     response = await doRequest({url:"http://request-manager:3007/detailed-production", qs:reqQs , method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:detailed-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("On voit bien qu'il a une production pour cette maison : " + response.body);
+    console.log("On voit bien qu'il a une production pour cette maison : " + response.body + " W.");
 
 
 }
@@ -141,7 +141,7 @@ function sleep(ms) {
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE+"[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body+ANSI_RESET);
-    console.log("On a les objet suivant :" + response.body);
+    console.log("On a les objet suivants :" + response.body);
 }
 
 main()

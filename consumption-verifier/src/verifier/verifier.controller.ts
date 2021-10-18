@@ -28,9 +28,9 @@ export class VerifierController {
         for(var production of frame.productionFrameTotal){
             sumProduction += +production.production
         }
-        console.log("production : "+sumProduction+", consumption :"+sumConsumption)
+        console.log("production : "+sumProduction+" W, consumption :"+sumConsumption + " W.")
         if(sumConsumption!=sumProduction){
-            console.log("need adapt production : "+(sumConsumption-sumProduction))
+            console.log("need adapt production : "+(sumConsumption-sumProduction) + " W.")
             this.client.emit("production.adapt",(sumConsumption-sumProduction))
         }
     }

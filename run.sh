@@ -10,6 +10,7 @@ echo "---------------------------- Scenario1 ----------------------------"
 
 docker exec scenario2 sh -c 'node ./scenarioN1.js'
 docker exec scenario2 sh -c 'node ./scenarioN2.js'
+docker exec scenario2 sh -c 'node ./scenarioN3.js'
 
 docker-compose stop
 docker stop scenario2

@@ -19,7 +19,7 @@ export class ConsumptionPeakService {
     
         communityConsumptionMap.forEach((value,key,map)=> {
             if(value > this.peakLimit){
-                console.log("Consumption peak detect for communityID "+key+" with value "+value);
+                console.log("Consumption peak detect for communityID "+key+" with value "+value + " W.");
                 this.emitPeakSignal(key);
             }
         });

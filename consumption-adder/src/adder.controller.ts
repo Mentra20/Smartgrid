@@ -34,7 +34,7 @@ export class AdderController {
 
             clientConsumptionSum += detailedCons.consumption;
         }
-        console.log("Consumption sum for houseID "+houseID+" at date "+consumptionDate+" is : "+clientConsumptionSum);
+        console.log("Consumption sum for houseID "+houseID+" at date "+consumptionDate+" is : "+clientConsumptionSum + " W.");
 
 
         //EMIT

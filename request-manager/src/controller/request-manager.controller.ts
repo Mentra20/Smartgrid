@@ -13,14 +13,14 @@ export class RequestManagerController {
     console.log("Get houseID list : "+housesID);
 
     var communityCons = await this.requestManagerService.getCommunityConsumption(date,housesID);
-    console.log("Get community consumption : "+communityCons);
+    console.log("Get community consumption : "+communityCons + " W.");
     return communityCons;
   }
 
   @Get('total-production')
   async getTotalProduction(@Query('date') date:string):Promise<number> {
     var totalProd = await this.requestManagerService.getTotalProduction(date);
-    console.log("Get total production : "+totalProd);
+    console.log("Get total production : "+totalProd + " W.");
     return totalProd;
   }
 
@@ -34,14 +34,14 @@ export class RequestManagerController {
   @Get('total-consumption')
   async getTotalConsumption(@Query('date') date:string):Promise<number> {
     var totalCons = await this.requestManagerService.getTotalConsumption(date);
-    console.log("Get total consumption : "+totalCons);
+    console.log("Get total consumption : "+totalCons + " W.");
     return totalCons;
   } 
 
   @Get('house-global-consumption')
   async getHouseGlobalConsumption(@Query('date') date:string,@Query('houseID') houseID: string):Promise<number> {
     var houseGlobalCons = await this.requestManagerService.getHouseGlobalConsumption(date,houseID);
-    console.log("Get house global consumption : "+houseGlobalCons);
+    console.log("Get house global consumption : "+houseGlobalCons + " W.");
     return houseGlobalCons;
   }
   @Get('house-detailed-consumption')
