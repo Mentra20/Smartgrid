@@ -81,6 +81,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   consumption-detailed:
     container_name: consumption-detailed
@@ -95,7 +97,9 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
-  
+    depends_on:
+      - "kafka"
+
   consumption-peak:
     container_name: consumption-peak
     image: consumption-peak:1.0.0
@@ -107,6 +111,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   consumption-provider:
     container_name: consumption-provider
@@ -121,6 +127,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   consumption-scheduler:
     container_name: consumption-scheduler
@@ -135,6 +143,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   consumption-verifier:
     container_name: consumption-verifier
@@ -147,6 +157,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   electricity-frame:
     container_name: electricity-frame
@@ -159,6 +171,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   global-consumption-database:
     container_name: global-consumption-database
@@ -175,6 +189,7 @@ services:
       - /usr/src/app
     depends_on:
       - "database"
+      - "kafka"
 
   global-production-database:
     container_name: global-production-database
@@ -191,6 +206,7 @@ services:
       - /usr/src/app
     depends_on:
       - "database"
+      - "kafka"
 
   house:
     container_name: house
@@ -221,6 +237,7 @@ services:
       - /usr/src/app
     depends_on:
       - "database"
+      - "kafka"
 
   producers:
     container_name: producers
@@ -235,6 +252,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   production-adapter:
     container_name: production-adapter
@@ -247,6 +266,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   production-provider:
     container_name: production-provider
@@ -261,6 +282,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   registry-manager:
     container_name: registry-manager
@@ -275,6 +298,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
   request-manager:
     container_name: request-manager
@@ -289,6 +314,8 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
 networks:
   si5-soa:

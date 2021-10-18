@@ -10,6 +10,10 @@ async function bootstrap() {
     name: 'CONSUMPTION_SCHEDULER',
     transport: Transport.KAFKA,
     options: {
+      client: {
+        clientId: 'consumption-scheduler',
+        brokers: ['kafka:9092'],
+      },
       consumer: {
         groupId: 'consumption-scheduler',
         allowAutoTopicCreation: true,
