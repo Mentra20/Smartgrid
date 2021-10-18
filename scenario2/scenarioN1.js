@@ -229,12 +229,12 @@ async function doTick(){
     //Envoyer le tick à ceux qui en ont besoin.
     response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
     response = await doRequest({url:"http://producers:3005/tick", form:{date:globalDate}, method:"POST"});
-    await sleep(200);    
+    await sleep(600);    
 
     response = await doRequest({url:"http://electricity-frame:3015/clock/tick", form:{date:globalDate}, method:"POST"});
 
     //Wait que tout s'envoie bien
-    await sleep(200);    
+    await sleep(300);    
 }
 
 async function waitTick(iterationNumber){
