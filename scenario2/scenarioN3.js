@@ -79,7 +79,7 @@ async function main(){
     reqQs = {date:globalDate,producerID:houseProdID};
     response = await doRequest({url:"http://request-manager:3007/detailed-production", qs:reqQs , method:"GET"});
     console.log(ANSI_BLUE+"[service]:request-manager; [route]:detailed-production; [params]:"+JSON.stringify(reqQs)+" => [return]:"+response.body+ANSI_RESET);
-    console.log("On voit bien qu'il n'y a pas eu de production pour cette maison" + response.body + " W.");
+    console.log("On voit bien qu'il y a une production pour cette maison (mais pas suffisante pour la consommation) :" + response.body + " W.");
 
 
     // STEP 5
@@ -119,12 +119,12 @@ async function doTick(){
     //Envoyer le tick à ceux qui en ont besoin.
     response = await doRequest({url:"http://house:3000/tick", form:{date:globalDate}, method:"POST"});
     response = await doRequest({url:"http://producers:3005/tick", form:{date:globalDate}, method:"POST"});
-    await sleep(200);    
+    await sleep(600);    
 
     response = await doRequest({url:"http://electricity-frame:3015/clock/tick", form:{date:globalDate}, method:"POST"});
 
     //Wait que tout s'envoie bien
-    await sleep(200);    
+    await sleep(300);    
 }
 
 async function waitTick(iterationNumber){
