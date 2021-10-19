@@ -50,19 +50,21 @@ export class ConsumptionPeakService {
     }
 
     public async getCommunityIDFromHouseID(houseID:string){
+        var communityID:string;
 
         if(this.communityIDMap.has(houseID)){//In the cache
-            var communityID = this.communityIDMap.get(houseID);
+            communityID = this.communityIDMap.get(houseID);
             console.log("load client community ID from cache : "+communityID);
             return communityID;
         }
         else{ //Need to get info
             var clientInfo = await this.getClientInfoFromClientDB(houseID);
             console.log("get client info : "+JSON.stringify(clientInfo));
-            var communityID = clientInfo.id_community;
+            communityID = clientInfo.id_community;
 
             //Add to cache
             this.communityIDMap.set(houseID, communityID);
+            return communityID;
         }
     }
 
