@@ -7,7 +7,7 @@ export class DailyConsumption {
     houseID: string;
 
     @PrimaryColumn()
-    dailyDate: string;
+    dailyDate: Date;
     
     @Column("double precision")
     consumptionWH: number;

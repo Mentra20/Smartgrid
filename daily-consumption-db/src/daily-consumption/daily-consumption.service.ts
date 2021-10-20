@@ -15,7 +15,7 @@ export class DailyConsumptionService {
 
     public async addClientConsumptionToDB(clientConsumption: {houseID:string,consumptionDate:string,consumption:number}) 
     {
-        var dailyDate = new Date(clientConsumption.consumptionDate).toLocaleDateString("en-US");
+        var dailyDate = new Date(new Date(clientConsumption.consumptionDate).setHours(0,0,0,0));//Only day
         var consumptionWH = this.convertWToWH(+clientConsumption.consumption);
 
         console.log("Add consumption "+consumptionWH+" W/H for client "+clientConsumption.houseID+ " at daily date "+dailyDate+".");
@@ -40,7 +40,7 @@ export class DailyConsumptionService {
         }
     }
 
-    public getHouseConsumptionByDate(date:string,houseID:string){
+    public getHouseConsumptionByDate(date:Date,houseID:string){
         //It's unique
         return this.dailyConsumptionRepository.findOne({where:{houseID:houseID,dailyDate:date}});
     }
