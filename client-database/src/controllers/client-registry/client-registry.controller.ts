@@ -38,18 +38,18 @@ export class ClientRegistryController {
   }
 
   @Post('updateClientName')
-  updateName(
+  updateClientNameinDB(
     @Body('idClient') idClient: string,
     @Body('newClientName') newClientName: string,
   ) {
-    return this.clientRegistryService.updateClientName(
+    return this.clientRegistryService.updateClientNameinDB(
       idClient,
       newClientName,
     );
   }
 
   @Post('updateClientProducerID')
-  updateClientProducerID(@Body('idClient') idClient: string, @Body('producerID') producerID: string) {
-    return this.clientRegistryService.updateClientProducerID(idClient, producerID);
+  updateClientProducerIDinDB(@Body('idClient') idClient: string, @Body('producerID') producerID: string) {
+    return this.clientRegistryService.updateClientProducerIDinDB(idClient, producerID);
   }
 }

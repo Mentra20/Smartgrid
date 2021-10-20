@@ -32,7 +32,7 @@ export class ClientRegistryService {
     return await this.generateClientSubscription(clientName, communityID);
   }
 
-  async updateClientName(idClient: string, newClientName: string) {
+  async updateClientNameinDB(idClient: string, newClientName: string) {
     const client = await this.clientRepository.findOne(idClient);
     client.clientName = newClientName;
 
@@ -42,7 +42,7 @@ export class ClientRegistryService {
     return;
   }
 
-  async updateClientProducerID(idClient: string, producerID: string) {
+  async updateClientProducerIDinDB(idClient: string, producerID: string) {
     let client = await this.clientRepository.findOne(idClient);
     client.id_producer = producerID;
 

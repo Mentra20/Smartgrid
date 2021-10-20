@@ -15,10 +15,10 @@ export class SubscriptionController {
         return response;
     }
 
-    @Post("updateClientConnection")
-    updateClientName(@Body("idHouse") idHouse:string, @Body("clientName") clientName:string){
+    @Post("updateClientName")
+    updateClientNameinDB(@Body("idHouse") idHouse:string, @Body("clientName") clientName:string){
         //console.log("[subscription/ip][clientSubscribe] ip:string "+ ip +" port:string "+ port +" => void")
-        return this.SubscriptionService.updateClientName(idHouse, clientName);
+        return this.SubscriptionService.updateClientNameinDB(idHouse, clientName);
     }
 
     @Post("producerSubscribe")
@@ -29,10 +29,10 @@ export class SubscriptionController {
     }
 
     @Post("updateProducerName")
-    updateProducerName(@Body("producerID") producerID:string, @Body("producerNewName") producerNewName:string) {
+    updateProducerNameinDB(@Body("producerID") producerID:string, @Body("producerNewName") producerNewName:string) {
         console.log("[subscription][updateProducerName] producerID:string " + producerID + " producerNewName:string "
         + producerNewName + " => void\n");
-        return this.SubscriptionService.updateProducerName(producerID, producerNewName);
+        return this.SubscriptionService.updateProducerNameinDB(producerID, producerNewName);
     }
 
     @Post("clientBecomeProducer")

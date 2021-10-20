@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class SubscriptionService {
     private URL_SubscribeClientDB = "http://client-database:3004/client-registry/subscribe";
-    private URL_UpdateNameClientDB = "http://client-database:3004/client-registry/updateClientConnection";
+    private URL_UpdateNameClientDB = "http://client-database:3004/client-registry/updateClientName";
     private URL_SubscribeProducerDB = "http://producer-database:3010/producer-registry/subscribe";
     private URL_UpdateNameProducerDB = "http://producer-database:3010/producer-registry/updateProducerName";
     private URL_UpdateProducerIDClientDB = "http://client-databse:3004/client-registry/updateClientProducerID";
@@ -20,7 +20,7 @@ export class SubscriptionService {
         return this.generateClientSubscription(clientName);
     }
 
-    async updateClientName(idHouse:string, newClientName:string){
+    async updateClientNameinDB(idHouse:string, newClientName:string){
         var message = {idHouse, newClientName};
 
         await this.http.post(this.URL_UpdateNameClientDB, message).subscribe( {
@@ -35,7 +35,7 @@ export class SubscriptionService {
         return await this.generateProducerSubscription(producerName);
     }
 
-    async updateProducerName(idProducer:string, newProducerName:string) {
+    async updateProducerNameinDB(idProducer:string, newProducerName:string) {
         var message = {idProducer, newProducerName};
         await this.http.post(this.URL_UpdateNameProducerDB, message).subscribe({
             next: (value) => console.log("Data stored\n"),
