@@ -11,8 +11,12 @@ export class ConsumptionPeakService {
 
     private peakLimit:number = 10000;
 
+    private communityIDMap:Map<string,string>;
+
     constructor(@Inject("CONSUMPTION_PEAK") private client:ClientKafka,
-        private http:HttpService){}
+        private http:HttpService){
+            this.communityIDMap = new Map<string,string>();
+        }
 
     public async checkPeak(consumptionFrame:{houseID:string,consumption:string}[]){
         var communityConsumptionMap = await this.constructCommunityMap(consumptionFrame); 
@@ -29,8 +33,7 @@ export class ConsumptionPeakService {
         var communityConsumption = new Map<string,number>();
 
         for(let clientCons of consumptionFrame){
-            var clientInfo = await this.getClientInfo(clientCons.houseID);
-            var currentCommunityID = clientInfo.id_community;
+            var currentCommunityID = await this.getCommunityIDFromHouseID(clientCons.houseID);
 
             //Already existing community consumption
             if(communityConsumption.has(currentCommunityID)){
@@ -46,15 +49,32 @@ export class ConsumptionPeakService {
         return communityConsumption;
     }
 
-    public async getClientInfo(houseID:string){
+    public async getCommunityIDFromHouseID(houseID:string){
+        var communityID:string;
+
+        if(this.communityIDMap.has(houseID)){//In the cache
+            communityID = this.communityIDMap.get(houseID);
+            console.log("load client community ID from cache : "+communityID);
+            return communityID;
+        }
+        else{ //Need to get info
+            var clientInfo = await this.getClientInfoFromClientDB(houseID);
+            console.log("get client info : "+JSON.stringify(clientInfo));
+            communityID = clientInfo.id_community;
+
+            //Add to cache
+            this.communityIDMap.set(houseID, communityID);
+            return communityID;
+        }
+    }
+
+    public async getClientInfoFromClientDB(houseID:string){
         var clientInfo:{id:string,id_community:string,clientName:string} 
         = await firstValueFrom(
             this.http.get(this.URL_HOUSE_CLIENT_DB, {
               params: { houseID: houseID },
             }),
           ).then((response)=>response.data);
-
-        console.log("get client info : "+JSON.stringify(clientInfo));
         return clientInfo;
     }
 
