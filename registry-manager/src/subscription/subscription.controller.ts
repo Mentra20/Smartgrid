@@ -36,7 +36,7 @@ export class SubscriptionController {
     }
 
     @Post("clientBecomeProducer")
-    clientBecomeProducer(@Body("clientID") clientID:string) {
+    clientBecomeProducer(@Body("clientID") clientID:string): Promise<String> {
         console.log("[subscription][clientBecomeProducer] clientID:string " + clientID);
         return this.SubscriptionService.clientBecomeProducer(clientID);
     }

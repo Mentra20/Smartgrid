@@ -43,10 +43,10 @@ export class SubscriptionService {
         })
     }
 
-    async clientBecomeProducer(idClient: string) {
+    async clientBecomeProducer(idClient: string): Promise<String> {
         var producerID = await this.generateProducerSubscription(idClient);
         await this.updateProducerIDinClientDB(idClient, producerID);
-        return;
+        return producerID;
     }
     
     private async updateProducerIDinClientDB(idClient:string, producerID:string) {
