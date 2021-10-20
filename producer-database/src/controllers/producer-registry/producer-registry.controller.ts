@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { response } from 'express';
 import { Producer } from 'src/models/Producer';
 import { ProducerRegistryService } from 'src/services/producer-registry/producer-registry.service';
 
@@ -9,12 +8,12 @@ export class ProducerRegistryController {
     constructor(private producerRegistryService: ProducerRegistryService) {}
 
     @Get("allProducers")
-    getCommunity(): Promise<Producer[]> {
+    getAllProducers(): Promise<Producer[]> {
         return this.producerRegistryService.getAllProducers();
     }
 
     @Get("producer")
-    getHouse(@Query("producerID") producerID:number): Promise<Producer> {
+    getProducer(@Query("producerID") producerID:string): Promise<Producer> {
         return this.producerRegistryService.getProducer(producerID);
     }
     
@@ -26,7 +25,7 @@ export class ProducerRegistryController {
     }
 
     @Post("updateProducerName")
-    updateName(@Body("idProducer") idProducer:number, @Body("newProducerName") newProducerName:string) {
+    updateName(@Body("idProducer") idProducer:string, @Body("newProducerName") newProducerName:string) {
         return this.producerRegistryService.updateProducerName(idProducer, newProducerName);
     }
 }

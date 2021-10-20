@@ -10,7 +10,7 @@ export class ProducerRegistryService {
         @InjectRepository(Producer)
         private producerRepository: Repository<Producer>){}
 
-    async getProducer(producerID:number):Promise<Producer> {
+    async getProducer(producerID:string):Promise<Producer> {
         return await this.producerRepository.findOne(producerID);
     }
 
@@ -22,13 +22,13 @@ export class ProducerRegistryService {
         return await this.generateProducerSubscription(producerName);
     }
 
-    async updateProducerName(idProducer:number, newProducerName:string){
+    async updateProducerName(idProducer:string, newProducerName:string) {
         let producer = await this.producerRepository.findOne(idProducer);
         producer.id_company = newProducerName;
 
         await this.producerRepository.save(producer);
 
-        console.log("Producer " + producer.id_producer + " updated.\n");
+        console.log("Producer " + producer.id_producer + "'s name updated.\n");
         return;
     }
 

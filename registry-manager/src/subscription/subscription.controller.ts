@@ -1,6 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
-import { getConnection } from "typeorm";
 
 @Controller('subscription')
 export class SubscriptionController {
@@ -17,9 +16,9 @@ export class SubscriptionController {
     }
 
     @Post("updateClientConnection")
-    updateConnexion(@Body("idHouse") idHouse:number, @Body("clientName") clientName:string){
+    updateClientName(@Body("idHouse") idHouse:string, @Body("clientName") clientName:string){
         //console.log("[subscription/ip][clientSubscribe] ip:string "+ ip +" port:string "+ port +" => void")
-        return this.SubscriptionService.updateSubscription(idHouse, clientName);
+        return this.SubscriptionService.updateClientName(idHouse, clientName);
     }
 
     @Post("producerSubscribe")
@@ -30,10 +29,16 @@ export class SubscriptionController {
     }
 
     @Post("updateProducerName")
-    updateProducerName(@Body("producerID") producerID:number, @Body("producerNewName") producerNewName:string) {
-        console.log("[subscription][updateProducerName] producerID:number " + producerID + " producerNewName:string "
+    updateProducerName(@Body("producerID") producerID:string, @Body("producerNewName") producerNewName:string) {
+        console.log("[subscription][updateProducerName] producerID:string " + producerID + " producerNewName:string "
         + producerNewName + " => void\n");
         return this.SubscriptionService.updateProducerName(producerID, producerNewName);
+    }
+
+    @Post("clientBecomeProducer")
+    clientBecomeProducer(@Body("clientID") clientID:string) {
+        console.log("[subscription][clientBecomeProducer] clientID:string " + clientID);
+        return this.SubscriptionService.clientBecomeProducer(clientID);
     }
 
 }

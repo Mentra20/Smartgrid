@@ -37,14 +37,19 @@ export class ClientRegistryController {
     return this.clientRegistryService.subscribeClient(clientName, communityID);
   }
 
-  @Post('updateClientConnection')
-  updateConnection(
+  @Post('updateClientName')
+  updateName(
     @Body('idClient') idClient: string,
     @Body('newClientName') newClientName: string,
   ) {
-    return this.clientRegistryService.updateClientSubscription(
+    return this.clientRegistryService.updateClientName(
       idClient,
       newClientName,
     );
+  }
+
+  @Post('updateClientProducerID')
+  updateClientProducerID(@Body('idClient') idClient: string, @Body('producerID') producerID: string) {
+    return this.clientRegistryService.updateClientProducerID(idClient, producerID);
   }
 }

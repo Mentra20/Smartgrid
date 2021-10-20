@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ClientRegistryService {
+
   constructor(
     @InjectRepository(Client)
     private clientRepository: Repository<Client>,
@@ -31,13 +32,22 @@ export class ClientRegistryService {
     return await this.generateClientSubscription(clientName, communityID);
   }
 
-  async updateClientSubscription(idClient: string, newClientName: string) {
+  async updateClientName(idClient: string, newClientName: string) {
     const client = await this.clientRepository.findOne(idClient);
     client.clientName = newClientName;
 
     await this.clientRepository.save(client);
 
-    console.log('Client ' + client.clientName + ' updated.\n');
+    console.log('Client ' + client.id + "'s name updated.\n");
+    return;
+  }
+
+  async updateClientProducerID(idClient: string, producerID: string) {
+    let client = await this.clientRepository.findOne(idClient);
+    client.id_producer = producerID;
+
+    await this.clientRepository.save(client);
+    console.log("Client " + client.id + "'s producer ID updated.\n");
     return;
   }
 
