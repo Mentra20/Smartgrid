@@ -7,7 +7,7 @@ import { AutarkyService } from 'src/services/autarky/autarky.service';
 export class AutarkyController {
   constructor(
     private readonly autarkyService: AutarkyService,
-    @Inject('Autarky') private client: ClientKafka,
+    @Inject('AUTARKY') private client: ClientKafka,
   ) {}
 
   async onModuleInit() {

@@ -6,6 +6,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HouseAutarky } from './models/house-autarky';
 import { AutarkyController } from './controllers/autarky/autarky.controller';
 import { AutarkyService } from './services/autarky/autarky.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AutarkyService } from './services/autarky/autarky.service';
         },
       },
     ]),
+    HttpModule,
   ],
   controllers: [AppController, AutarkyController],
   providers: [AppService, AutarkyService],
