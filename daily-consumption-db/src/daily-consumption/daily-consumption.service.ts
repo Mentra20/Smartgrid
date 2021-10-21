@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DailyConsumption } from 'src/models/daily-consumption';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 
 @Injectable()
 export class DailyConsumptionService {
@@ -43,6 +43,11 @@ export class DailyConsumptionService {
     public getHouseConsumptionByDate(date:Date,houseID:string){
         //It's unique
         return this.dailyConsumptionRepository.findOne({where:{houseID:houseID,dailyDate:date}});
+    }
+
+    public getHousePeriodConsumption(begin:Date,end:Date,houseID:string){
+        //It's unique
+        return this.dailyConsumptionRepository.find({where:{houseID:houseID,dailyDate:Between(begin,end)}});
     }
 
     public convertWToWH(consumptionInW:number){
