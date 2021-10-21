@@ -15,8 +15,13 @@ export class ClientRegistryController {
   }
 
   @Get('house')
-  getHouse(@Query('houseID') houseID: string): Promise<Client> {
-    return this.clientRegistryService.getClient(houseID);
+  getHouseWithClientID(@Query('houseID') houseID: string): Promise<Client> {
+    return this.clientRegistryService.getClientWithClientID(houseID);
+  }
+
+  @Get('house-producer-id')
+  getHouseWithProducerID(@Query('producerID') producerID: string): Promise<Client> {
+    return this.clientRegistryService.getClientWithProducerID(producerID);
   }
 
   @Get('allHouses')

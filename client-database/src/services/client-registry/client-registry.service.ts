@@ -11,8 +11,14 @@ export class ClientRegistryService {
     private clientRepository: Repository<Client>,
   ) {}
 
-  async getClient(clientID: string): Promise<Client> {
+  async getClientWithClientID(clientID: string): Promise<Client> {
     return await this.clientRepository.findOne(clientID);
+  }
+
+  async getClientWithProducerID(producerID: string): Promise<Client> {
+    return await this.clientRepository.findOne({
+      where: {id_producer: producerID},
+    });
   }
 
   async getAllClients(): Promise<Client[]> {
