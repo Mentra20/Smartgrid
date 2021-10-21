@@ -1,7 +1,6 @@
 import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { DailyConsumptionService } from './daily-consumption.service';
 import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
-import e from 'express';
 import { DailyConsumption } from 'src/models/daily-consumption';
 
 @Controller('daily-consumption')

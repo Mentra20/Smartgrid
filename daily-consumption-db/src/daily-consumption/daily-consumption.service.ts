@@ -46,7 +46,6 @@ export class DailyConsumptionService {
     }
 
     public getHousePeriodConsumption(begin:Date,end:Date,houseID:string){
-        //It's unique
         return this.dailyConsumptionRepository.find({where:{houseID:houseID,dailyDate:Between(begin,end)}});
     }
 
