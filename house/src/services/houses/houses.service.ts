@@ -12,7 +12,7 @@ export class HousesService {
 
     private URL_TIME_SLOT = "http://consumption-scheduler:3002/schedule"
     private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/clientSubscribe"
-    private URL_REGISTER_NEW_PRODUCER = "http://registry-manager:3003/subscription/clientBecomeClient"
+    private URL_REGISTER_NEW_PRODUCER = "http://registry-manager:3003/subscription/clientBecomeProducer"
 
     private allHouse:Map<string,House> = new Map();
     private currentDate : Date;
