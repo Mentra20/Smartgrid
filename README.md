@@ -83,6 +83,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - 127.0.0.1 consumption-provider=3012
 - 127.0.0.1 consumption-scheduler=3002  
 - 127.0.0.1 consumption-verifier=_  
+- 127.0.0.1 daily-consumption-db=3013
 - 127.0.0.1 electricity-frame=3015  
 - 127.0.0.1 global-consumption-database=3009
 - 127.0.0.1 global-production-database=3001
