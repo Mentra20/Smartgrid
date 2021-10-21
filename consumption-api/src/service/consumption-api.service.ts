@@ -7,8 +7,11 @@ export class ConsumptionApiService {
   private URL_DATASERVICE_REGISTRY =
     'http://client-database:3004/client-registry/community';
 
-  private URL_GLOBAL_CONSUMPTION_MANAGER =
+    private URL_GLOBAL_CONSUMPTION_MANAGER =
     'http://global-consumption-database:3009/global-consumption';
+
+    private URL_DAILY_CONSUMPTION =
+    'http://daily-consumption-db:3013/daily-consumption';
 
   constructor(private http: HttpService) { }
 
@@ -31,6 +34,27 @@ export class ConsumptionApiService {
     return firstValueFrom(
       this.http.get(this.URL_GLOBAL_CONSUMPTION_MANAGER + '/get-community-consumption', {
         params: { date: date, housesID: housesID },
+      }),
+    ).then((body) => {
+      return body.data||0
+    });
+  }
+
+  getDailyConsumption(houseID:string,consumptionDate:string) {
+    return firstValueFrom(
+      this.http.get(this.URL_DAILY_CONSUMPTION+"/daily-consumption", {
+        params: { houseID: houseID,consumptionDate:consumptionDate},
+      }),
+    ).then((body) => {
+      return body.data||0
+    });
+  }
+
+    
+  getPeriodConsumption(houseID:string,begin:string,end:string) {
+    return firstValueFrom(
+      this.http.get(this.URL_DAILY_CONSUMPTION+"/period-consumption", {
+        params: { houseID: houseID,begin:begin,end:end},
       }),
     ).then((body) => {
       return body.data||0

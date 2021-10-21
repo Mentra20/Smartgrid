@@ -8,6 +8,9 @@ export class ProductionApiService {
   private URL_GLOBAL_PRODUCTION_MANAGER =
     'http://global-production-database:3001/global-production/get-production';
 
+    private URL_DAILY_PRODUCTION =
+    'http://daily-production-db:3014/daily-production';
+
   private URL_DETAILED_PRODUCTION_MANAGER =
     'http://global-production-database:3001/global-production/get-producer-production';
 
@@ -30,6 +33,26 @@ export class ProductionApiService {
       })
     ).then((body) => {
       return body.data || 0
+    });
+  }
+  getDailyProduction(id_producer:string,productionDate:string) {
+    return firstValueFrom(
+      this.http.get(this.URL_DAILY_PRODUCTION+"/daily-production", {
+        params: { id_producer: id_producer,productionDate:productionDate},
+      }),
+    ).then((body) => {
+      return body.data||0 
+    });
+  }
+
+    
+  getPeriodProduction(id_producer:string,begin:string,end:string) {
+    return firstValueFrom(
+      this.http.get(this.URL_DAILY_PRODUCTION+"/period-production", {
+        params: { id_producer: id_producer,begin:begin,end:end},
+      }),
+    ).then((body) => {
+      return body.data||0
     });
   }
 }
