@@ -14,4 +14,10 @@ export class Client {
     })
     clientName: string;
 
+    @Column({
+        nullable: true,
+        type: 'text'
+    })
+    id_producer: string | null;
+
 }

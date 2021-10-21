@@ -15,8 +15,13 @@ export class ClientRegistryController {
   }
 
   @Get('house')
-  getHouse(@Query('houseID') houseID: string): Promise<Client> {
-    return this.clientRegistryService.getClient(houseID);
+  getHouseWithClientID(@Query('houseID') houseID: string): Promise<Client> {
+    return this.clientRegistryService.getClientWithClientID(houseID);
+  }
+
+  @Get('house-producer-id')
+  getHouseWithProducerID(@Query('producerID') producerID: string): Promise<Client> {
+    return this.clientRegistryService.getClientWithProducerID(producerID);
   }
 
   @Get('allHouses')
@@ -37,14 +42,19 @@ export class ClientRegistryController {
     return this.clientRegistryService.subscribeClient(clientName, communityID);
   }
 
-  @Post('updateClientConnection')
-  updateConnection(
+  @Post('updateClientName')
+  updateClientNameinDB(
     @Body('idClient') idClient: string,
     @Body('newClientName') newClientName: string,
   ) {
-    return this.clientRegistryService.updateClientSubscription(
+    return this.clientRegistryService.updateClientNameinDB(
       idClient,
       newClientName,
     );
+  }
+
+  @Post('updateClientProducerID')
+  updateClientProducerIDinDB(@Body('idClient') idClient: string, @Body('producerID') producerID: string) {
+    return this.clientRegistryService.updateClientProducerIDinDB(idClient, producerID);
   }
 }

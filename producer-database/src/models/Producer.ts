@@ -8,5 +8,4 @@ export class Producer {
 
     @Column()
     id_company: string;
-
 }

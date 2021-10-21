@@ -49,7 +49,7 @@ export class GlobalConsumptionController {
         var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(new Date(date),houseID);
         console.log("[get-house-consumption][getHouseConsumption] Get date : " + new Date(date) + " and house ID");
 
-        console.log("house consumption of ID +" + houseID + " at date " + date + " is " + houseConsumption.totalConsumption + " W.");
+        console.log("House " + houseID + "consumption at date " + date + " is " + houseConsumption.totalConsumption + " W.");
 
         return houseConsumption.totalConsumption;
     }
@@ -67,7 +67,7 @@ export class GlobalConsumptionController {
 
         var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(date,houseID);
 
-        console.log("community consumption at date " + date + " is " + communitySum + " W.");
+        console.log("Community consumption at date " + date + " is " + communitySum + " W.");
 
         return communitySum;
     }
