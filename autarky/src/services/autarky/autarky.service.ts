@@ -2,12 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HouseAutarky } from 'src/models/house-autarky';
 import { Repository, Between } from 'typeorm';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AutarkyService {
+  private URL_DATASERVICE_REGISTRY_CONSUMPTION =
+    'http://client-database:3004/client-registry/house';
+  private URL_DATASERVICE_REGISTRY_PRODUCTION =
+    'http://client-database:3004/client-registry/house-producer-id';
+
   constructor(
     @InjectRepository(HouseAutarky)
     private houseAutarkyRepository: Repository<HouseAutarky>,
+    private http: HttpService,
   ) {}
 
   public async addClientConsumptionToDB(clientConsumption: {
@@ -15,29 +23,52 @@ export class AutarkyService {
     consumptionDate: string;
     consumption: number;
   }) {
-    const houseAutarky = await this.houseAutarkyRepository.findOne({
-      where: {
-        clientID: clientConsumption.houseID,
-      },
-    });
-    if (houseAutarky != null) {
-      const updateHouseAutarky = await this.houseAutarkyRepository.findOne({
-        where: {
-          clientID: clientConsumption.houseID,
-          autarkyDate: new Date(clientConsumption.consumptionDate),
-        },
-      });
-      if (updateHouseAutarky != null) {
-        updateHouseAutarky.totalConsumption -= clientConsumption.consumption;
+    const houseAutarky = await this.findHouseAutarkyByClientID(
+      clientConsumption.houseID,
+    );
+    if (houseAutarky) {
+      const updateHouseAutarky = await this.findHouseAutarkyByClientIDAndDate(
+        clientConsumption.houseID,
+        clientConsumption.consumptionDate,
+      );
+      if (updateHouseAutarky) {
+        updateHouseAutarky.totalConsumption -= +clientConsumption.consumption;
         await this.houseAutarkyRepository.save(updateHouseAutarky);
       } else {
-        const newHouseAutarky = houseAutarky;
-        newHouseAutarky.totalConsumption = -clientConsumption.consumption;
-        newHouseAutarky.autarkyDate = new Date(
-          clientConsumption.consumptionDate,
+        await this.newHouseAutarkyByOtherDateAndConsumption(
+          clientConsumption,
+          houseAutarky,
         );
-        await this.houseAutarkyRepository.save(newHouseAutarky);
       }
+    } else {
+      await this.getNewHouseByHouseID(clientConsumption);
+    }
+  }
+
+  async addProductionToDB(productionReceived: {
+    id_producer: string;
+    productionDate: string;
+    production: number;
+  }) {
+    const houseAutarky = await this.findHouseAutarkyByProducerID(
+      productionReceived.id_producer,
+    );
+    if (houseAutarky != null) {
+      const updateHouseAutarky = await this.findHouseAutarkyByClientIDAndDate(
+        houseAutarky.clientID,
+        productionReceived.productionDate,
+      );
+      if (updateHouseAutarky != null) {
+        updateHouseAutarky.totalConsumption += productionReceived.production;
+        await this.houseAutarkyRepository.save(updateHouseAutarky);
+      } else {
+        await this.newHouseAutarkyByOtherDateAndProduction(
+          productionReceived,
+          houseAutarky,
+        );
+      }
+    } else {
+      await this.getNewHouseByProducerID(productionReceived);
     }
   }
 
@@ -69,34 +100,105 @@ export class AutarkyService {
     housesAutarky.forEach((house) => (autarky += house.totalConsumption));
   }
 
-  async addProductionToDB(productionReceived: {
+  private async getNewHouseByHouseID(clientConsumption: {
+    houseID: string;
+    consumptionDate: string;
+    consumption: number;
+  }) {
+    const newHouseAutarky = new HouseAutarky();
+    await firstValueFrom(
+      this.http.get(this.URL_DATASERVICE_REGISTRY_CONSUMPTION, {
+        params: { houseID: clientConsumption.houseID },
+      }),
+    ).then((body) => {
+      console.log(body.data);
+      const client = body.data;
+      newHouseAutarky.totalConsumption = -clientConsumption.consumption;
+      newHouseAutarky.autarkyDate = new Date(clientConsumption.consumptionDate);
+      newHouseAutarky.clientID = client.id;
+      newHouseAutarky.communityID = client.id_community;
+      newHouseAutarky.producerID = client.id_producer;
+    });
+    await this.houseAutarkyRepository.save(newHouseAutarky);
+  }
+
+  private async newHouseAutarkyByOtherDateAndConsumption(
+    clientConsumption: {
+      houseID: string;
+      consumptionDate: string;
+      consumption: number;
+    },
+    houseAutarky: HouseAutarky,
+  ) {
+    const newHouseAutarky = new HouseAutarky();
+    newHouseAutarky.totalConsumption = -clientConsumption.consumption;
+    newHouseAutarky.autarkyDate = new Date(clientConsumption.consumptionDate);
+    newHouseAutarky.clientID = houseAutarky.clientID;
+    newHouseAutarky.producerID = houseAutarky.producerID;
+    await this.houseAutarkyRepository.save(newHouseAutarky);
+  }
+
+  private async findHouseAutarkyByClientIDAndDate(
+    houseID: string,
+    consumptionDate: string,
+  ) {
+    return await this.houseAutarkyRepository.findOne({
+      where: {
+        clientID: houseID,
+        autarkyDate: new Date(consumptionDate),
+      },
+    });
+  }
+
+  private async findHouseAutarkyByClientID(houseID: string) {
+    return this.houseAutarkyRepository.findOne({
+      where: {
+        clientID: houseID,
+      },
+    });
+  }
+
+  private async findHouseAutarkyByProducerID(id_producer: string) {
+    return this.houseAutarkyRepository.findOne({
+      where: {
+        producerID: id_producer,
+      },
+    });
+  }
+
+  private async newHouseAutarkyByOtherDateAndProduction(
+    productionReceived: {
+      id_producer: string;
+      productionDate: string;
+      production: number;
+    },
+    houseAutarky: HouseAutarky,
+  ) {
+    const newHouseAutarky = houseAutarky;
+    newHouseAutarky.totalConsumption = +productionReceived.production;
+    newHouseAutarky.autarkyDate = new Date(productionReceived.productionDate);
+    await this.houseAutarkyRepository.save(newHouseAutarky);
+  }
+
+  private async getNewHouseByProducerID(productionReceived: {
     id_producer: string;
     productionDate: string;
     production: number;
   }) {
-    const houseAutarky = await this.houseAutarkyRepository.findOne({
-      where: {
-        producerID: productionReceived.id_producer,
-      },
+    const newHouseAutarky = new HouseAutarky();
+    await firstValueFrom(
+      this.http.get(this.URL_DATASERVICE_REGISTRY_PRODUCTION, {
+        params: { producerID: productionReceived.id_producer },
+      }),
+    ).then((body) => {
+      console.log(body.data);
+      const client = body.data;
+      newHouseAutarky.totalConsumption = +productionReceived.production;
+      newHouseAutarky.autarkyDate = new Date(productionReceived.productionDate);
+      newHouseAutarky.clientID = client.id;
+      newHouseAutarky.communityID = client.id_community;
+      newHouseAutarky.producerID = client.id_producer;
     });
-    if (houseAutarky != null) {
-      const updateHouseAutarky = await this.houseAutarkyRepository.findOne({
-        where: {
-          clientID: houseAutarky.clientID,
-          autarkyDate: new Date(productionReceived.productionDate),
-        },
-      });
-      if (updateHouseAutarky != null) {
-        updateHouseAutarky.totalConsumption += productionReceived.production;
-        await this.houseAutarkyRepository.save(updateHouseAutarky);
-      } else {
-        const newHouseAutarky = houseAutarky;
-        newHouseAutarky.totalConsumption = productionReceived.production;
-        newHouseAutarky.autarkyDate = new Date(
-          productionReceived.productionDate,
-        );
-        await this.houseAutarkyRepository.save(newHouseAutarky);
-      }
-    }
+    await this.houseAutarkyRepository.save(newHouseAutarky);
   }
 }

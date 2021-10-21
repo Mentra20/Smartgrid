@@ -5,8 +5,8 @@ export class HouseAutarky {
   @PrimaryColumn()
   clientID: string;
 
-  @Column()
-  producerID: string;
+  @Column({ nullable: true })
+  producerID: string | null;
 
   @PrimaryColumn()
   autarkyDate: Date;
