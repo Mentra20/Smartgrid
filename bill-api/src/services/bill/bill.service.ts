@@ -63,7 +63,7 @@ export class BillService {
     }
 
 
-    private async createBillForClient(client:Client,year:number,month:number):Promise<ClientBill>{
+    public async createBillForClient(client:Client,year:number,month:number):Promise<ClientBill>{
         var bill;
         if(client){
             var production
@@ -79,7 +79,7 @@ export class BillService {
         return bill
     }
 
-    private getHouseRegistry(houseID:string):Promise<Client>{
+    public getHouseRegistry(houseID:string):Promise<Client>{
         return firstValueFrom(this.http.get(URL_HOUSE_PRODUCER_ID,{params:{houseID}})).then((response)=>Object.assign(Client,response.data)).catch((error)=>{console.error(error),undefined})
     }
 

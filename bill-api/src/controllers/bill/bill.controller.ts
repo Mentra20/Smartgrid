@@ -8,12 +8,14 @@ export class BillController {
 
     @Get("all-bill-for-house")
     getAllBillForHouse(@Query("houseID") houseID:string){
-        this.billService.getAllBillForHouse(houseID)
+        console.log("[bill-api][BillController][getAllBillForHouse] entry with param : {houseID:"+houseID+"}")
+        return this.billService.getAllBillForHouse(houseID)
     }
 
     @Get("bill-for-house")
     getSpecificBillForHouse(@Query("houseID") houseID:string,@Query("year",ParseIntPipe) year:number,@Query("month",ParseIntPipe) month:number){
-        this.billService.getBill(houseID,year,month)
+        console.log("[bill-api][BillController][getSpecificBillForHouse] entry with param : {houseID:"+houseID+"}")
+        return this.billService.getBill(houseID,year,month)
     }
 
     //la facture courante du mois (pas forcement complete si le mois est pas fini)
