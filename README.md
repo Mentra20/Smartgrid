@@ -75,14 +75,19 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Port
 
+- 127.0.0.1 autarky=_
+- 127.0.0.1 bill-api=3016
+- 127.0.0.1 client-consumption-api=2997
 - 127.0.0.1 client-database=3004
 - 127.0.0.1 consumption-adder=_  
+- 127.0.0.1 consumption-api:2998
 - 127.0.0.1 consumption-detailed=3008  
 - 127.0.0.1 consumption-peak=_  
 - 127.0.0.1 consumption-provider=3012
 - 127.0.0.1 consumption-scheduler=3002  
 - 127.0.0.1 consumption-verifier=_  
 - 127.0.0.1 daily-consumption-db=3013
+- 127.0.0.1 daily-production-db=3014
 - 127.0.0.1 electricity-frame=3015  
 - 127.0.0.1 global-consumption-database=3009
 - 127.0.0.1 global-production-database=3001
@@ -90,9 +95,9 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - 127.0.0.1 producer-database=3010
 - 127.0.0.1 producers=3005  
 - 127.0.0.1 production-adapter=_
+- 127.0.0.1 production-api=2999
 - 127.0.0.1 production-provider=3006
-- 127.0.0.1 registry-manager=3003
-- 127.0.0.1 request-manager=3007
+- 127.0.0.1 registry-manager=3003  
 
 ## Host
 
