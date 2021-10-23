@@ -30,17 +30,17 @@ Les containers de nos services sont re-créés entre chaque scénario.
 10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
 
-**Scénario 2 : Gestion de la consommation et pic de consommation dans une communauté**  
+**Scénario 2 : Gestion de la consommation et pic dans une communauté**  
 
-1 - On a des maisons dans une communauté et d'autres dans une autre communautés  
-2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons de la communauté  
-3 - On regarde la consommation totale de toutes les maisons  
-4 - On regarde la consommation dans la communauté  
-5 - On détecte un pic de consommation dans cette communautée  
-6 - On demande aux objets planifiables d'arrêter de charger  
-7 - On remarque qu’il n’y a plus de pic  
+1 - On a des maisons dans une communauté et une autre dans une autre communauté    
+2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons   
+3 - On regarde la consommation totale de toutes les maisons   
+4 - On regarde la consommation dans une communauté  
+5 - On détecte un pic de consommation dans cette communauté  
+6 - On demande aux objets planifiables d'arrêter de charger dans cette communauté   
+7 - On remarque qu’il n’y a maintenant plus de pic  
 
-**Scénario 3 : Achat de la production supplémentaire d'une maison**
+**Scénario 3 : Production d'une maison et autarcie**
 
 1 - On inscrit une maison avec des objets consommant de l'éléctricité et on l'inscrit en tant que producteur  
 2 - On ajoute à la maison un objet produisant de l'électricité  

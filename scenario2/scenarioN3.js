@@ -22,8 +22,8 @@ function doRequest(req) {
 
 var globalDate = new Date();
 
-async function main() {
-    console.log(ANSI_GREEN + "Scénario 3 : objets de production et utilisation des producteurs de l'électricité en trop\n");
+async function main(){
+    console.log(ANSI_GREEN+"Scénario 3 : Production d'une maison et autarcie\n");
 
     // STEP 0
     console.log(ANSI_GREEN + "\n\n================= STEP 0 =================" + ANSI_RESET)
