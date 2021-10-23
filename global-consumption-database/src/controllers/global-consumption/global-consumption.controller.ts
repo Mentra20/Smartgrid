@@ -37,7 +37,7 @@ export class GlobalConsumptionController {
         console.log("[get-total-consumption][getTotalConsumption] Get date : " + new Date(date));
         
         for (var houseCons of consumptionList){
-            consumptionSum += houseCons.totalConsumption;
+            consumptionSum += houseCons?.totalConsumption ||0;
         }
         console.log("Total consumption at date " + date + " is " + consumptionSum + " W.");
         return consumptionSum;
@@ -49,9 +49,9 @@ export class GlobalConsumptionController {
         var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(new Date(date),houseID);
         console.log("[get-house-consumption][getHouseConsumption] Get date : " + new Date(date) + " and house ID");
 
-        console.log("House " + houseID + "consumption at date " + date + " is " + houseConsumption.totalConsumption + " W.");
+        console.log("House " + houseID + "consumption at date " + date + " is " + houseConsumption?.totalConsumption||0 + " W.");
 
-        return houseConsumption.totalConsumption;
+        return houseConsumption?.totalConsumption||0;
     }
 
     @Get('get-community-consumption')
@@ -62,7 +62,7 @@ export class GlobalConsumptionController {
         
         for (var houseID of housesID){
             var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(date,houseID);
-            communitySum += houseConsumption.totalConsumption;
+            communitySum += houseConsumption?.totalConsumption||0;
         }
 
         var houseConsumption:HouseConsumption = await this.globalConsumptionService.getHouseConsumptionByDate(date,houseID);

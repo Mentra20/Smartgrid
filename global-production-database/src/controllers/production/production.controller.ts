@@ -43,7 +43,7 @@ export class GlobalProductionController {
         var ProductionList = await this.productionService.getProductionByDate(date);
         console.log("[getproduction][getProduction] Get date : " + date.toDateString() + " and return Production list : " + ProductionList);
         for (var elem of ProductionList) {
-            productionSum += elem.production;
+            productionSum += elem?.production||0;
         }
         return productionSum;
     }
@@ -53,7 +53,7 @@ export class GlobalProductionController {
         console.log("[GlobalProductionController][getProducerProduction] params:"+{dateString}+" ,"+{producerID})
         var date = new Date(dateString)
         var production = await this.productionService.getProducerProductionByDate(date, producerID)
-        return production.production;
+        return production?.production||0;
 
     }
 }
