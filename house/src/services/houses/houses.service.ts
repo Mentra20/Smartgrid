@@ -1,6 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { response } from 'express';
 import { firstValueFrom } from 'rxjs';
 import { House } from 'src/models/house';
 import { ScheduledHouseObject } from 'src/models/house-object';
@@ -83,8 +82,9 @@ export class HousesService {
         }
     }
 
-    public async registryNewProducter(clientName:string):Promise<string>{
-        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { producerName: clientName }))).data
+    public async registryNewProducter(houseID:string):Promise<string>{
+        console.log('client tring to become producer' + houseID);
+        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { clientID: houseID }))).data
     }
 
     public async registryNewClient(clientName:string):Promise<string>{
