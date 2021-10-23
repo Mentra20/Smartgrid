@@ -35,7 +35,7 @@ async function main() {
     await consumer.connect()
     await consumer.subscribe({ topic: 'consumption.peak', fromBeginning:false})
 
-    console.log(ANSI_GREEN + "Scénario 2 : Gestion de la consommation et pic dans une communauté");
+    console.log(ANSI_GREEN + "Scénario 2 : Gestion de la consommation, pic et autarky dans une communauté");
 
     // STEP 0
     console.log(ANSI_GREEN + "\n\n================= STEP 0 =================" + ANSI_RESET)

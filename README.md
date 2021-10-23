@@ -30,7 +30,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
 
-**Scénario 2 : Gestion de la consommation et pic dans une communauté**  
+**Scénario 2 : Gestion de la consommation, pic et autarky dans une communauté**  
 
 1 - On a des maisons dans une communauté et une autre dans une autre communauté    
 2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons   
