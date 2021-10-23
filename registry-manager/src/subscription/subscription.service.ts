@@ -8,7 +8,7 @@ export class SubscriptionService {
     private URL_UpdateNameClientDB = "http://client-database:3004/client-registry/updateClientName";
     private URL_SubscribeProducerDB = "http://producer-database:3010/producer-registry/subscribe";
     private URL_UpdateNameProducerDB = "http://producer-database:3010/producer-registry/updateProducerName";
-    private URL_UpdateProducerIDClientDB = "http://client-databse:3004/client-registry/updateClientProducerID";
+    private URL_UpdateProducerIDClientDB = "http://client-database:3004/client-registry/updateClientProducerID";
 
     constructor(private http:HttpService){}
 
@@ -51,6 +51,7 @@ export class SubscriptionService {
     
     private async updateProducerIDinClientDB(idClient:string, producerID:string) {
         var message = {idClient, producerID};
+        console.log("[registry-manager][SubscriptionService][updateProducerIDinClientDB] I send to database : "+JSON.stringify(message))
         await this.http.post(this.URL_UpdateProducerIDClientDB, message).subscribe({
             next: (value) => console.log("Data updated\n"),
             error: (error) => console.log(error)

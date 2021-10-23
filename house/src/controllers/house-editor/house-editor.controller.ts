@@ -29,7 +29,7 @@ export class HouseEditorController {
         if(house.getProducerId()){
             return;
         }
-        var producerId = await this.housesService.registryNewProducter(house.getClientName());
+        var producerId = await this.housesService.registryNewProducter(house.getHouseId());
         house.setProducerId(producerId);
         console.log("[HouseEditorController][becomeProducer] return : houseId="+producerId)
         return producerId;

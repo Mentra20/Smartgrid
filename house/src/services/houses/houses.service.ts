@@ -82,9 +82,9 @@ export class HousesService {
         }
     }
 
-    public async registryNewProducter(clientName:string):Promise<string>{
-        console.log('client tring to become producer' + clientName);
-        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { clientID: clientName }))).data
+    public async registryNewProducter(houseID:string):Promise<string>{
+        console.log('client tring to become producer' + houseID);
+        return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { clientID: houseID }))).data
     }
 
     public async registryNewClient(clientName:string):Promise<string>{
