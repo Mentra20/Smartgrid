@@ -117,7 +117,7 @@ async function main() {
 
     console.log("On demande un planing pour les objets planifiables : ");
     await askSchedule(houseID1, "Car");
-    await askSchedule(houseID2, "Car");
+    await askSchedule(houseID2, "Car");//Super car
     await askSchedule(houseID3, "Car");
     await askSchedule(houseID4, "Car");
 
@@ -172,6 +172,37 @@ async function main() {
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
     console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est--- : " + response.body + " W.");
+
+
+    console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET);
+    console.log(ANSI_GREEN + "On regarde si la communauté est en otarsie et ce n'est pas le cas"+ ANSI_RESET)
+
+    var autarkyQs = { date: globalDate, communityID:communityHouse2}
+    response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
+    var exceedConsumption = response.body;
+    console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que la valeur (prod - cons) est négative : " + exceedConsumption + " W donc la communauté "+communityHouse2+" n'est pas en autarcie");
+
+
+    console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
+    console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarsie"+ ANSI_RESET);
+    
+    var neededProd = -1*(exceedConsumption + 200);//Marge
+    var velo = { object: { name: "Vélo d'appartement", maxConsumption: neededProd, enabled: true }, type: "BASIC" }
+
+    console.log("On ajoute un objet qui produit à la maison "+houseID2+" de la communauté "+communityHouse2);
+    await addObject(houseID2, velo);
+    await checkObject(houseID2);
+
+    await waitTick(1);
+    await sleep(1000)
+
+    console.log("On vérifie que la communauté est bien passée en autarcie")
+    
+    reqQs = { date: globalDate, communityID:communityHouse2}
+    response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que la valeur (prod - cons) est positive : " + exceedConsumption + " W donc la communauté "+communityHouse2+" est maintenant en autarcie");
 }
 
 async function checkCarCons(houseID) {
@@ -189,7 +220,7 @@ async function checkCarCons(houseID) {
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
-    console.log("On constate qu'ils ont bien été ajoutés :" + response.body);
+    console.log("On constate qu'il a bien été ajouté :" + response.body);
     console.log("");
 }
 
@@ -204,7 +235,7 @@ async function askSchedule(houseID, objectName) {
 
 
 async function addObject(houseID, nameObject) {
-    console.log("\nUn object est branché");
+    console.log("\nUn object est branché : "+nameObject);
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_" + ANSI_RESET);
 }
