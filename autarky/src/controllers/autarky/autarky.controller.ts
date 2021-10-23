@@ -14,11 +14,11 @@ export class AutarkyController {
     this.client.subscribeToResponseOf('consumption.client');
     this.client.subscribeToResponseOf('production.raw.global');
     await this.client.connect();
-    console.log('Global consumption database connected to the bus.');
+    console.log('Autarky connected to the bus.');
   }
 
   @MessagePattern('consumption.client')
-  addClientConsumptionToDB(@Payload() totalClientConsumptionMSG: any) {
+  async addClientConsumptionToDB(@Payload() totalClientConsumptionMSG: any) {
     const clientConsumption: {
       houseID: string;
       consumptionDate: string;
@@ -32,11 +32,11 @@ export class AutarkyController {
         JSON.stringify(clientConsumption),
     );
 
-    this.autarkyService.addClientConsumptionToDB(clientConsumption);
+    await this.autarkyService.addClientConsumptionToDB(clientConsumption);
   }
 
   @MessagePattern('production.raw.global')
-  addClientProductionToDB(@Payload() totalProductionMSG: any) {
+  async addClientProductionToDB(@Payload() totalProductionMSG: any) {
     const productionReceived: {
       id_producer: string;
       productionDate: string;
@@ -48,7 +48,7 @@ export class AutarkyController {
         JSON.stringify(productionReceived),
     );
 
-    this.autarkyService.addProductionToDB(productionReceived);
+    await this.autarkyService.addProductionToDB(productionReceived);
 
     console.log('new production added');
   }
@@ -71,7 +71,7 @@ export class AutarkyController {
     );
 
     console.log(
-      'house consumption of ID +' +
+      'house autarky of ID +' +
         clientID +
         ' at date ' +
         date +
