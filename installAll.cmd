@@ -15,5 +15,10 @@ start powershell -command "[console]::windowwidth=100; [console]::windowheight=3
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd production-adapter | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd production-provider | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd registry-manager | npm i" &
-start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd request-manager | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd client-consumption-api | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd consumption-api | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd production-api | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd bill-api | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-consumption-db | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-production-db | npm i" &
 

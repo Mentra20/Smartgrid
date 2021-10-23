@@ -15,4 +15,9 @@ start powershell -command "[console]::windowwidth=100; [console]::windowheight=3
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd production-adapter | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd production-provider | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd registry-manager | npm run start:dev" &
-start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd request-manager | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd client-consumption-api | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd consumption-api | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd production-api | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd bill-api | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-consumption-db | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-production-db | npm run start:dev" &
