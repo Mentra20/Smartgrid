@@ -19,7 +19,7 @@ export class ProducerRegistryController {
     
     @Post("subscribe")
     producerSubscribe(@Body("producerName") producerName:string):Promise<string>{
-        console.log("[producer-registry][producerSubscribe] producerName:string "+ producerName + "=> void");
+        console.log("[producer-registry][producerSubscribe] producerName:string "+ producerName + "=> Promise<String>");
         var reponse = this.producerRegistryService.subscribeProducer(producerName)
         return reponse;
     }
