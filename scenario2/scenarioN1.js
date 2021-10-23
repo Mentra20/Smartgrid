@@ -1,4 +1,5 @@
 var request = require('request');
+const {generateBill2LastYear} = require("./inject-data-to-db")
 
 function doRequest(req) {
     return new Promise(function(resolve, reject) {
@@ -209,17 +210,19 @@ async function main() {
     var firstYear = globalDate.getFullYear();
     var firstMonth = globalDate.getMonth();
     //TODO : s'écouler 3 mois
+    generateBill2LastYear(houseID);
+    await sleep(2000)
 
     var firstMonthBillReq = {houseID:houseID, year:firstYear, month:firstMonth};   
-    var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear, month:globalDate.getMonth};    
+    var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear(), month:globalDate.getMonth()+1};    
 
     response = await doRequest({ url: "http://bill-api:3016/bill/bill-for-house", qs: firstMonthBillReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Facture du premier mois ("+firstMonth+1+"/"+firstYear+") : " + JSON.stringify(response.body)+".");
+    console.log("Facture du premier mois ("+firstMonth+"/"+firstYear+") : " + JSON.stringify(response.body)+".");
 
-    response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporar-bill", qs: currMonthBillReq, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporar-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Facture du mois courant ("+globalDate.getMonth+1+"/"+globalDate.getFullYear+") : " + JSON.stringify(response.body)+".");
+    response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporary-bill", qs: currMonthBillReq, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log("Facture du mois courant ("+globalDate.getMonth()+"/"+globalDate.getFullYear()+") : " + JSON.stringify(response.body)+".");
 }
 
 async function beforeStep() {

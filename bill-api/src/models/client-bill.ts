@@ -14,17 +14,17 @@ export class ClientBill {
     @Column()
     private consumption:number
 
-    @Column()
+    @Column({type:"double precision"})
     private productionPrice:number
-    @Column()
+    @Column({type:"double precision"})
     private consumptionPrice:number
 
-    @Column()
+    @Column({type:"double precision"})
     private calculedConsumptionPrice:number
-    @Column()
+    @Column({type:"double precision"})
     private calculedProductionPrice:number
 
-    @Column()
+    @Column({type:"double precision"})
     private finalPrice : number
 
     constructor(houseID:string,year:number,month:number,consumption:number,production=0){
@@ -36,7 +36,7 @@ export class ClientBill {
     }
 
     
-    public calculeBill(productionPrice,consumptionPrice){
+    public calculeBill(productionPrice:number,consumptionPrice:number):void{
         this.consumptionPrice=consumptionPrice;
         this.productionPrice=productionPrice;
         this.calculedConsumptionPrice = this.consumption * consumptionPrice;

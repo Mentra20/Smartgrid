@@ -20,13 +20,14 @@ export class BillController {
 
     //la facture courante du mois (pas forcement complete si le mois est pas fini)
     //utiliser uniquement si necessaire
-    // @Get("generate-temporar-bill")
-    // async generateCurrentBill(@Query("houseID") houseID:string,@Query("year",ParseIntPipe) year:number,@Query("month",ParseIntPipe) month:number){
-    //     var client = await this.billService.getHouseRegistry(houseID);
-    //     var temporarBill;
-    //     if(houseID){
-    //         temporarBill = this.billService.createBillForClient(client,year,month)
-    //     }
-    //     return temporarBill
-    // }
+    @Get("generate-temporary-bill")
+    async generateCurrentBill(@Query("houseID") houseID:string,@Query("year",ParseIntPipe) year:number,@Query("month",ParseIntPipe) month:number){
+        console.log("[bill-api][BillController][generateCurrentBill] entry with param : "+JSON.stringify({houseID,year,month}))
+        var client = await this.billService.getHouseRegistry(houseID);
+        var temporarBill;
+        if(houseID){
+            temporarBill = this.billService.createBillForClient(client,year,month)
+        }
+        return temporarBill
+    }
 }

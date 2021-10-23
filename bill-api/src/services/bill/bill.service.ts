@@ -14,8 +14,8 @@ const URL_ALL_HOUSE = "http://client-database:3004/client-registry/allHouses"
 
 @Injectable()
 export class BillService {
-    private productionPrice = 0.10
-    private consumptionPrice = 0.15
+    private productionPriceWH = 0.00010
+    private consumptionPriceWH = 0.00015
 
     constructor(private http:HttpService,@InjectRepository(ClientBill) private clientBillRepository:Repository<ClientBill>){}
 
@@ -27,9 +27,9 @@ export class BillService {
     }
 
     private getMonthConsumption(houseID:string,year:number,month:number):Promise<number>{
-        var params = {houseID,start:new Date(year,month-1),end:new Date(year,month,0,0,0,0,-1)}
+        var params = {houseID,begin:new Date(year,month-1),end:new Date(year,month,0,0,0,0,-1)}
         console.log("[bill-api][BillService][getMonthConsumption] "+JSON.stringify(params))
-        return firstValueFrom(this.http.get(URL_MONTH_CONSUMPTION)).then((response)=>response.data)
+        return firstValueFrom(this.http.get(URL_MONTH_CONSUMPTION,{params})).then((response)=>response.data)
     } 
 
     public async getBill(houseID:string,year:number,month:number){
@@ -72,9 +72,10 @@ export class BillService {
                 production = this.getMonthProduction(client.id,year,month)
             }
             consumption = this.getMonthConsumption(client.id,year,month)
-            Promise.all([consumption,production])
+            consumption = await consumption;
+            production = await production;
             bill = new ClientBill(client.id,year,month,consumption||0,production||0)
-            bill.calculeBill()
+            bill.calculeBill(this.productionPriceWH,this.consumptionPriceWH)
         }
         return bill
     }

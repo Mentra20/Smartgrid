@@ -21,13 +21,13 @@ export class ClientRegistryService {
     });
     console.log(
       'line found' +
-        c.id +
+        c?.id +
         ' ' +
-        c.id_producer +
+        c?.id_producer +
         ' ' +
-        c.clientName +
+        c?.clientName +
         ' ' +
-        c.id_community,
+        c?.id_community,
     );
     return c;
   }
