@@ -18,16 +18,16 @@ Les containers de nos services sont re-créés entre chaque scénario.
 ## Scénarios
 **Scénario 1 : inscription, object paramétrable et adaptation de la production avec la consommation**
 
-1 - Une maison s’inscrit à la smartgrid  
-2 - La maison reçoit un id  
-3 - Le client peut voir sa consommation  
-4 - Un producteur s’inscrit à la smartgrid  
-5 - Le producteur reçoit un id  
+1 - Une nouvelle maison s’inscrit à Smartgrid  
+2 - SmartGrid attribue un ID à la maison   
+3 - Le client peut voir sa consommation depuis son boitier  
+4 - Un nouveau producteur s’inscrit à SmartGrid    
+5 - SmartGrid attribue un ID au producteur  
 6 - On vérifie que la consommation est égale à la production  
-7 - Un object paramètrable est branché  
-8 - On demande un planning de consommation  
-9 - On peut voir que l’objet consomme à l‘heure donnée depuis smartGrid
-10 - On peut voir que la production n’est plus égale à la consommation, on demande aux producteurs de s’adapter 
+7 - Un object paramètrable est branché à la maison   
+8 - On demande un planning de consommation pour cet objet   
+9 - On voit que l’objet consomme à son heure d'activité  
+10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
 
 **Scénario 2 : Gestion de la consommation et pic de consommation dans une communauté**  
@@ -42,18 +42,17 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 **Scénario 3 : Achat de la production supplémentaire d'une maison**
 
-1 - Une maison consommant de l'électricité  
-2 - Ajout d’un objet produisant de l'électricité  
-3 - On peut voir au niveau de la maison que de l'électricité est produite mais pas en excès  
-4 - On remarque que la consommation de la maison au niveau de SmartGrid est réduite  
-5 - On peut voir niveau producteur que l'on n'accède pas à cette électricité  
+1 - On inscrit une maison avec des objets consommant de l'éléctricité et on l'inscrit en tant que producteur  
+2 - On ajoute à la maison un objet produisant de l'électricité  
+3 - On remarque que la consommation est réduite mais toujours positive  
+4 - On regarde la production de la maison, celle-ci est accessible mais pas suffisante  
+5 - On voit que la maison n'est pas en autarcie  
 6 - On ajoute un deuxième objet producteur dans la maison  
-7 - La production est en excès  
-8 - On peut y accèder côté producteur  
-9 - On remarque que la consommation de la maison au niveau de SmartGrid est nulle  
+7 - On remarque que la consommation est maintenant négative  
+8 - On voit que la production est maintenant plus grande que la consommation  
+9 - On voit maintenant que la maison est en autarcie  
 
-
-*PS: Quand une maison est lancée lors d’un scénario, on fait un sleep() de 10 secondes pour être sûr que celle-ci soit bien inscrite lors de la prochaine étape.*
+*PS: Plusieurs sleep sont effectués dans les scénarios pour attendre que le traitement des événements s'effectues.*
 
 ## Docker
 
@@ -94,3 +93,35 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - 127.0.0.1 production-provider=3006
 - 127.0.0.1 registry-manager=3003
 - 127.0.0.1 request-manager=3007
+
+## Host
+
+127.0.0.1 autarky
+127.0.0.1 bill-api
+127.0.0.1 client-consumption-api
+127.0.0.1 client-database
+127.0.0.1 consumption-adder
+127.0.0.1 consumption-api
+127.0.0.1 consumption-db
+127.0.0.1 consumption-detailed
+127.0.0.1 consumption-peak
+127.0.0.1 consumption-provider
+127.0.0.1 consumption-scheduler
+127.0.0.1 consumption-verifier
+127.0.0.1 daily-consumption-db
+127.0.0.1 daily-production-db
+127.0.0.1 electricity-frame
+127.0.0.1 global-consumption-database
+127.0.0.1 global-production-database
+127.0.0.1 house
+127.0.0.1 producer-database
+127.0.0.1 producers
+127.0.0.1 production-adapter
+127.0.0.1 production-api
+127.0.0.1 production-provider
+127.0.0.1 registry-manager
+
+127.0.0.1 kafka
+127.0.0.1 mock
+127.0.0.1 database 
+
