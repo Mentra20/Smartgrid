@@ -5,7 +5,6 @@ start powershell -command "[console]::windowwidth=100; [console]::windowheight=3
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd consumption-provider | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd consumption-scheduler | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd consumption-verifier | npm run start:dev" &
-start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-consumption-db | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd electricity-frame | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd global-consumption-database | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd global-production-database | npm run start:dev" &
