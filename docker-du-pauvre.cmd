@@ -21,3 +21,4 @@ start powershell -command "[console]::windowwidth=100; [console]::windowheight=3
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd bill-api | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-consumption-db | npm run start:dev" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-production-db | npm run start:dev" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd autarky | npm run start:dev" &
