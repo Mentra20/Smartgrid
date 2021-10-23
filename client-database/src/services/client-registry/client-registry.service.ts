@@ -10,8 +10,8 @@ export class ClientRegistryService {
     private clientRepository: Repository<Client>,
   ) {}
 
-  async getClientWithClientID(clientID: string): Promise<Client> {
-    return await this.clientRepository.findOne(clientID);
+  async getClientWithClientID(houseID: string): Promise<Client> {
+    return await this.clientRepository.findOne(houseID);
   }
 
   async getClientWithProducerID(producerID: string): Promise<Client> {

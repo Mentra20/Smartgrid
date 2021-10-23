@@ -1,6 +1,6 @@
 var request = require('request');
 const { Kafka } = require('kafkajs')
-
+const URL_CLIENT_DATABASE = "http://client-database:3004"
 const kafka = new Kafka({
     clientId: 'scenario2',
     brokers: ['kafka:9092'],
@@ -33,7 +33,7 @@ var globalDate = new Date();
 async function main() {
     const consumer = kafka.consumer({ groupId: 'scenario2' })
     await consumer.connect()
-    await consumer.subscribe({ topic: 'consumption.peak', })
+    await consumer.subscribe({ topic: 'consumption.peak', fromBeginning:false})
 
 
     console.log(ANSI_GREEN + "Scénario 2 : pic dans une communauté");
@@ -44,31 +44,40 @@ async function main() {
     doRequest({ url: "http://consumption-scheduler:3002/schedule", form: scheduleStart, method: "POST" });
 
     var response;
-    console.log("On regarde les maisons actuellement inscrites : ");
+    console.log("On regarde le nombre de maisons actuellement inscrites : ");
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
-    console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body + ANSI_RESET);
-    console.log("Les maisons inscrites : " + response.body);
+    var responseBody = JSON.parse(response.body)
+    var initialHouseCount = responseBody.length
+    console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: (length)" + initialHouseCount + ANSI_RESET);
+    console.log("Nombre de maison inscrite: " + initialHouseCount);
 
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
     console.log("On a des maisons dans une communauté et d'autres dans une autre communautés");
     // STEP 1
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
+    var communityHouse1 = (await getClient(houseID1)).id_community
 
     var client2 = { client_name: "Jean-Pierre" };
     var houseID2 = await addHouse(client2);
+    var communityHouse2 = (await getClient(houseID2)).id_community
 
     var client3 = { client_name: "Jean-Sylvestre" };
     var houseID3 = await addHouse(client3);
+    var communityHouse3 = (await getClient(houseID3)).id_community
 
     var client4 = { client_name: "Jean-Baptiste" };
     var houseID4 = await addHouse(client4);
+    var communityHouse4 = (await getClient(houseID4)).id_community
 
-    console.log("On regarde les maisons qui sont inscrites : ");
+    console.log("On regarde les maisons qui sont inscrites (5 nouvelles pour le scenario) : ");
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
-    console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" + response.body + ANSI_RESET);
-    console.log("Les maisons inscrites : " + response.body);
+    responseBody = JSON.parse(response.body)
+    var currentHouseCount = responseBody.length
+    console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" +currentHouseCount + ANSI_RESET);
+    console.log("On a bien 5 maison en plus (initialement "+initialHouseCount+") : " + currentHouseCount);
 
+    
     console.log(ANSI_GREEN + "\n\n================= STEP 2 =================" + ANSI_RESET)
     console.log("On ajoute plein d’objets planifiables et non planifiables dans les maisons de la communauté");
 
@@ -82,11 +91,13 @@ async function main() {
     console.log("\n");
 
 
-    var car = { object: { name: "Car", maxConsumption: 4000 }, type: "SCHEDULED" }
+    var car = { object: { name: "Car", maxConsumption: 1300 }, type: "SCHEDULED" }
+    var supercar = { object: { name: "Car", maxConsumption: 9000 }, type: "SCHEDULED" }
+
 
     console.log("On ajoute un objet programmable à chaque maison");
     await addObject(houseID1, car);
-    await addObject(houseID2, car);
+    await addObject(houseID2, supercar);
     await addObject(houseID3, car);
     await addObject(houseID4, car);
     console.log("\n");
@@ -108,23 +119,25 @@ async function main() {
     await askSchedule(houseID3, "Car");
     await askSchedule(houseID4, "Car");
 
-    await waitTick(1);
+    await waitTick(5);
 
     await sleep(2000)
+    
     console.log(ANSI_GREEN + "\n\n================= STEP 3 =================" + ANSI_RESET)
 
     console.log("On regarde la consommation totale de toutes les maisons");
-    var response = await doRequest({ url: "http://request-manager:3007/total-consumption", qs: { date: globalDate }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:request-manager; [route]:total-consumption; [params]: " + JSON.stringify({ date: globalDate }) + " => [return]:" + JSON.parse(response.body) + ANSI_RESET);
+    var response = await doRequest({ url: "http://consumption-api:2998/total-consumption", qs: { date: globalDate }, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:consumption-api; [route]:total-consumption; [params]: " + JSON.stringify({ date: globalDate }) + " => [return]:" + JSON.parse(response.body) + ANSI_RESET);
     console.log("Actuellement, la consommation totale est : " + response.body + " W.");
 
     await sleep(2000)
-    console.log(ANSI_GREEN + "\n\n================= STEP 4 =================" + ANSI_RESET);
-    console.log("On regarde la consommation dans la communauté");
 
-    var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: { date: globalDate, communityID: 1 }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: 1 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté '1' est : " + response.body + " W.");
+    console.log(ANSI_GREEN + "\n\n================= STEP 4 =================" + ANSI_RESET);
+    console.log("On regarde la consommation dans la communauté "+communityHouse2);
+
+    var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est : " + response.body + " W.");
 
     await sleep(2000)
     console.log(ANSI_GREEN + "\n\n================= STEP 5 =================" + ANSI_RESET);
@@ -137,15 +150,14 @@ async function main() {
         }
     })
     await topicListener;
+
+    await waitTick(10);
     await sleep(5000)
     consumer.stop();
     consumer.disconnect();
 
-    await waitTick(2);
-    await sleep(2000)
-
     console.log(ANSI_GREEN + "\n\n================= STEP 6 =================" + ANSI_RESET);
-    console.log("On demande au object panifiable d'arrêter de charger")
+    console.log("On demande au object panifiable d'arrêter de charger de la "+communityHouse2)
 
     await checkCarCons(houseID1);
     await checkCarCons(houseID2);
@@ -155,9 +167,9 @@ async function main() {
     await sleep(2000)
     console.log(ANSI_GREEN + "\n\n================= STEP 7 =================" + ANSI_RESET);
     console.log("On remarque qu’il n’y a plus de pic")
-    var response = await doRequest({ url: "http://request-manager:3007/community-consumption", qs: { date: globalDate, communityID: 1 }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:request-manager; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: 1 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté '1' est : " + response.body + " W.");
+    var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est--- : " + response.body + " W.");
 
 }
 
@@ -196,19 +208,6 @@ async function addObject(houseID, nameObject) {
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_" + ANSI_RESET);
 }
 
-async function doTick() {
-    globalDate = globalDate.setMinutes(globalDate.getMinutes() + 10);
-    await doRequest({ url: "http://house:3000/tick/", form: { date: globalDate }, method: "POST" });
-    await doRequest({ url: "http://producers:3005/tick/", form: { date: globalDate }, method: "POST" });
-}
-
-async function waitTick(iterationNumber) {
-    for (var i = 0; i < iterationNumber; i++) {
-        await doTick();
-    }
-}
-
-
 
 
 async function addHouse(client) {
@@ -224,7 +223,7 @@ async function doTick() {
     //Envoyer le tick à ceux qui en ont besoin.
     response = await doRequest({ url: "http://house:3000/tick", form: { date: globalDate }, method: "POST" });
     response = await doRequest({ url: "http://producers:3005/tick", form: { date: globalDate }, method: "POST" });
-    await sleep(200);
+    await sleep(500);
 
     response = await doRequest({ url: "http://electricity-frame:3015/clock/tick", form: { date: globalDate }, method: "POST" });
 
@@ -236,6 +235,13 @@ async function waitTick(iterationNumber) {
     for (var i = 0; i < iterationNumber; i++) {
         await doTick();
     }
+}
+
+
+async function getClient(houseID){
+    var client = await doRequest({ url: URL_CLIENT_DATABASE+"/client-registry/house", qs: { houseID: houseID }, method: "GET" }).then((value)=>JSON.parse(value.body));
+    console.log("================================="+JSON.stringify(client))
+    return client;
 }
 
 function sleep(ms) {
