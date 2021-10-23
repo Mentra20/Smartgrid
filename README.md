@@ -29,6 +29,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 9 - On voit que l’objet consomme à son heure d'activité  
 10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
+12 - Trois mois s'écoulent, le client veut voir sa consommation du premier mois et du mois courant  
 
 **Scénario 2 : Gestion de la consommation, pic et autarky dans une communauté**  
 

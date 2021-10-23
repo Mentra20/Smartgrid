@@ -202,6 +202,24 @@ async function main() {
     console.log(ANSI_BLUE + "[service]:production-api; [route]:total-production; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
     console.log("Production : " + response.body + " W.");
 
+    //STEP 11 
+    console.log(ANSI_GREEN + "\n\n================= STEP 12 =================" + ANSI_RESET)
+    console.log(ANSI_GREEN + "Trois mois s'écoulent, le client veut voir sa consommation du premier mois et du mois courant " + ANSI_RESET);
+
+    var firstYear = globalDate.getFullYear();
+    var firstMonth = globalDate.getMonth();
+    //TODO : s'écouler 3 mois
+
+    var firstMonthBillReq = {houseID:houseID, year:firstYear, month:firstMonth};   
+    var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear, month:globalDate.getMonth};    
+
+    response = await doRequest({ url: "http://bill-api:3016/bill/bill-for-house", qs: firstMonthBillReq, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log("Facture du premier mois ("+firstMonth+1+"/"+firstYear+") : " + JSON.stringify(response.body)+".");
+
+    response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporar-bill", qs: currMonthBillReq, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporar-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log("Facture du mois courant ("+globalDate.getMonth+1+"/"+globalDate.getFullYear+") : " + JSON.stringify(response.body)+".");
 }
 
 async function beforeStep() {
