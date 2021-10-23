@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3030);
   app.connectMicroservice({
     transport: Transport.KAFKA,
     options: {
@@ -29,6 +28,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  await app.listen(3030);
   console.log('-------------------------- AUTARKY -------------------------');
 }
 bootstrap();

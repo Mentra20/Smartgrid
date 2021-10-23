@@ -76,11 +76,11 @@ export class AutarkyController {
         ' at date ' +
         date +
         ' is ' +
-        houseAutarky.totalConsumption +
+        houseAutarky.autarky +
         ' W.',
     );
 
-    return houseAutarky.totalConsumption;
+    return houseAutarky.autarky;
   }
 
   @Get('get-community-autarky')

@@ -15,5 +15,5 @@ export class HouseAutarky {
   communityID: number;
 
   @Column('double precision')
-  totalConsumption: number;
+  autarky: number;
 }

@@ -34,7 +34,7 @@ export class AutarkyService {
       );
       if (updateHouseAutarky) {
         console.log('found a line with the same client ID and date');
-        updateHouseAutarky.totalConsumption -= +clientConsumption.consumption;
+        updateHouseAutarky.autarky -= +clientConsumption.consumption;
         console.log('saving the line with -consumption');
         await this.houseAutarkyRepository.save(updateHouseAutarky);
       } else {
@@ -66,7 +66,7 @@ export class AutarkyService {
       );
       if (updateHouseAutarky != null) {
         console.log('found a line with the same client ID and date');
-        updateHouseAutarky.totalConsumption += productionReceived.production;
+        updateHouseAutarky.autarky += productionReceived.production;
         console.log('saving the line with +production');
         await this.houseAutarkyRepository.save(updateHouseAutarky);
       } else {
@@ -107,7 +107,7 @@ export class AutarkyService {
         },
       });
     let autarky = 0;
-    housesAutarky.forEach((house) => (autarky += house.totalConsumption));
+    housesAutarky.forEach((house) => (autarky += house.autarky));
     return autarky;
   }
 
@@ -124,7 +124,7 @@ export class AutarkyService {
     ).then((body) => {
       console.log(body.data);
       const client = body.data;
-      newHouseAutarky.totalConsumption = -clientConsumption.consumption;
+      newHouseAutarky.autarky = -clientConsumption.consumption;
       newHouseAutarky.autarkyDate = new Date(clientConsumption.consumptionDate);
       newHouseAutarky.clientID = client.id;
       newHouseAutarky.communityID = client.id_community;
@@ -142,7 +142,7 @@ export class AutarkyService {
     houseAutarky: HouseAutarky,
   ) {
     const newHouseAutarky = new HouseAutarky();
-    newHouseAutarky.totalConsumption = -clientConsumption.consumption;
+    newHouseAutarky.autarky = -clientConsumption.consumption;
     newHouseAutarky.autarkyDate = new Date(clientConsumption.consumptionDate);
     newHouseAutarky.clientID = houseAutarky.clientID;
     newHouseAutarky.producerID = houseAutarky.producerID;
@@ -187,7 +187,7 @@ export class AutarkyService {
     houseAutarky: HouseAutarky,
   ) {
     const newHouseAutarky = new HouseAutarky();
-    newHouseAutarky.totalConsumption = +productionReceived.production;
+    newHouseAutarky.autarky = +productionReceived.production;
     newHouseAutarky.clientID = houseAutarky.clientID;
     newHouseAutarky.producerID = houseAutarky.producerID;
     newHouseAutarky.communityID = houseAutarky.communityID;
@@ -208,7 +208,7 @@ export class AutarkyService {
     ).then((body) => {
       console.log(body.data);
       const client = body.data;
-      newHouseAutarky.totalConsumption = +productionReceived.production;
+      newHouseAutarky.autarky = +productionReceived.production;
       newHouseAutarky.autarkyDate = new Date(productionReceived.productionDate);
       newHouseAutarky.clientID = client.id;
       newHouseAutarky.communityID = client.id_community;
