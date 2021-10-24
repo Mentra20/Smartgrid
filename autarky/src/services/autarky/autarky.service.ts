@@ -100,14 +100,11 @@ export class AutarkyService {
       await this.houseAutarkyRepository.find({
         where: {
           communityID: communityID,
-          autarkyDate: Between(
-            new Date(date.getTime() - 1000),
-            new Date(date.getTime() + 1000),
-          ),
+          autarkyDate : date
+          
         },
       });
-    let autarky = 0;
-    housesAutarky.forEach((house) => (autarky += house.autarky));
+     let autarky = await housesAutarky.reduce((v1,v2)=>v1+v2.autarky,0);
     return autarky;
   }
 

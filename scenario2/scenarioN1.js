@@ -217,12 +217,12 @@ async function main() {
     var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear(), month:globalDate.getMonth()+1};    
 
     response = await doRequest({ url: "http://bill-api:3016/bill/bill-for-house", qs: firstMonthBillReq, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Facture du premier mois ("+firstMonth+"/"+firstYear+") : " + JSON.stringify(response.body)+".");
+    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
+    console.log("Facture du premier mois ("+firstMonth+"/"+firstYear+") : " + response.body+".");
 
     response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporary-bill", qs: currMonthBillReq, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Facture du mois courant ("+globalDate.getMonth()+"/"+globalDate.getFullYear()+") : " + JSON.stringify(response.body)+".");
+    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
+    console.log("Facture du mois courant ("+globalDate.getMonth()+"/"+globalDate.getFullYear()+") : " + response.body+".");
 }
 
 async function beforeStep() {
@@ -246,8 +246,8 @@ async function beforeStep() {
     //On inscrit un producteur et on fixe sa production
     var producer = { producerName: "EDF", production: 1000 }
     response = await doRequest({ url: "http://producers:3005/add-supplier", form: producer, method: "POST" });
-    await sleep(2000);
-    await waitTick(20); //premier tick pour commencer a avoir des données
+    await sleep(1000);
+    await waitTick(5); //premier tick pour commencer a avoir des données
 }
 
 async function doTick() {

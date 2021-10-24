@@ -1,4 +1,5 @@
 var request = require('request');
+const { randomInt } = require('crypto');
 const { Kafka } = require('kafkajs')
 const URL_CLIENT_DATABASE = "http://client-database:3004"
 const kafka = new Kafka({
@@ -171,11 +172,11 @@ async function main() {
     console.log(ANSI_GREEN + "On remarque qu’il n’y a maintenant plus de pic"+ ANSI_RESET)
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est--- : " + response.body + " W.");
+    console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est : " + response.body + " W.");
 
 
     console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET);
-    console.log(ANSI_GREEN + "On regarde si la communauté est en otarsie et ce n'est pas le cas"+ ANSI_RESET)
+    console.log(ANSI_GREEN + "On regarde si la communauté est en autarcie et ce n'est pas le cas"+ ANSI_RESET)
 
     var autarkyQs = { date: globalDate, communityID:communityHouse2}
     response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
@@ -185,24 +186,27 @@ async function main() {
 
 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
-    console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarsie"+ ANSI_RESET);
+    console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie"+ ANSI_RESET);
     
-    var neededProd = -1*(exceedConsumption + 200);//Marge
+    var neededProd = +exceedConsumption - 200;//Marge
     var velo = { object: { name: "Vélo d'appartement", maxConsumption: neededProd, enabled: true }, type: "BASIC" }
+    //la maison devien producteur
+    response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID2 + "/become-producer", method: "POST" });
+
 
     console.log("On ajoute un objet qui produit à la maison "+houseID2+" de la communauté "+communityHouse2);
     await addObject(houseID2, velo);
     await checkObject(houseID2);
 
     await waitTick(1);
-    await sleep(1000)
+    await sleep(1500)
 
     console.log("On vérifie que la communauté est bien passée en autarcie")
     
-    reqQs = { date: globalDate, communityID:communityHouse2}
+    autarkyQs = { date: globalDate, communityID:communityHouse2}
     response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit que la valeur (prod - cons) est positive : " + exceedConsumption + " W donc la communauté "+communityHouse2+" est maintenant en autarcie");
+    console.log("On voit que la valeur (prod - cons) est positive : " + response.body + " W donc la communauté "+communityHouse2+" est maintenant en autarcie");
 }
 
 async function checkCarCons(houseID) {
@@ -235,7 +239,7 @@ async function askSchedule(houseID, objectName) {
 
 
 async function addObject(houseID, nameObject) {
-    console.log("\nUn object est branché : "+nameObject);
+    console.log("\nUn object est branché : "+JSON.stringify(nameObject));
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_" + ANSI_RESET);
 }
