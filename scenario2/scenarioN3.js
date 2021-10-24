@@ -33,7 +33,7 @@ async function main(){
     var responseBody = JSON.parse(response.body)
     var nbHouseInit = responseBody.length
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:" + responseBody.length + ANSI_RESET);
-    console.log("Il y a " + nbHouseInit + " maison inscrite");
+    console.log("Il y a " + ANSI_YELLOW + nbHouseInit + ANSI_RESET + " maison inscrite");
 
     // STEP 1
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
@@ -58,7 +58,7 @@ async function main(){
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
     var responseBody = JSON.parse(response.body)
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:" + responseBody.length + ANSI_RESET);
-    console.log("Il y a bien une maison en plus (initialement " + nbHouseInit + ") : " + responseBody.length);
+    console.log("Il y a bien une maison en plus (initialement " + ANSI_YELLOW + nbHouseInit + ANSI_RESET + ") : " + ANSI_YELLOW + responseBody.length+ ANSI_RESET );
 
     console.log("\nOn regarde les objets de la maison :");
     await checkObject(houseID);
@@ -69,7 +69,8 @@ async function main(){
 
     var objProd = { object: { name: "Roue du hamster", maxConsumption: -300, enabled: true }, type: "BASIC" }
 
-    console.log("\nOn ajoute à la maison " + houseID + " l'objet de production : " + JSON.stringify(objProd));
+    console.log("\nOn ajoute à la maison " + ANSI_YELLOW +  houseID + ANSI_RESET + " l'objet de production : ");
+    console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET);
     await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: objProd, method: "POST" });
 
     console.log("\nOn regarde les objets de la maison :");
@@ -83,7 +84,7 @@ async function main(){
     var reqQs = { houseID: houseID };
     response = await doRequest({ url: "http://house:3000/consumption/global", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:consumption/global; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
-    console.log("La consommation de la maison est positive : " + response.body + " W.");
+    console.log("La consommation de la maison est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
     await sleep(2000);
 
     // STEP 4
@@ -96,7 +97,7 @@ async function main(){
     reqQs = { date: globalDate, producerID: houseProdID };
     response = await doRequest({ url: "http://production-api:2999/detailed-production", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:request-manager; [route]:detailed-production; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit bien qu'il y a une production pour cette maison (mais pas suffisante pour la consommation) :" + response.body + " W.");
+    console.log("On voit bien qu'il y a une production pour cette maison (mais pas suffisante pour la consommation) :" + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 5
     console.log(ANSI_GREEN + "\n\n================= STEP 5 =================" + ANSI_RESET)
@@ -105,7 +106,7 @@ async function main(){
     reqQs = { date: globalDate, clientID: houseID }
     response = await doRequest({ url: "http://autarky:3030/autarky/get-house-autarky", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:autarky; [route]:get-house-autarky; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit que la valeur (prod - cons) est negative : " + response.body + " W donc on est pas en autarcie");
+    console.log("On voit que la valeur (prod - cons) est negative : " + ANSI_YELLOW + response.body+ ANSI_RESET  + " W donc on est pas en autarcie");
 
     // STEP 6
     console.log(ANSI_GREEN + "\n\n================= STEP 6 =================" + ANSI_RESET)
@@ -113,7 +114,8 @@ async function main(){
 
     var objProd = { object: { name: "Générateur nucléaire DIY", maxConsumption: -600, enabled: true }, type: "BASIC" }
 
-    console.log("\nOn ajoute à la maison " + houseID + " l'objet de production : " + JSON.stringify(objProd));
+    console.log("\nOn ajoute à la maison " + ANSI_YELLOW + houseID + ANSI_RESET + " l'objet de production : ");
+    console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET );
     await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: objProd, method: "POST" });
 
     console.log("\nOn regarde les objets de la maison :");
@@ -126,7 +128,7 @@ async function main(){
     reqQs = { houseID: houseID };
     response = await doRequest({ url: "http://house:3000/consumption/global", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:consumption/global; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
-    console.log("\nLa consommation de la maison n'est plus positive : " + response.body + " W.");
+    console.log("\nLa consommation de la maison n'est plus positive : " + ANSI_YELLOW + response.body + " W.");
 
     // STEP 8
     console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET)
@@ -137,7 +139,7 @@ async function main(){
     reqQs = { date: globalDate, producerID: houseProdID };
     response = await doRequest({ url: "http://production-api:2999/detailed-production", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:request-manager; [route]:detailed-production; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit bien qu'il a une production pour cette maison : " + response.body + " W.");
+    console.log("On voit bien qu'il a une production pour cette maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 9
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
@@ -146,7 +148,7 @@ async function main(){
     reqQs = { date: globalDate, clientID: houseID }
     response = await doRequest({ url: "http://autarky:3030/autarky/get-house-autarky", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:autarky; [route]:get-house-autarky; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit que la valeur (prod - cons) est positive : " + response.body + " W donc on est en autarcie");
+    console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie");
 }
 
 async function doTick() {
@@ -177,7 +179,8 @@ function sleep(ms) {
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
-    console.log("On a les objets suivants :" + response.body);
+    console.log("On a les objets suivants :");
+    console.log(ANSI_YELLOW + response.body+ ANSI_RESET );
 }
 
 main()

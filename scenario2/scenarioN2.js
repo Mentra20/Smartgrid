@@ -50,7 +50,7 @@ async function main() {
     var responseBody = JSON.parse(response.body)
     var initialHouseCount = responseBody.length
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: (length)" + initialHouseCount + ANSI_RESET);
-    console.log("Nombre de maison inscrite: " + initialHouseCount);
+    console.log("Nombre de maison inscrite: " + ANSI_YELLOW + initialHouseCount + ANSI_RESET);
 
     // STEP 1
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
@@ -78,7 +78,7 @@ async function main() {
     var currentHouseCount = responseBody.length
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" +currentHouseCount + ANSI_RESET);
     
-    console.log("On a bien 4 maison en plus (initialement "+initialHouseCount+") : " + currentHouseCount);
+    console.log("On a bien 4 maison en plus (initialement "+ANSI_YELLOW + initialHouseCount+ ANSI_RESET +") : " + ANSI_YELLOW + currentHouseCount + ANSI_RESET);
 
     //STEP 2 
     console.log(ANSI_GREEN + "\n\n================= STEP 2 =================" + ANSI_RESET)
@@ -131,7 +131,7 @@ async function main() {
 
     var response = await doRequest({ url: "http://consumption-api:2998/total-consumption", qs: { date: globalDate }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:total-consumption; [params]: " + JSON.stringify({ date: globalDate }) + " => [return]:" + JSON.parse(response.body) + ANSI_RESET);
-    console.log("Actuellement, la consommation totale est : " + response.body + " W.");
+    console.log("Actuellement, la consommation totale est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     await sleep(2000)
 
@@ -140,7 +140,7 @@ async function main() {
 
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est : " + response.body + " W.");
+    console.log("Actuellement, la consommation de la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET +" est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     await sleep(2000)
     console.log(ANSI_GREEN + "\n\n================= STEP 5 =================" + ANSI_RESET);
@@ -149,7 +149,7 @@ async function main() {
     var topicListener = consumer.run({
         eachMessage: async({ topic, partition, message }) => {
             console.log("on a un pic de consommation dans la communauté : ")
-            console.log(message.value.toString())
+            console.log(ANSI_YELLOW + message.value.toString()+ ANSI_RESET)
         }
     })
     await topicListener;
@@ -160,7 +160,7 @@ async function main() {
     consumer.disconnect();
 
     console.log(ANSI_GREEN + "\n\n================= STEP 6 =================" + ANSI_RESET);
-    console.log(ANSI_GREEN +"On demande aux objets panifiables d'arrêter de charger de la communauté "+communityHouse2+ ANSI_RESET)
+    console.log(ANSI_GREEN +"On demande aux objets panifiables d'arrêter de charger de la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET)
 
     await checkCarCons(houseID1);
     await checkCarCons(houseID2);
@@ -172,7 +172,7 @@ async function main() {
     console.log(ANSI_GREEN + "On remarque qu’il n’y a maintenant plus de pic"+ ANSI_RESET)
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
-    console.log("Actuellement, la consommation de la communauté "+communityHouse2+" est : " + response.body + " W.");
+    console.log("Actuellement, la consommation de la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET +" est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
 
     console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET);
@@ -182,7 +182,7 @@ async function main() {
     response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
     var exceedConsumption = response.body;
     console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit que la valeur (prod - cons) est négative : " + exceedConsumption + " W donc la communauté "+communityHouse2+" n'est pas en autarcie");
+    console.log("On voit que la valeur (prod - cons) est négative : " + ANSI_YELLOW +exceedConsumption + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET+" n'est pas en autarcie");
 
 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
@@ -194,7 +194,7 @@ async function main() {
     response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID2 + "/become-producer", method: "POST" });
 
 
-    console.log("On ajoute un objet qui produit à la maison "+houseID2+" de la communauté "+communityHouse2);
+    console.log("On ajoute un objet qui produit à la maison "+ANSI_YELLOW +houseID2+ ANSI_RESET +" de la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET);
     await addObject(houseID2, velo);
     await checkObject(houseID2);
 
@@ -206,7 +206,7 @@ async function main() {
     autarkyQs = { date: globalDate, communityID:communityHouse2}
     response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit que la valeur (prod - cons) est positive : " + response.body + " W donc la communauté "+communityHouse2+" est maintenant en autarcie");
+    console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW +response.body + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET +" est maintenant en autarcie");
 }
 
 async function checkCarCons(houseID) {
@@ -215,16 +215,17 @@ async function checkCarCons(houseID) {
         houseID: houseID,
         objectName: "Car"
     }
-    console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
+    console.log("\nOn peut voir que l’objet consomme à la date " + ANSI_YELLOW + globalDate + ANSI_RESET + " depuis smartGrid");
     var response = await doRequest({ url: "http://consumption-detailed:3008/get-detailed-consumption", qs: detailedObject, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("La consommation de l'objet " + detailedObject.objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body + " W.");
+    console.log("La consommation de l'objet " + ANSI_YELLOW + detailedObject.objectName + ANSI_RESET + " de la maison d'ID " + ANSI_YELLOW + houseID + ANSI_RESET + " à la date du " + ANSI_YELLOW + globalDate + ANSI_RESET + " est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 }
 
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
-    console.log("On constate qu'il a bien été ajouté :" + response.body);
+    console.log("On constate qu'il a bien été ajouté :");
+    console.log(ANSI_YELLOW + response.body + ANSI_RESET);
     console.log("");
 }
 
@@ -232,14 +233,16 @@ async function askSchedule(houseID, objectName) {
     console.log("On demande un planning de consommation :");
     var response = await doRequest({ url: "http://house:3000/manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot", method: "POST" });
     console.log(ANSI_BLUE + "[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
-    console.log("On reçoit le planning suivant :" + response.body);
+    console.log("On reçoit le planning suivant :");
+    console.log( ANSI_YELLOW + response.body + ANSI_RESET);
     console.log("");
 }
 
 
 
 async function addObject(houseID, nameObject) {
-    console.log("\nUn object est branché : "+JSON.stringify(nameObject));
+    console.log("\nUn object est branché : ");
+    console.log(ANSI_YELLOW + JSON.stringify(nameObject)+ANSI_RESET);
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: nameObject, method: "POST" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(nameObject) + " => [return]:_" + ANSI_RESET);
 }
@@ -276,7 +279,6 @@ async function waitTick(iterationNumber) {
 
 async function getClient(houseID){
     var client = await doRequest({ url: URL_CLIENT_DATABASE+"/client-registry/house", qs: { houseID: houseID }, method: "GET" }).then((value)=>JSON.parse(value.body));
-    console.log("================================="+JSON.stringify(client))
     return client;
 }
 

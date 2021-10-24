@@ -39,7 +39,7 @@ async function main() {
     var responseBody = JSON.parse(response.body)
     var nbHouseInit = responseBody.length
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:" + responseBody.length + ANSI_RESET);
-    console.log("Il y a " + nbHouseInit + " maison inscrite");
+    console.log("Il y a " + ANSI_YELLOW + nbHouseInit + ANSI_RESET + " maison inscrite");
 
     // STEP 1
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
@@ -59,13 +59,13 @@ async function main() {
     response = await doRequest({ url: "http://client-database:3004/client-registry/allHouses", method: "GET" });
     var responseBody = JSON.parse(response.body)
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:" + responseBody.length + ANSI_RESET);
-    console.log("Il y a bien une maison en plus (initialement " + nbHouseInit + ") : " + responseBody.length);
+    console.log("Il y a bien une maison en plus (initialement " + ANSI_YELLOW + nbHouseInit +ANSI_RESET+ ") : " + ANSI_YELLOW + responseBody.length + ANSI_RESET);
 
     // STEP 2
     console.log(ANSI_GREEN + "\n\n================= STEP 2 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "SmartGrid attribue un ID à la maison" + ANSI_RESET)
 
-    console.log("\nLa maison reçoit un ID : " + houseID);
+    console.log("\nLa maison reçoit un ID : " + ANSI_YELLOW + houseID + ANSI_RESET);
 
     //STEP 3 
     await waitTick(1);
@@ -74,12 +74,12 @@ async function main() {
 
     response = await doRequest({ url: "http://house:3000/consumption/global", qs: { houseID: houseID }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:consumption/global; [params]:houseID:" + houseID + " => [return]:" + response.body + ANSI_RESET);
-    console.log("La consommation globale de la maison : " + response.body + " W.");
+    console.log("La consommation globale de la maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     console.log("\nLe client peut voir sa consommation depuis le site web");
     response = await doRequest({ url: "http://client-consumption-api:2997/house-global-consumption", qs: { date: globalDate, houseID: houseID }, method: "GET" });
     console.log(ANSI_BLUE + "[service]:client-consumption; [route]:house-global-consumption; [params]:date:" + globalDate + " ,houseID:" + houseID + " => [return]:" + response.body + ANSI_RESET);
-    console.log("La consommation globale de la maison : " + response.body + " W.");
+    console.log("La consommation globale de la maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
 
     //STEP 4 
@@ -91,7 +91,7 @@ async function main() {
     var initialProducerArray = JSON.parse(response.body)
     var initialCountProducer = initialProducerArray.length
     console.log(ANSI_BLUE + "[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]: (nb inscrit) " + initialCountProducer + ANSI_RESET);
-    console.log("On a " + initialCountProducer + "prodcteurs inscrit");
+    console.log("On a " + ANSI_YELLOW + initialCountProducer + ANSI_RESET + "producteurs inscrits");
 
     var producer = { producerName: "ENGIE", production: 1000 }
 
@@ -105,13 +105,13 @@ async function main() {
     var currentProducerArray = JSON.parse(response.body)
     var currentCountProducer = currentProducerArray.length
     console.log(ANSI_BLUE + "[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]: (nombre)" + currentCountProducer + ANSI_RESET);
-    console.log("Notre producteur est bien inscrit (initialement " + initialCountProducer + ") : " + currentCountProducer);
+    console.log("Notre producteur est bien inscrit (initialement " + ANSI_YELLOW + initialCountProducer + ANSI_RESET + ") : " + ANSI_YELLOW +currentCountProducer + ANSI_RESET);
 
     //STEP 5
     console.log(ANSI_GREEN + "\n\n================= STEP 5 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "SmartGrid attribue un ID au producteur" + ANSI_RESET)
 
-    console.log("\nLe producteur reçoit un ID : " + producerID);
+    console.log("\nLe producteur reçoit un ID : " + ANSI_YELLOW + producerID + ANSI_RESET);
 
     //STEP 6
     console.log(ANSI_GREEN + "\n\n================= STEP 6 =================" + ANSI_RESET)
@@ -122,15 +122,15 @@ async function main() {
     await sleep(1000);
     var dateReq = { date: globalDate };
 
-    console.log("\nOn vérifie la tension de la ligne à la date du " + globalDate);
+    console.log("\nOn vérifie la tension de la ligne à la date du " + ANSI_YELLOW + globalDate + ANSI_RESET);
 
     response = await doRequest({ url: "http://consumption-api:2998/total-consumption", qs: dateReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:total-consumption; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Consommation : " + response.body + " W.");
+    console.log("Consommation : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     response = await doRequest({ url: "http://production-api:2999/total-production", qs: dateReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:production-api; [route]:total-production; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Production : " + response.body + " W.");
+    console.log("Production : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
     console.log("On voit que la consommation est égale à la production")
 
     //STEP 7 
@@ -145,17 +145,19 @@ async function main() {
 
     response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
-    console.log("On constate qu'il a bien été ajouté :" + response.body);
+    console.log("On constate qu'il a bien été ajouté :");
+    console.log(ANSI_YELLOW + response.body + ANSI_RESET);
 
     //STEP 8 
     console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On demande un planning de consommation pour cette objet" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On demande un planning de consommation pour cet objet" + ANSI_RESET)
 
     response = await doRequest({ url: "http://consumption-scheduler:3002/schedule", form: { dayDate: globalDate }, method: "POST" });
 
     response = await doRequest({ url: "http://house:3000/manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot", method: "POST" });
     console.log(ANSI_BLUE + "[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
-    console.log("On reçoit le planning suivant :" + response.body);
+    console.log("On reçoit le planning suivant :");
+    console.log(ANSI_YELLOW + response.body + ANSI_RESET);
 
     //STEP 9 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
@@ -170,25 +172,25 @@ async function main() {
         objectName: objectName
     }
 
-    console.log("\nOn peut voir que l’objet consomme à la date " + globalDate + " depuis smartGrid");
+    console.log("\nOn peut voir que l’objet consomme à la date " + ANSI_YELLOW + globalDate + ANSI_RESET + " depuis smartGrid");
     response = await doRequest({ url: "http://client-consumption-api:2997/house-detailed-consumption", qs: detailedObject, method: "GET" });
     console.log(ANSI_BLUE + "[service]:client-consumption-api; [route]:house-detailed-consumption; [params]: " + JSON.stringify(detailedObject) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("La consommation de l'objet " + objectName + " de la maison d'ID " + houseID + " à la date du " + globalDate + " est : " + response.body + " W.");
+    console.log("La consommation de l'objet " + ANSI_YELLOW + objectName + ANSI_RESET + " de la maison d'ID " + ANSI_YELLOW + houseID + ANSI_RESET + " à la date du " + ANSI_YELLOW + globalDate + ANSI_RESET + " est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 10
     console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On constate que la consommation n'est plus égale à la production" + ANSI_RESET)
 
     dateReq = { date: globalDate };
-    console.log("\nLa tension sur la ligne n'est plus stable à la date du " + globalDate + ", on demande aux producteurs de s’adapter :");
+    console.log("\nLa tension sur la ligne n'est plus stable à la date du " + ANSI_YELLOW + globalDate + ANSI_RESET + ", on demande aux producteurs de s’adapter :");
 
     response = await doRequest({ url: "http://consumption-api:2998/total-consumption", qs: dateReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:consumption-api; [route]:total-consumption; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Consommation : " + response.body + " W.");
+    console.log("Consommation : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     response = await doRequest({ url: "http://production-api:2999/total-production", qs: dateReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:production-api; [route]:total-production; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Production : " + response.body + " W.");
+    console.log("Production : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 11 
     console.log(ANSI_GREEN + "\n\n================= STEP 11 =================" + ANSI_RESET)
@@ -201,7 +203,7 @@ async function main() {
 
     response = await doRequest({ url: "http://production-api:2999/total-production", qs: dateReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:production-api; [route]:total-production; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Production : " + response.body + " W.");
+    console.log("Production : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 11 
     console.log(ANSI_GREEN + "\n\n================= STEP 12 =================" + ANSI_RESET)
@@ -218,11 +220,13 @@ async function main() {
 
     response = await doRequest({ url: "http://bill-api:3016/bill/bill-for-house", qs: firstMonthBillReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Facture du premier mois ("+firstMonth+"/"+firstYear+") : " + response.body+".");
+    console.log("Facture du premier mois ("+ANSI_YELLOW + firstMonth+"/"+firstYear + ANSI_RESET +") : ");
+    console.log(ANSI_YELLOW + response.body + ANSI_RESET);
 
     response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporary-bill", qs: currMonthBillReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Facture du mois courant ("+globalDate.getMonth()+"/"+globalDate.getFullYear()+") : " + response.body+".");
+    console.log("Facture du mois courant ("+ANSI_YELLOW + globalDate.getMonth()+"/"+globalDate.getFullYear()+ ANSI_RESET +") : ");
+    console.log(ANSI_YELLOW+ response.body+ANSI_RESET);
 }
 
 async function beforeStep() {
