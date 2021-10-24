@@ -91,7 +91,7 @@ async function main() {
     var initialProducerArray = JSON.parse(response.body)
     var initialCountProducer = initialProducerArray.length
     console.log(ANSI_BLUE + "[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]: (nb inscrit) " + initialCountProducer + ANSI_RESET);
-    console.log("On a " + ANSI_YELLOW + initialCountProducer + ANSI_RESET + "producteurs inscrits");
+    console.log("On a " + ANSI_YELLOW + initialCountProducer + ANSI_RESET + " producteurs inscrits");
 
     var producer = { producerName: "ENGIE", production: 1000 }
 
@@ -225,7 +225,7 @@ async function main() {
 
     response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporary-bill", qs: currMonthBillReq, method: "GET" });
     console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("Facture du mois courant ("+ANSI_YELLOW + globalDate.getMonth()+"/"+globalDate.getFullYear()+ ANSI_RESET +") : ");
+    console.log("Facture du mois courant ("+ANSI_YELLOW + (globalDate.getMonth()+1)+"/"+globalDate.getFullYear()+ ANSI_RESET +") : ");
     console.log(ANSI_YELLOW+ response.body+ANSI_RESET);
 }
 
