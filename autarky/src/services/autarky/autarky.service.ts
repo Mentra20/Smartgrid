@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HouseAutarky } from 'src/models/house-autarky';
-import { Repository, Between } from 'typeorm';
+import { Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
@@ -87,10 +87,7 @@ export class AutarkyService {
     return this.houseAutarkyRepository.findOne({
       where: {
         clientID: clientID,
-        autarkyDate: Between(
-          new Date(date.getTime() - 1000),
-          new Date(date.getTime() + 1000),
-        ),
+        autarkyDate: date,
       },
     });
   }

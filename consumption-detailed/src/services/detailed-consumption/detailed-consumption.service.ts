@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DetailedConsumption } from 'src/models/detailed-consumption';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
@@ -42,7 +42,7 @@ export class DetailedConsumptionService {
         return await this.detailedConsumptionRepository.findOne({where:
             {
                 houseID:houseID, 
-                consumptionDate: Between(new Date(consumptionDate.getTime()-1000),new Date(consumptionDate.getTime()+1000)), 
+                consumptionDate: consumptionDate, 
                 objectName:objectName
             }});
     }
