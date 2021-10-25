@@ -20,4 +20,4 @@ start powershell -command "[console]::windowwidth=100; [console]::windowheight=3
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd bill-api | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-consumption-db | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd daily-production-db | npm i" &
-start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd autarky | npm i" &
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd real-energy-output | npm i" &
