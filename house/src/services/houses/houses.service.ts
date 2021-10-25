@@ -87,8 +87,9 @@ export class HousesService {
         return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { clientID: houseID }))).data
     }
 
-    public async registryNewClient(clientName:string):Promise<string>{
-        var response = (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, { clientName: clientName })));
+    public async registryNewClient(clientName:string, privacyDetailedData:boolean, privacyConsumptionData:boolean, privacyProductionData:boolean):Promise<string>{
+        var message = {clientName: clientName, privacyDetailedData: privacyDetailedData, privacyConsumptionData: privacyConsumptionData, privacyProductionData: privacyProductionData};
+        var response = (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, message)));
         console.log(response.data);
         return response.data
     }

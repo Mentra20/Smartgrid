@@ -30,16 +30,15 @@ export class ClientRegistryController {
   }
 
   @Post('subscribe')
-  clientSubscribe(
-    @Body('clientName') clientName: string,
-    @Body('communityID') communityID: number,
-  ): Promise<string> {
+  clientSubscribe(@Body('clientName') clientName: string, @Body('communityID') communityID: number, @Body("privacyDetailedData") privacyDetailedData:boolean, 
+  @Body("privacyConsumptionData") privacyConsumptionData:boolean, @Body("privacyProductionData") privacyProductionData:boolean): Promise<string> {
     console.log(
       '[client-registry][clientSubscribe] clientName:string ' +
-        clientName +
-        '=> void',
+        clientName + ' communityID:string ' + communityID + ' privacyDetailedData:boolean ' + privacyDetailedData +
+        ' privacyConsumptionData:boolean ' + privacyConsumptionData + ' privacyProductionData:boolean ' + privacyProductionData +
+        ' => Promise<String>',
     );
-    return this.clientRegistryService.subscribeClient(clientName, communityID);
+    return this.clientRegistryService.subscribeClient(clientName, communityID, privacyDetailedData, privacyConsumptionData, privacyProductionData);
   }
 
   @Post('updateClientName')

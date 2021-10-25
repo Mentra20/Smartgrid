@@ -15,9 +15,10 @@ export class SubscriptionService {
     ID_Community = 1;
     nbHouseInCommunity = 0;
 
-    async subscribeClient(clientName:string):Promise<string>{
-        console.log("Client registred info : " + clientName);
-        return this.generateClientSubscription(clientName);
+    async subscribeClient(clientName:string, privacyDetailedData:boolean, privacyConsumptionData:boolean, privacyProductionData:boolean):Promise<string>{
+        console.log("Client registred info : " + clientName + "." + "Accepted privacy detailed data : " + privacyDetailedData + 
+        ", privacy consumption data : " + privacyConsumptionData + ", privacy production data : " + privacyProductionData);
+        return this.generateClientSubscription(clientName, privacyDetailedData, privacyConsumptionData, privacyProductionData);
     }
 
     async updateClientNameinDB(idHouse:string, newClientName:string){
@@ -64,9 +65,9 @@ export class SubscriptionService {
         return id_producer;
     }
 
-    private async generateClientSubscription(clientName:string):Promise<string>{
+    private async generateClientSubscription(clientName:string, privacyDetailedData:boolean, privacyConsumptionData:boolean, privacyProductionData:boolean):Promise<string>{
         var community_ID = this.giveCommunityID();
-        var message = {clientName, communityID:community_ID};
+        var message = {clientName, communityID:community_ID, privacyDetailedData: privacyDetailedData, privacyConsumptionData: privacyConsumptionData, privacyProductionData: privacyProductionData};
         var client_id = (await firstValueFrom(this.http.post(this.URL_SubscribeClientDB, message))).data;
         return client_id;
     }
