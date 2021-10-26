@@ -23,6 +23,10 @@ export class ClientRegistryService {
     });
   }
 
+  async getClientPrivacySettings(clientID: string): Promise<ClientData> {
+    return await this.clientDataRepository.findOne(clientID);
+  }
+
   async getAllClients(): Promise<Client[]> {
     return await this.clientRepository.find();
   }

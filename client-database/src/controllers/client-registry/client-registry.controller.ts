@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { Client } from 'src/models/Client';
+import { ClientData } from 'src/models/ClientData';
 import { ClientRegistryService } from '../../services/client-registry/client-registry.service';
 
 @Controller('client-registry')
@@ -22,6 +23,11 @@ export class ClientRegistryController {
   @Get('house-producer-id')
   getHouseWithProducerID(@Query('producerID') producerID: string): Promise<Client> {
     return this.clientRegistryService.getClientWithProducerID(producerID);
+  }
+
+  @Get('client-privacy-settings')
+  getClientPrivacySettings(@Query('clientID') clientID: string): Promise<ClientData> {
+    return this.clientRegistryService.getClientPrivacySettings(clientID);
   }
 
   @Get('allHouses')
