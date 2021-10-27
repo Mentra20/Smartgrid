@@ -19,4 +19,17 @@ export class DetailedProductionController {
 
         this.DetailledProductionServices.pushProduction(objectProduction);
     }
+    @Post('add-production-limit')
+    addDetailedProductionLimit(
+        @Body("productionLimit") objectProductionLimit:{
+            id_producer:string, 
+            productionDate:string, 
+            productionLimit:number,
+            production:number})
+    {
+        //TODO: verifier si le client existe dans la DB
+        console.log("[production-provider][add-production-limit] objectsProductionsLimit:any[] "+ JSON.stringify(objectProductionLimit) +" => void")
+
+        this.DetailledProductionServices.pushProductionLimit(objectProductionLimit);
+    }
 }

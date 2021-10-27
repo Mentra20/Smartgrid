@@ -22,4 +22,12 @@ export class DetailedProductionService {
         console.log("I emit global production : "+objectProduction);
         this.client.emit('production.raw.global',objectProduction);
     }
+    public pushProductionLimit(objectProductionLimit:{
+        id_producer:string, 
+        productionDate:string, 
+        productionLimit:number})
+    {
+        console.log("I emit production limit : "+objectProductionLimit);
+        this.client.emit('production.limit',objectProductionLimit);
+    }
 }
