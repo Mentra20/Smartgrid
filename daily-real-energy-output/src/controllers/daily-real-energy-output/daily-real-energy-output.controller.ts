@@ -33,35 +33,25 @@ export class DailyRealEnergyOutputController {
     }
 
     @Get('daily-real-energy-output')
-    async getDailyRealEnergyOutput(@Query('id_client') id_client:string, @Query('id_producer') id_producer:string, @Query('dataDate') dateString:string): Promise<DailyRealEnergy> {
+    async getDailyRealEnergyOutput(@Query('id_client') id_client:string, @Query('dataDate') dateString:string): Promise<DailyRealEnergy> {
         var dataDate = new Date(dateString);
-        console.log("[DailyRealEnergyOutputController][daily-real-energy-output] params : id_client:" + id_client + " id_producer:" + id_producer + " dataDate:" + dateString);
+        console.log("[DailyRealEnergyOutputController][daily-real-energy-output] params : id_client:" + id_client + " dataDate:" + dateString);
         
-        var dailyEnergy = await this.dailyRealEnergyOutputService.getClientDataByDate(dataDate, id_client, id_producer);
+        var dailyEnergy = await this.dailyRealEnergyOutputService.getClientDataByDate(dataDate, id_client);
         console.log("Return daily real energy output :" + JSON.stringify(dailyEnergy));
         return dailyEnergy;
     }
 
     @Get('period-real-energy-output')
-    async getRealEnergyOutputInGivenPeriod(@Query('id_client') id_client:string, 
-        @Query('id_producer') id_producer:string,
+    async getRealEnergyOutputInGivenPeriod(@Query('id_client') id_client:string,
         @Query('begin') begin:string,
-        @Query('end') end:string): Promise<number> {
+        @Query('end') end:string): Promise<DailyRealEnergy[]> {
             
         var beginDate = new Date(begin);
         var endDate = new Date(end);
 
-        console.log("[DailyRealEnergyOutputController][period-real-energy-output] params : id_client:" + id_client + " id_producer:" + id_producer + " begin:" + begin + " end:" + end);
+        console.log("[DailyRealEnergyOutputController][period-real-energy-output] params : id_client:" + id_client + " begin:" + begin + " end:" + end);
         
-        var periodEnergyList:DailyRealEnergy[] = await this.dailyRealEnergyOutputService.getClientPeriodData(beginDate, endDate, id_client, id_producer);
-        var totalPeriodEnergy = 0; //W/H
-        
-        for(let dailyEnergy of periodEnergyList){
-            totalPeriodEnergy += dailyEnergy.energy;
-            console.log("totalPeriodEnergy:" + totalPeriodEnergy);
-        }
-        
-        console.log("Return period energy :" + totalPeriodEnergy + "W/H");
-        return totalPeriodEnergy;
+        return await this.dailyRealEnergyOutputService.getClientPeriodData(beginDate, endDate, id_client);
     }
 }

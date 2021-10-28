@@ -7,10 +7,13 @@ export class DailyRealEnergy {
     id_client: string;
 
     @PrimaryColumn()
-    id_producer: string;
-
-    @PrimaryColumn()
     dailyDate: Date;
+
+    @Column({
+        nullable: true,
+        type: 'text'
+    })
+    id_producer: string | null;
 
     @Column()
     id_community: number;

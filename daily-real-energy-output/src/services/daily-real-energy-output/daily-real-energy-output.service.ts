@@ -18,7 +18,7 @@ export class DailyRealEnergyOutputService {
 
         console.log("Add energy " + clientRealDailyData.energy +" W/H for client " + clientRealDailyData.id_client + " at daily date " + dailyDate + ".");
 
-        var existingRealDailyEnergy = await this.getClientDataByDate(dailyDate, clientRealDailyData.id_client, clientRealDailyData.id_producer);
+        var existingRealDailyEnergy = await this.getClientDataByDate(dailyDate, clientRealDailyData.id_client);
 
         if(existingRealDailyEnergy){ //Existing line
             existingRealDailyEnergy.energy += energyinWH;
@@ -40,12 +40,12 @@ export class DailyRealEnergyOutputService {
         }
     }
 
-    public getClientDataByDate(date:Date, id_client:string, id_producer:string): Promise<DailyRealEnergy> {
-        return this.dailyRealEnergyRepository.findOne({where:{id_client:id_client, id_producer:id_producer, dailyDate:date}});
+    public getClientDataByDate(date:Date, id_client:string): Promise<DailyRealEnergy> {
+        return this.dailyRealEnergyRepository.findOne({where:{id_client:id_client, dailyDate:date}});
     }
 
-    public getClientPeriodData(begin:Date, end:Date, id_client:string, id_producer:string): Promise<DailyRealEnergy[]> {
-        return this.dailyRealEnergyRepository.find({where:{id_client:id_client, id_producer:id_producer, dailyDate:Between(begin,end)}});
+    public getClientPeriodData(begin:Date, end:Date, id_client:string): Promise<DailyRealEnergy[]> {
+        return this.dailyRealEnergyRepository.find({where:{id_client:id_client, dailyDate:Between(begin,end)}});
     }
 
     public convertWToWH(energyInW:number): number{
