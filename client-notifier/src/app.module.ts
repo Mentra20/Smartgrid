@@ -2,29 +2,27 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import {AutarkyOversightController} from "./controllers/autarky-oversight.controller";
-import {AutarkyOversightService} from "./services/autarky-oversight.service";
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'AUTARKY-OVERSIGHT',
+        name: 'CLIENT-NOTIFIER',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'autarky-oversight',
+            clientId: 'client-notifier',
             brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'autarky-oversight',
+            groupId: 'client-notifier',
             allowAutoTopicCreation: true,
           },
         },
       },
     ]),
   ],
-  controllers: [AppController, AutarkyOversightController],
-  providers: [AppService, AutarkyOversightService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

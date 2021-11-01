@@ -9,11 +9,11 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: 'autarky-oversight',
+        clientId: 'client-notifier',
         brokers: ['kafka:9092'],
       },
       consumer: {
-        groupId: 'autarky-oversight',
+        groupId: 'client-notifier',
         allowAutoTopicCreation: true,
         sessionTimeout: 30000,
       },
@@ -21,8 +21,8 @@ async function bootstrap() {
   });
   await app.startAllMicroservices();
   const config = new DocumentBuilder()
-    .setTitle('AutarkyOversight')
-    .setDescription('The AutarkyOversight API description')
+    .setTitle('ClientNotifier')
+    .setDescription('The ClientNotifier API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();
@@ -30,7 +30,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   await app.listen(3031);
   console.log(
-    '-------------------------- AUTARKY-OVERSIGHT -------------------------',
+    '-------------------------- CLIENT-NOTIFIER -------------------------',
   );
 }
 bootstrap();

@@ -2,8 +2,8 @@ import { AutarkyOversightService } from '../services/autarky-oversight.service';
 import { Controller, Inject } from '@nestjs/common';
 import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('realEnergyOutput')
-export class RealEnergyOutputController {
+@Controller()
+export class AutarkyOversightController {
   constructor(
     private readonly autarkyOversightService: AutarkyOversightService,
     @Inject('AUTARKY-OVERSIGHT') private client: ClientKafka,
@@ -16,7 +16,7 @@ export class RealEnergyOutputController {
   }
 
   @MessagePattern('energy.output.community')
-  async addClientConsumptionToDB(
+  async processAutarkyCommunity(
     @Payload()
     realConsumptionCommunityMSG: any,
   ) {
