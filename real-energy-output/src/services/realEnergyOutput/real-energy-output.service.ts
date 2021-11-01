@@ -241,7 +241,15 @@ export class RealEnergyOutputService {
         order: { communityID: 'ASC' },
       });
     const messages = [];
-    const message = {
+    const message: {
+      communityID: number;
+      houses: {
+        house: {
+          clientID: string;
+          realEnergyOutput: number;
+        };
+      }[];
+    } = {
       communityID: housesRealEnergyOutput[0].communityID,
       houses: [],
     };

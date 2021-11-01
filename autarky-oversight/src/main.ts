@@ -9,11 +9,11 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: 'real-energy-output',
+        clientId: 'autarky-oversight',
         brokers: ['kafka:9092'],
       },
       consumer: {
-        groupId: 'real-energy-output',
+        groupId: 'autarky-oversight',
         allowAutoTopicCreation: true,
         sessionTimeout: 30000,
       },
@@ -21,16 +21,16 @@ async function bootstrap() {
   });
   await app.startAllMicroservices();
   const config = new DocumentBuilder()
-    .setTitle('RealEnergyOutput')
+    .setTitle('AutarkyOversight')
     .setDescription('The RealEnergyOutput API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(3030);
+  await app.listen(3031);
   console.log(
-    '-------------------------- REAL-ENERGY-OUTPUT -------------------------',
+    '-------------------------- AUTARKY-OVERSIGHT -------------------------',
   );
 }
 bootstrap();
