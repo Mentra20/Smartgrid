@@ -12,9 +12,13 @@ export class BatteryProviderService {
         console.log("battery-provider connected on bus")
     }
 
-    public pushBatteryState(batteryState:{producerID:string,capacity:number,current_storage:number,max_production_flow:number,max_storage_flow:number})
-    {
-        console.log("I emit battery state : "+JSON.stringify(batteryState));
+    public pushBatteryState(batteryState:{id_battery:string,id_producer:string,current_storage:number}){
+        this.logger.debug("I emit battery state : "+JSON.stringify(batteryState));
         this.client.emit('battery.state',batteryState);
+    }
+
+    public pushBatterySubscription(battery:{id_battery:string,id_producer:string,capacity:number,max_production_flow:number,max_storage_flow:number}){
+        this.logger.debug("I emit battery Subscription : "+JSON.stringify(battery));
+        this.client.emit('battery.subscription',battery);
     }
 }
