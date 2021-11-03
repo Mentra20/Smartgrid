@@ -10,13 +10,24 @@ export class PushBatteryProviderController {
     }
 
     @Post("battery-sate")
-    batteryState(@Body() body:any){
-        this.batteryProviderService.pushBatteryState({id_battery:body.id_battery,id_producer:body.id_producer,current_storage:body.current_storage})
+    batteryState(@Body("producerID") producerID:string,@Body("battery") battery:any,@Body("date") date:string){
+        this.batteryProviderService.pushBatteryState({
+            id_battery:battery.id_battery,
+            id_producer:producerID,
+            current_storage:+battery.current_storage,
+            date:new Date(date)
+        })
     }
 
     @Post("battery-subscription")
-    batterySubscription(@Body() body:any){
-        this.batteryProviderService.pushBatterySubscription({id_battery:body.id_battery,id_producer:body.id_producer,capacity:body.capacity,
-            max_production_flow:body.max_production_flow,max_storage_flow:body.max_storage_flow})
+    batterySubscription(@Body("producerID") producerID:string,@Body("battery") battery:any){
+        this.batteryProviderService.pushBatterySubscription(
+            {
+                id_battery:battery.id_battery,
+                id_producer:producerID,
+                capacity:battery.capacity,
+                max_production_flow:battery.max_production_flow,
+                max_storage_flow:battery.max_storage_flow
+            })
     }
 }

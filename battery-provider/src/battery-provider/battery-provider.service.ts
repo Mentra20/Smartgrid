@@ -12,7 +12,7 @@ export class BatteryProviderService {
         console.log("battery-provider connected on bus")
     }
 
-    public pushBatteryState(batteryState:{id_battery:string,id_producer:string,current_storage:number}){
+    public pushBatteryState(batteryState:{id_battery:string,id_producer:string,current_storage:number,date:Date}){
         this.logger.debug("I emit battery state : "+JSON.stringify(batteryState));
         this.client.emit('battery.state',batteryState);
     }
