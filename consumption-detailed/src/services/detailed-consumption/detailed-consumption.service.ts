@@ -46,4 +46,12 @@ export class DetailedConsumptionService {
                 objectName:objectName
             }});
     }
+
+    public async getAllDetailedConsumptionByDate(houseID:string, consumptionDate:Date){
+        return await this.detailedConsumptionRepository.find({where:
+            {
+                houseID:houseID, 
+                consumptionDate: consumptionDate, 
+            }});
+    }
 }
