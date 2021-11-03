@@ -19,6 +19,10 @@ export class PartnerApiService {
     GLOBAL_CONSUMPTION_COST = 50;
     PRODUCTION_COST = 70;
 
+    DETAILED_TL = 3;
+    PRODUCTION_TL = 2;
+    GLOBAL_TL = 1;
+
     constructor(
         @Inject("PARTNER_API") private client:ClientKafka,
         @InjectRepository(PartnerInfo)
@@ -31,7 +35,7 @@ export class PartnerApiService {
         console.log("partner-api connected on bus")
     }
 
-    public addPartnerToDB(partnerID:string, datapoint:number, trustLevel:string){
+    public addPartnerToDB(partnerID:string, datapoint:number, trustLevel:number){
 
         var partnerInfo = new PartnerInfo();
         partnerInfo.id_partner = partnerID;
@@ -56,10 +60,16 @@ export class PartnerApiService {
         var partnerInfo = await this.getPartnerInfo(partnerID);
         var clientsData = [];
 
+        if(partnerInfo.trustLevel < this.DETAILED_TL){
+            console.log("Partner "+partnerID+" doesn't have suffisant trust level");
+            console.log("trust level :"+partnerInfo.trustLevel+", needed :"+this.DETAILED_TL)
+            return clientsData;
+        }
+
         if(partnerInfo.dataPoint < this.DETAILED_CONSUMPTION_COST){
             console.log("Partner "+partnerID+" can't afford detailed consumption data");
             console.log("datapoint :"+partnerInfo.dataPoint+", needed :"+this.DETAILED_CONSUMPTION_COST)
-            return clientsData;//?? ou null Jsp..
+            return clientsData;
         }
 
         var allClients = await this.getAllHouseID();
@@ -87,6 +97,12 @@ export class PartnerApiService {
         console.log("Partner "+partnerID+" request global consumption data of clients at date "+date);
         var partnerInfo = await this.getPartnerInfo(partnerID);
         var clientsData = [];
+
+        if(partnerInfo.trustLevel < this.GLOBAL_TL){
+            console.log("Partner "+partnerID+" doesn't have suffisant trust level");
+            console.log("trust level :"+partnerInfo.trustLevel+", needed :"+this.GLOBAL_TL)
+            return clientsData;
+        }
 
         if(partnerInfo.dataPoint < this.GLOBAL_CONSUMPTION_COST){
             console.log("Partner "+partnerID+" can't afford global consumption data");
@@ -119,6 +135,12 @@ export class PartnerApiService {
         console.log("Partner "+partnerID+" request production data of clients at date "+date);
         var partnerInfo = await this.getPartnerInfo(partnerID);
         var clientsData = [];
+
+        if(partnerInfo.trustLevel < this.PRODUCTION_TL){
+            console.log("Partner "+partnerID+" doesn't have suffisant trust level");
+            console.log("trust level :"+partnerInfo.trustLevel+", needed :"+this.PRODUCTION_TL)
+            return clientsData;
+        }
 
         if(partnerInfo.dataPoint < this.PRODUCTION_COST){
             console.log("Partner "+partnerID+" can't afford production data");

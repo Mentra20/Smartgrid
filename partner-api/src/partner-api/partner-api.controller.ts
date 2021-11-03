@@ -10,10 +10,11 @@ export class PartnerApiController {
     addPartner(
         @Body('partnerID') partnerID:string, 
         @Body('datapoint') datapointStr:string, 
-        @Body('trust-level') trustLevel:string)
+        @Body('trust-level') trustLevelStr:string)
     {
         console.log("[add-partner] partnerID :"+partnerID+", datapoint :"+datapoint+", trust-level :"+trustLevel)
         var datapoint = +datapointStr;
+        var trustLevel = +trustLevelStr;
         
         this.partnerService.addPartnerToDB(partnerID, datapoint, trustLevel);
     }

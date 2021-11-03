@@ -10,5 +10,5 @@ export class PartnerInfo {
     dataPoint: number;
 
     @Column()
-    trustLevel: string;
+    trustLevel: number;//Pour detailed : niv 3, pour prod : niv 2, pour global : niv 1
 }
