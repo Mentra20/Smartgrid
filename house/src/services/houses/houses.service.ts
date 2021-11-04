@@ -32,6 +32,61 @@ export class HousesService {
         this.pushAllHouseProduction();
         this.pushAllBatteryState();
     }
+    doTickForAllHouse(){
+        for(let houseEntry of this.allHouse){
+            this.doTickForHouse(houseEntry[1])
+        }
+    }
+
+    doTickForHouse(house:House){
+        
+    }
+
+    generateConsumptionArray(house:House){
+        var jsonHouseDetailed = [];
+        for(let object of house.getAllObject()){
+            var consumption = object.getCurrentConsumption(this.currentDate)
+            if(consumption>0){
+                jsonHouseDetailed.push({objectName:object.getName(),consumption:consumption})
+            }
+        }
+        return jsonHouseDetailed;
+    }
+
+    calculeProductionHouse(house:House){
+        var production = 0;
+        for(let object of house.getAllObject()){
+            var consumption = object.getCurrentConsumption(this.currentDate)
+            if(consumption<0){
+                production+= -consumption;
+            }
+        }
+        return production;
+    }
+
+    useBattery(house:House,totalProduction:number,totalConsumption:number){
+        var margeProduction = totalConsumption-totalProduction;
+        var batteryUse = []
+        if(margeProduction>0){
+            //TODO modifier
+            for(var battery of house.getAllBattery()){
+                var chargeStore =battery.chargeBattery(margeProduction);
+                batteryUse.push({battery,consumption:chargeStore})
+                margeProduction-=chargeStore
+            }
+        }
+        else if(margeProduction<0){
+            //TODO modifier
+            for(var battery of house.getAllBattery()){
+                var chargeUse =battery.useChargeOfBattery(margeProduction);
+                batteryUse.push({battery,production:-chargeUse})
+                margeProduction+=chargeUse
+            }
+        }
+        else{
+            batteryUse.push()
+        }
+    }
 
     getTotalConsumption(houseID:string){
         return this.allHouse.get(houseID)?.getTotalConsumption(this.currentDate);
