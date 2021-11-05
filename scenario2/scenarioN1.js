@@ -207,7 +207,7 @@ async function main() {
 
     //STEP 11 
     console.log(ANSI_GREEN + "\n\n================= STEP 12 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "Trois mois s'écoulent, le client veut voir sa consommation du premier mois et du mois courant " + ANSI_RESET);
+    console.log(ANSI_GREEN + "Trois mois s'écoulent, le client veut voir sa facture du premier mois et du mois courant " + ANSI_RESET);
 
     var firstYear = globalDate.getFullYear();
     var firstMonth = globalDate.getMonth();

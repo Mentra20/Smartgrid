@@ -2,7 +2,7 @@ import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { PartnerApiService } from './partner-api.service';
 import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('partner-api')
+@Controller()
 export class PartnerApiController {
     constructor(private partnerService: PartnerApiService){}
 
@@ -10,13 +10,20 @@ export class PartnerApiController {
     addPartner(
         @Body('partnerID') partnerID:string, 
         @Body('datapoint') datapointStr:string, 
-        @Body('trust-level') trustLevelStr:string)
+        @Body('trustLevel') trustLevelStr:string)
     {
         console.log("[add-partner] partnerID :"+partnerID+", datapoint :"+datapoint+", trust-level :"+trustLevel)
         var datapoint = +datapointStr;
         var trustLevel = +trustLevelStr;
         
         this.partnerService.addPartnerToDB(partnerID, datapoint, trustLevel);
+    }
+
+    @Get("get-partner-info")
+    getPartnerInfo(@Query('partnerID') partnerID:string){
+        console.log("[get-partner-info] partnerID :"+partnerID);
+
+        return this.partnerService.getPartnerInfo(partnerID);
     }
 
     @Post("add-datapoint")

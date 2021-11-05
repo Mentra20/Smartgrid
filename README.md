@@ -29,9 +29,9 @@ Les containers de nos services sont re-créés entre chaque scénario.
 9 - On voit que l’objet consomme à son heure d'activité  
 10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
-12 - Trois mois s'écoulent, le client veut voir sa consommation du premier mois et du mois courant  
+12 - Trois mois s'écoulent, le client veut voir sa facture du premier mois et du mois courant  
 
-**Scénario 2 : Gestion de la consommation, pic et autarky dans une communauté**  
+**Scénario 2 : Gestion de la consommation, achat des données, pic et autarky dans une communauté**  
 
 1 - On a des maisons dans une communauté et une autre dans une autre communauté    
 2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons   
@@ -42,6 +42,8 @@ Les containers de nos services sont re-créés entre chaque scénario.
 7 - On remarque qu’il n’y a maintenant plus de pic  
 8 - On regarde si la communauté est en autarcie et ce n'est pas le cas
 9 - On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie
+10 - On ajoute un nouveau partenaire avec des datapoints, il récupère les données de production des clients  
+11 - Le partenaire récupère les données de consommation détaillée des clients mais n'a plus de datapoints, il en reprend et retente mais il n'a pas le niveau de confiance requis  
 
 **Scénario 3 : Production d'une maison, autarcie et notification**
 

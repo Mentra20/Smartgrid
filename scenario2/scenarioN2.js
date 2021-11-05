@@ -218,6 +218,57 @@ async function main() {
     console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit qu'il a une notification pour la communauté : ");
     console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
+
+
+    console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET);
+    console.log(ANSI_GREEN + "On ajoute un nouveau partenaire avec des datapoints, il récupère les données de production des clients  "+ ANSI_RESET);
+
+    console.log("Un nouveau partenaire s'inscrit");
+    var partnerID = "partenaire-scénario";
+    var reqPartnerSub = {partnerID:partnerID, datapoint:100, trustLevel:2}
+    response = await doRequest({ url: "http://partner-api:3019/add-partner", form: reqPartnerSub, method: "POST" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:add-partner; [params]:" + JSON.stringify(reqPartnerSub) + " => [return]:_"+ ANSI_RESET);
+
+    console.log("On voit qu'on peut récuperer ses informations");
+    response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
+    console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
+
+    console.log("Le partenaire récupère les données de production des clients (coûte 70 datapoints)");
+    var reqPartnerRequest = {partnerID:partnerID, date:globalDate}
+    response = await doRequest({ url: "http://partner-api:3019/request-production", qs: reqPartnerRequest, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:request-production; [params]:" + JSON.stringify(reqPartnerRequest) + " => [return]:"+response.body+ ANSI_RESET);
+    console.log("Données de production du "+ANSI_YELLOW +globalDate+ ANSI_RESET+" récupérées par le partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
+
+    console.log("Son nombre de datapoints est mis à jour");
+    response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
+    console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
+
+
+    console.log(ANSI_GREEN + "\n\n================= STEP 11 =================" + ANSI_RESET);
+    console.log(ANSI_GREEN + "Le partenaire reprend des datapoints et récupère les données de consommation détaillée des clients mais n'a pas le niveau de confiance requis  "+ ANSI_RESET);
+
+    console.log("Le partenaire à payé en amont, des datapoints lui sont ajoutés");
+    var reqPartnerAddPoint = {partnerID:partnerID, datapoint:100}
+    response = await doRequest({ url: "http://partner-api:3019/add-datapoint", form: reqPartnerAddPoint, method: "POST" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:add-datapoint; [params]:" + JSON.stringify(reqPartnerAddPoint) + " => [return]:_"+ ANSI_RESET);
+
+    console.log("Son nombre de datapoints est mis à jour");
+    response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
+    console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
+
+    console.log("Le partenaire essaye de récupéré les données de consommation détaillée des clients (coûte 100 datapoints)")
+    reqPartnerRequest = {partnerID:partnerID, date:globalDate}
+    response = await doRequest({ url: "http://partner-api:3019/request-detailed-consumption", qs: reqPartnerRequest, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:request-detailed-consumption; [params]:" + JSON.stringify(reqPartnerRequest) + " => [return]:"+response.body+ ANSI_RESET);
+    console.log("Données de consommation détaillée du "+ANSI_YELLOW +globalDate+ ANSI_RESET+" récupérées par le partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
+    
+    console.log("Il ne récupère rien car n'a pas le niveau de confiance requis (nécéssaire : 3), ses datapoints ne sont pas débités");
+    response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
+    console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
 }
 
 async function checkCarCons(houseID) {

@@ -17,7 +17,7 @@ export class HouseEditorController {
     @Post("add-house")
     public async addHouse(@Body('client_name') clientName:string){
         console.log("[HouseEditorController][addHouse] Param : clientname="+clientName)
-        var clientId= await this.housesService.registryNewClient(clientName);
+        var clientId= await this.housesService.registryNewClient(clientName,true,true,true);//TODO récupérer les privacys
         var newHouse = new House(clientName,clientId);
         this.housesService.addHouse(newHouse)
         console.log("[HouseEditorController][addHouse] return : clientid="+clientId)
