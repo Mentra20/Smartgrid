@@ -9,11 +9,11 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: 'autarky',
+        clientId: 'client-notifier',
         brokers: ['kafka:9092'],
       },
       consumer: {
-        groupId: 'autarky',
+        groupId: 'client-notifier',
         allowAutoTopicCreation: true,
         sessionTimeout: 30000,
       },
@@ -21,14 +21,16 @@ async function bootstrap() {
   });
   await app.startAllMicroservices();
   const config = new DocumentBuilder()
-    .setTitle('Autarky')
-    .setDescription('The Autarky API description')
+    .setTitle('ClientNotifier')
+    .setDescription('The ClientNotifier API description')
     .setVersion('1.0')
     .addTag('MVP')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(3030);
-  console.log('-------------------------- AUTARKY -------------------------');
+  await app.listen(3031);
+  console.log(
+    '-------------------------- CLIENT-NOTIFIER -------------------------',
+  );
 }
 bootstrap();

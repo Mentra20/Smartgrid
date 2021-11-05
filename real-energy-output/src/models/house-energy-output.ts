@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class HouseAutarky {
+export class HouseEnergyOutput {
   @PrimaryColumn()
   clientID: string;
 
@@ -9,11 +9,11 @@ export class HouseAutarky {
   producerID: string | null;
 
   @PrimaryColumn()
-  autarkyDate: Date;
+  realEnergyOutputDate: Date;
 
   @Column()
   communityID: number;
 
   @Column('double precision')
-  autarky: number;
+  realEnergyOutput: number;
 }

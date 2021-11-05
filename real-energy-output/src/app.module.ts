@@ -3,14 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { HouseAutarky } from './models/house-autarky';
-import { AutarkyController } from './controllers/autarky/autarky.controller';
-import { AutarkyService } from './services/autarky/autarky.service';
+import { HouseEnergyOutput } from './models/house-energy-output';
+import { RealEnergyOutputController } from './controllers/realEnergyOutput/real-energy-output.controller';
+import { RealEnergyOutputService } from './services/realEnergyOutput/real-energy-output.service';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([HouseAutarky]),
+    TypeOrmModule.forFeature([HouseEnergyOutput]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'database',
@@ -18,20 +18,20 @@ import { HttpModule } from '@nestjs/axios';
       username: 'SI5-SOA',
       password: 'SI5-SOA',
       database: 'SI5-SOA',
-      entities: [HouseAutarky],
+      entities: [HouseEnergyOutput],
       synchronize: true,
     }),
     ClientsModule.register([
       {
-        name: 'AUTARKY',
+        name: 'REAL-ENERGY-OUTPUT',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'autarky',
+            clientId: 'real-energy-output',
             brokers: ['kafka:9092'],
           },
           consumer: {
-            groupId: 'autarky',
+            groupId: 'real-energy-output',
             allowAutoTopicCreation: true,
           },
         },
@@ -39,7 +39,7 @@ import { HttpModule } from '@nestjs/axios';
     ]),
     HttpModule,
   ],
-  controllers: [AppController, AutarkyController],
-  providers: [AppService, AutarkyService],
+  controllers: [AppController, RealEnergyOutputController],
+  providers: [AppService, RealEnergyOutputService],
 })
 export class AppModule {}

@@ -36,7 +36,7 @@ async function main() {
     await consumer.connect()
     await consumer.subscribe({ topic: 'consumption.peak', fromBeginning:false})
 
-    console.log(ANSI_GREEN + "Scénario 2 : Gestion de la consommation, pic et autarky dans une communauté");
+    console.log(ANSI_GREEN + "Scénario 2 : Gestion de la consommation, pic et real-energy-output dans une communauté");
 
     // STEP 0
     console.log(ANSI_GREEN + "\n\n================= STEP 0 =================" + ANSI_RESET)
@@ -55,7 +55,7 @@ async function main() {
     // STEP 1
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
     console.log(ANSI_GREEN +"On a des maisons dans une communauté et une autre dans une autre communauté"+ ANSI_RESET);
-    
+
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
     var communityHouse1 = (await getClient(houseID1)).id_community
@@ -77,10 +77,10 @@ async function main() {
     responseBody = JSON.parse(response.body)
     var currentHouseCount = responseBody.length
     console.log(ANSI_BLUE + "[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:" +currentHouseCount + ANSI_RESET);
-    
+
     console.log("On a bien 4 maison en plus (initialement "+ANSI_YELLOW + initialHouseCount+ ANSI_RESET +") : " + ANSI_YELLOW + currentHouseCount + ANSI_RESET);
 
-    //STEP 2 
+    //STEP 2
     console.log(ANSI_GREEN + "\n\n================= STEP 2 =================" + ANSI_RESET)
     console.log(ANSI_GREEN +"On ajoute plein d’objets planifiables et non planifiables dans les maisons"+ ANSI_RESET);
 
@@ -125,7 +125,7 @@ async function main() {
     await waitTick(5);
 
     await sleep(2000)
-    
+
     console.log(ANSI_GREEN + "\n\n================= STEP 3 =================" + ANSI_RESET)
     console.log(ANSI_GREEN +"On regarde la consommation totale de toutes les maisons"+ ANSI_RESET);
 
@@ -179,15 +179,15 @@ async function main() {
     console.log(ANSI_GREEN + "On regarde si la communauté est en autarcie et ce n'est pas le cas"+ ANSI_RESET)
 
     var autarkyQs = { date: globalDate, communityID:communityHouse2}
-    response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
+    response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
     var exceedConsumption = response.body;
-    console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est négative : " + ANSI_YELLOW +exceedConsumption + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET+" n'est pas en autarcie");
 
 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie"+ ANSI_RESET);
-    
+
     var neededProd = +exceedConsumption - 200;//Marge
     var velo = { object: { name: "Vélo d'appartement", maxConsumption: neededProd, enabled: true }, type: "BASIC" }
     //la maison devien producteur
@@ -202,10 +202,10 @@ async function main() {
     await sleep(1500)
 
     console.log("On vérifie que la communauté est bien passée en autarcie")
-    
+
     autarkyQs = { date: globalDate, communityID:communityHouse2}
-    response = await doRequest({ url: "http://autarky:3030/autarky/get-community-autarky", qs: autarkyQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:autarky; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW +response.body + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET +" est maintenant en autarcie");
 }
 

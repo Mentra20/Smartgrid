@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AutarkyController } from './autarky.controller';
+import { RealEnergyOutputController } from './real-energy-output.controller';
 
 describe('GlobalConsumptionController', () => {
-  let controller: AutarkyController;
+  let controller: RealEnergyOutputController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AutarkyController],
+      controllers: [RealEnergyOutputController],
     }).compile();
 
-    controller = module.get<AutarkyController>(AutarkyController);
+    controller = module.get<RealEnergyOutputController>(RealEnergyOutputController);
   });
 
   it('should be defined', () => {
