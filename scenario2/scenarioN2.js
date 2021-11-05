@@ -184,6 +184,11 @@ async function main() {
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est négative : " + ANSI_YELLOW +exceedConsumption + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET+" n'est pas en autarcie");
 
+    var reqCommuNotif = {communityID: communityHouse2 }
+    response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-community-message", qs: reqCommuNotif, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit qu'il n'y a pas de notification pour la communauté : ");
+    console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie"+ ANSI_RESET);
@@ -207,6 +212,12 @@ async function main() {
     response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW +response.body + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET +" est maintenant en autarcie");
+
+    reqCommuNotif = {communityID: communityHouse2 }
+    response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-community-message", qs: reqCommuNotif, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit qu'il a une notification pour la communauté : ");
+    console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
 }
 
 async function checkCarCons(houseID) {

@@ -40,8 +40,10 @@ Les containers de nos services sont re-créés entre chaque scénario.
 5 - On détecte un pic de consommation dans cette communauté  
 6 - On demande aux objets planifiables d'arrêter de charger dans cette communauté   
 7 - On remarque qu’il n’y a maintenant plus de pic  
+8 - On regarde si la communauté est en autarcie et ce n'est pas le cas
+9 - On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie
 
-**Scénario 3 : Production d'une maison et autarcie**
+**Scénario 3 : Production d'une maison, autarcie et notification**
 
 1 - On inscrit une maison avec des objets consommant de l'éléctricité et on l'inscrit en tant que producteur  
 2 - On ajoute à la maison un objet produisant de l'électricité et une batterie  
@@ -51,7 +53,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 6 - On ajoute un deuxième objet producteur dans la maison  
 7 - On remarque que la consommation est maintenant nulle  
 8 - On voit que la production est maintenant plus grande que la consommation  
-9 - On voit maintenant que la maison est en autarcie  
+9 - On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification
 10 - On constate que la batterie a stocké le surplus d'énergie  
 
 *PS: Plusieurs sleep sont effectués dans les scénarios pour attendre que le traitement des événements s'effectues.*

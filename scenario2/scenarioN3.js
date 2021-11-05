@@ -120,6 +120,12 @@ async function main(){
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est negative : " + ANSI_YELLOW + response.body+ ANSI_RESET  + " W donc on est pas en autarcie");
 
+    var reqClientNotif = {clientID: houseID }
+    response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-house-message", qs: reqClientNotif, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que le client n'a pas recu de notification : ");
+    console.log("Messages reçus pour le client d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
+
     var batteryReqWithDate = {date:globalDate,producerID:houseProdID,batteryID:batteryID}
 
     response = await doRequest({ url: "http://battery:3018/get-battery-state", qs: batteryReqWithDate, method: "GET" });
@@ -162,12 +168,18 @@ async function main(){
 
     //STEP 9
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On voit maintenant que la maison est en autarcie " + ANSI_RESET)
+    console.log(ANSI_GREEN + "On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
     response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie");
+
+    reqClientNotif = {clientID: houseID }
+    response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-house-message", qs: reqClientNotif, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que le client a recu une notification : ");
+    console.log("Messages reçus pour le client d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
 
     //STEP 10 
     console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET)
@@ -179,6 +191,8 @@ async function main(){
     console.log(ANSI_BLUE + "[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la batterie a stocké le surplus d'énergie : " + ANSI_YELLOW + response.body + ANSI_RESET);
     //SUR DEUX LIGNES ??????
+
+    //TODO AJOUTE STEP 11 ON ENLEVE DE LA PROD ET ON VOIT SI CA PREND DANS CE QU'IL Y A DANS LA BATTERIE ET CA LA VIDE
 }
 
 async function doTick() {
