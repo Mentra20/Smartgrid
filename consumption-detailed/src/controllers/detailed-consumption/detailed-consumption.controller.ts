@@ -42,4 +42,15 @@ export class DetailedConsumptionController {
 
         return detailedConsumption?.consumption||0;
     }
+
+    @Get('get-all-detailed-consumption')
+    async getAllDetailedConsumption(@Query('date') dateString:string, @Query('houseID') houseID:string) {
+        var date = new Date(dateString);
+        var allDetailedConsumption:DetailedConsumption[] = (await this.detailedConsumptionService.getAllDetailedConsumptionByDate(houseID,date));
+        console.log("[detailed-consumption][get-all-detailed-consumption] Get date : "+date+" and house ID "+houseID);
+
+        console.log("house all detailed consumptions for houseID "+ houseID +" at date "+date+" is : "+allDetailedConsumption);
+
+        return allDetailedConsumption;
+    }
 }
