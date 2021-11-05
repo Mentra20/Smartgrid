@@ -24,7 +24,7 @@ export class AutarkyOversightController {
       'received this message :' + JSON.stringify(realConsumptionCommunityMSG),
     );
     this.autarkyOversightService
-      .processAutarkyCommunity(realConsumptionCommunityMSG)
+      .processAutarkyCommunity(realConsumptionCommunityMSG.value)
       .forEach((message) => {
         console.log('message : \n', JSON.stringify(message));
         this.client.emit('client.notification', message);

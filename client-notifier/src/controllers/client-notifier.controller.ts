@@ -18,17 +18,18 @@ export class ClientNotifierController {
   @MessagePattern('client.notification')
   async processAutarkyFailedMessage(
     @Payload()
-    autarkyChangeMSG: {
+    autarkyChangeMSG: any,
+  ) {
+    const message: {
       type: string;
       id: any;
-    },
-  ) {
-    this.clientNotifierService.addMessage(autarkyChangeMSG);
+    } = autarkyChangeMSG.value;
+    this.clientNotifierService.addMessage(message);
     console.log(
       'the ' +
-        autarkyChangeMSG.type +
+        message.type +
         ' of id ' +
-        autarkyChangeMSG.id +
+        message.id +
         'is not in autarky anymore',
     );
   }
