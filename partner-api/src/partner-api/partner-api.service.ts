@@ -72,6 +72,8 @@ export class PartnerApiService {
             return clientsData;
         }
 
+        this.debitDatapoint(partnerID,this.DETAILED_CONSUMPTION_COST);
+
         var allClients = await this.getAllHouseID();
 
         for(let client of allClients){
@@ -109,6 +111,8 @@ export class PartnerApiService {
             console.log("datapoint :"+partnerInfo.dataPoint+", needed :"+this.GLOBAL_CONSUMPTION_COST)
             return clientsData;//?? ou null Jsp..
         }
+
+        this.debitDatapoint(partnerID,this.GLOBAL_CONSUMPTION_COST);
 
         var allClients = await this.getAllHouseID();
 
@@ -148,6 +152,8 @@ export class PartnerApiService {
             return clientsData;//?? ou null Jsp..
         }
 
+        this.debitDatapoint(partnerID,this.PRODUCTION_COST);
+
         var allClients = await this.getAllHouseID();
 
         for(let client of allClients){
@@ -171,6 +177,13 @@ export class PartnerApiService {
         this.client.emit('sale.data.2',message);
 
         return clientsData;
+    }
+
+    private async debitDatapoint(partnerID:string, datapointToPay:number){
+        var partnerInfo = await this.getPartnerInfo(partnerID);
+        partnerInfo.dataPoint -= datapointToPay;
+        this.partnerInfoRepository.save(partnerInfo);
+        console.log("Paid "+datapointToPay+" datapoint for partnerID "+partnerID)
     }
 
     public getPartnerInfo(partnerID:string){
