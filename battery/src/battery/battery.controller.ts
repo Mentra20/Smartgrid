@@ -4,7 +4,7 @@ import { BatteryInfo } from 'src/models/battery-info';
 import { BatteryState } from 'src/models/battery-state';
 import { BatteryService } from './battery.service';
 
-@Controller('battery')
+@Controller()
 export class BatteryController {
     constructor(
         private batteryService: BatteryService,
