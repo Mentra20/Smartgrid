@@ -19,7 +19,7 @@ export class AutarkyOversightService {
       };
     }[];
   }) {
-    const messages: { type: string; id: any }[] = [];
+    const messages: { type: string; id: any; autarky: boolean }[] = [];
     let communityAutarky = 0;
     realConsumptionCommunityMSG.houses.forEach((house) => {
       if (this.housesAutarky[house.house.clientID] != undefined) {
@@ -33,7 +33,22 @@ export class AutarkyOversightService {
           !(house.house.realEnergyOutput >= 0)
         ) {
           console.log('message in queue for house :' + house.house.clientID);
-          messages.push({ type: 'House', id: house.house.clientID });
+          messages.push({
+            type: 'House',
+            id: house.house.clientID,
+            autarky: false,
+          });
+        }
+        if (
+          !this.housesAutarky[house.house.clientID] &&
+          house.house.realEnergyOutput >= 0
+        ) {
+          console.log('message in queue for house :' + house.house.clientID);
+          messages.push({
+            type: 'House',
+            id: house.house.clientID,
+            autarky: true,
+          });
         }
       }
       console.log(
@@ -48,24 +63,40 @@ export class AutarkyOversightService {
       undefined
     ) {
       console.log(
-          'precedent community autarky was ' +
+        'precedent community autarky was ' +
           this.communitiesAutarky[realConsumptionCommunityMSG.communityID],
-          'actual community autarky is ' + (communityAutarky >= 0),
+        'actual community autarky is ' + (communityAutarky >= 0),
       );
       if (
         this.communitiesAutarky[realConsumptionCommunityMSG.communityID] &&
         !(communityAutarky >= 0)
       ) {
-        console.log('message in queue for community :' + realConsumptionCommunityMSG.communityID);
+        console.log(
+          'message in queue for community :' +
+            realConsumptionCommunityMSG.communityID,
+        );
         messages.push({
           type: 'Community',
           id: realConsumptionCommunityMSG.communityID,
+          autarky: false,
+        });
+      }
+      if (
+        !this.communitiesAutarky[realConsumptionCommunityMSG.communityID] &&
+        communityAutarky >= 0
+      ) {
+        console.log(
+          'message in queue for community :' +
+            realConsumptionCommunityMSG.communityID,
+        );
+        messages.push({
+          type: 'Community',
+          id: realConsumptionCommunityMSG.communityID,
+          autarky: true,
         });
       }
     }
-    console.log(
-        'new community autarky is ' + (communityAutarky >= 0),
-    );
+    console.log('new community autarky is ' + (communityAutarky >= 0));
     this.communitiesAutarky[realConsumptionCommunityMSG.communityID] =
       communityAutarky >= 0;
     return messages;

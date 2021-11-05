@@ -5,7 +5,7 @@ export class ClientNotifierService {
   private houseMessages = [];
   private communityMessages = [];
 
-  addMessage(autarkyChangeMSG: { type: string; id: any }) {
+  addMessage(autarkyChangeMSG: { type: string; id: any; autarky: boolean }) {
     if (autarkyChangeMSG.type == 'House') {
       this.houseMessages[autarkyChangeMSG.id] = autarkyChangeMSG;
     } else {

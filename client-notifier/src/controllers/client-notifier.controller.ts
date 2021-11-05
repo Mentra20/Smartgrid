@@ -23,6 +23,7 @@ export class ClientNotifierController {
     const message: {
       type: string;
       id: any;
+      autarky: boolean;
     } = autarkyChangeMSG.value;
     this.clientNotifierService.addMessage(message);
     console.log(
