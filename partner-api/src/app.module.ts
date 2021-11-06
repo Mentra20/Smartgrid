@@ -4,6 +4,7 @@ import { ClientsModule,Transport } from '@nestjs/microservices';
 import { PartnerApiService } from './partner-api/partner-api.service';
 import { PartnerApiController } from './partner-api/partner-api.controller';
 import { PartnerInfo } from './models/partner-info';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PartnerInfo } from './models/partner-info';
       entities: [PartnerInfo],
       synchronize: true,
     }),
+    HttpModule,
   ],
   controllers: [PartnerApiController],
   providers: [PartnerApiService],

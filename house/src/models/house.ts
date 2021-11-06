@@ -8,7 +8,7 @@ export class House {
 
     private allHouseObject:Map<string,AbstractHouseObject> = new Map();
     private producerId:string;
-    private batteryList:Battery[];
+    private batteryList:Battery[] = [];
 
     constructor(private clientName:string,private houseId:string){
         this.allHouseObject = new Map();

@@ -56,7 +56,6 @@ export class HousesService {
         var message = {detailedConsumptions:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:houseConsumptionDetailled}}
         this.logger.debug(`[pushConsumption] params: ${JSON.stringify(message)}`)
         await this.http.post(this.URL_PUSH_CONSUMPTION,message).subscribe({
-            next : (response)=> this.logger.debug(response.data),
             error : (error)=> this.logger.error("error"),
         }
         );
@@ -67,7 +66,6 @@ export class HousesService {
         this.logger.debug(`[pushProduction] params: ${JSON.stringify(message)}`)
 
         await this.http.post(this.URL_PUSH_PRODUCTION,message).subscribe({
-            next : (response)=> this.logger.debug(response.data),
             error : (error)=> this.logger.error(error),
         })
     }
@@ -97,7 +95,7 @@ export class HousesService {
 
     public async registerNewBattery(battery:Battery,producerId:string){
         this.logger.debug(`register new battery for producerId ${producerId} : ${battery} `)
-        this.http.post(this.URL_BATTERY_SUBSCRIBTION, { 
+        await this.http.post(this.URL_BATTERY_SUBSCRIBTION, { 
             id_producer:producerId,
             battery: {
                 id_battery:battery.batteryID,
@@ -107,7 +105,6 @@ export class HousesService {
                 max_storage_flow:battery.maxStorageFlowW
             }
         }).subscribe({         
-            next : (response)=> this.logger.log(response),
             error : (error)=> this.logger.error(error)
         })
     }

@@ -5,7 +5,7 @@ import { AbstractHouseObject, BasicHouseObject, ScheduledHouseObject } from 'src
 export class HouseObjectPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata):AbstractHouseObject {
     if(value.type=="BASIC"){
-      return BasicHouseObject.objectFromJson(value)
+      return BasicHouseObject.objectFromJson(value.object)
     }
     else if(value.type == "SCHEDULED"){
       var scheduledHouseObject = new ScheduledHouseObject(value.object.name,+value.object.maxConsumption);

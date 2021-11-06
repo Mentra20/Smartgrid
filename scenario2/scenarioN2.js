@@ -167,7 +167,7 @@ async function main() {
     await checkCarCons(houseID3);
     await checkCarCons(houseID4);
 
-    await sleep(2000)
+    await sleep(10000)
     console.log(ANSI_GREEN + "\n\n================= STEP 7 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On remarque qu’il n’y a maintenant plus de pic"+ ANSI_RESET)
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
@@ -189,6 +189,7 @@ async function main() {
     console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit qu'il n'y a pas de notification pour la communauté : ");
     console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
+    await sleep(10000)
 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie"+ ANSI_RESET);
