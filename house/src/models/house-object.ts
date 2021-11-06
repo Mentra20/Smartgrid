@@ -74,6 +74,17 @@ export class BasicHouseObject extends AbstractHouseObject{
     public isConsumptionObject(){return this._isConsumptionObject;}
     public isProductionObject(){return this._isProductionObject;}
 
+    public static objectFromJson(json:any){
+        if(json.name==undefined||json.name==""){throw Error(`name "${json.name}" not accepted`)}
+        var maxProduction:number=json.maxProduction?+json.maxProduction:0
+        var maxConsumption:number=json.maxConsumption?+json.maxConsumption:0
+        var object = new this(json.name,maxConsumption,maxProduction)
+        object._isConsumptionObject=json.isConsumptionObject||maxConsumption>0;
+        object._isProductionObject=json.isProductionObject||maxProduction>0;
+        object.enabled=json.enabled||true
+        return object
+    }
+
 }
 
 export class ScheduledHouseObject extends AbstractHouseObject {
