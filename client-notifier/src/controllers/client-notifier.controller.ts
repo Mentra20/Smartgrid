@@ -27,11 +27,7 @@ export class ClientNotifierController {
     } = autarkyChangeMSG.value;
     this.clientNotifierService.addMessage(message);
     console.log(
-      'the ' +
-        message.type +
-        ' of id ' +
-        message.id +
-        'is not in autarky anymore',
+      `the ${message.type} of id ${message.id} is in autarky : ${message.autarky}`,
     );
   }
 

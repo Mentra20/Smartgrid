@@ -25,12 +25,7 @@ export class RealEnergyOutputController {
       consumption: number;
     } = totalClientConsumptionMSG.value;
 
-    console.log(
-      'RealEnergyOutput received this client consumption from Kafka' +
-        clientConsumption.houseID +
-        ' consumption from Kafka : ' +
-        JSON.stringify(clientConsumption),
-    );
+    console.log(`RealEnergyOutput received this client consumption from Kafka ${clientConsumption.houseID} consumption from Kafka : ${JSON.stringify(clientConsumption)}`);
 
     await this.realEnergyOutputService.addClientConsumptionToDB(
       clientConsumption,

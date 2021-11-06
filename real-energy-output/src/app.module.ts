@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HouseEnergyOutput } from './models/house-energy-output';
@@ -39,7 +37,7 @@ import { HttpModule } from '@nestjs/axios';
     ]),
     HttpModule,
   ],
-  controllers: [AppController, RealEnergyOutputController],
-  providers: [AppService, RealEnergyOutputService],
+  controllers: [RealEnergyOutputController],
+  providers: [RealEnergyOutputService],
 })
 export class AppModule {}

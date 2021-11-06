@@ -16,15 +16,17 @@ export class RealEnergyOutputService {
     @InjectRepository(HouseEnergyOutput)
     private houseRealEnergyOutputRepository: Repository<HouseEnergyOutput>,
     private http: HttpService,
-  ) {}
+  ) { }
 
-  public async addClientConsumptionToDB(clientConsumption: {
-    houseID: string;
-    consumptionDate: string;
-    consumption: number;
-  }) {
-    const houseRealEnergyOutput =
-      await this.findHouseRealEnergyOutputByClientID(clientConsumption.houseID);
+  public async addClientConsumptionToDB(clientConsumption: 
+    {
+      houseID: string;
+      consumptionDate: string;
+      consumption: number;
+    }) 
+    {
+    const houseRealEnergyOutput = await this.findHouseRealEnergyOutputByClientID(clientConsumption.houseID);
+
     if (houseRealEnergyOutput) {
       console.log('found a line with the same client ID');
       const updateHouseRealEnergyOutput =
@@ -232,7 +234,10 @@ export class RealEnergyOutputService {
   }
 
   async getRealConsumptionByCommunity(date: Date) {
+    console.log(date)
     date.setMinutes(date.getMinutes() - 5);
+    console.log(date)
+
     const housesRealEnergyOutput: HouseEnergyOutput[] =
       await this.houseRealEnergyOutputRepository.find({
         where: {

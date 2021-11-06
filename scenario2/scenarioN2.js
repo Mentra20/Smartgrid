@@ -122,7 +122,7 @@ async function main() {
     await askSchedule(houseID3, "Car");
     await askSchedule(houseID4, "Car");
 
-    await waitTick(5);
+    await waitTick(1);
 
     await sleep(2000)
 
@@ -167,7 +167,7 @@ async function main() {
     await checkCarCons(houseID3);
     await checkCarCons(houseID4);
 
-    await sleep(10000)
+    await sleep(2000)
     console.log(ANSI_GREEN + "\n\n================= STEP 7 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On remarque qu’il n’y a maintenant plus de pic"+ ANSI_RESET)
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
@@ -179,7 +179,7 @@ async function main() {
     console.log(ANSI_GREEN + "On regarde si la communauté est en autarcie et ce n'est pas le cas"+ ANSI_RESET)
 
     var autarkyQs = { date: globalDate, communityID:communityHouse2}
-    response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
     var exceedConsumption = response.body;
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est négative : " + ANSI_YELLOW +exceedConsumption + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET+" n'est pas en autarcie");
@@ -188,14 +188,13 @@ async function main() {
     response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-community-message", qs: reqCommuNotif, method: "GET" });
     console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit qu'il n'y a pas de notification pour la communauté : ");
-    console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
-    await sleep(10000)
+    console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + communityHouse2+" : "+ response.body+ ANSI_RESET);
 
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie"+ ANSI_RESET);
 
-    var neededProd = +exceedConsumption - 200;//Marge
-    var velo = { object: { name: "Vélo d'appartement", maxConsumption: neededProd, enabled: true }, type: "BASIC" }
+    var neededProd = -(+exceedConsumption - 200);//Marge
+    var velo = { object: { name: "Vélo d'appartement", maxProduction: neededProd, enabled: true }, type: "BASIC" }
     //la maison devien producteur
     response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID2 + "/become-producer", method: "POST" });
 
@@ -204,13 +203,13 @@ async function main() {
     await addObject(houseID2, velo);
     await checkObject(houseID2);
 
-    await waitTick(1);
-    await sleep(1500)
+    await waitTick(10);
+    await sleep(1000)
 
     console.log("On vérifie que la communauté est bien passée en autarcie")
 
     autarkyQs = { date: globalDate, communityID:communityHouse2}
-    response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW +response.body + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET +" est maintenant en autarcie");
 
@@ -218,7 +217,7 @@ async function main() {
     response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-community-message", qs: reqCommuNotif, method: "GET" });
     console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit qu'il a une notification pour la communauté : ");
-    console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
+    console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + communityHouse2+" : "+ response.body+ ANSI_RESET);
 
 
     console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET);
@@ -328,6 +327,8 @@ async function doTick() {
     await sleep(500);
 
     response = await doRequest({ url: "http://electricity-frame:3015/clock/tick", form: { date: globalDate }, method: "POST" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/tick", form: { date: globalDate }, method: "POST" });
+
 
     //Wait que tout s'envoie bien
     await sleep(200);

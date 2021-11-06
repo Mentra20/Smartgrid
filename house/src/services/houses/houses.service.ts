@@ -47,7 +47,9 @@ export class HousesService {
 
         this.pushBatteryStateOfHouse(house)
         this.pushConsumption(house,houseConsumptionDetailled)
-        this.pushProduction(house,houseTotalProduction)
+        if(house.getProducerId()!=undefined){
+            this.pushProduction(house,houseTotalProduction)
+        }
 
     }
 

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ClientNotifierService {
-  private houseMessages = [];
-  private communityMessages = [];
+  private houseMessages = {};
+  private communityMessages = {};
 
   addMessage(autarkyChangeMSG: { type: string; id: any; autarky: boolean }) {
     if (autarkyChangeMSG.type == 'House') {

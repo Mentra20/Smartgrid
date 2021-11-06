@@ -117,19 +117,21 @@ export class House {
     }
 
     getTotalProduction(currentDate:Date){
-    var production = 0;
-    for(let object of this.getAllObject()){
-        if(!object.isProductionObject()){continue}
-        var consumption = object.getCurrentConsumption(currentDate)
-        if(consumption>=0){
-            production+= -consumption;
+        var totalProduction = 0;
+        for(let object of this.getAllObject()){
+            if(!object.isProductionObject()){continue}
+
+            var production = object.getCurrentProduction(currentDate)
+            if(production>=0){
+                totalProduction+= production;
+            }
+            else{
+                this.logger.error("Consumption negative not allowned")
+            }
+            
         }
-        else{
-            this.logger.error("Consumption negative not allowned")
-        }
+        return totalProduction
     }
-    return production
-}
 
 
 }
