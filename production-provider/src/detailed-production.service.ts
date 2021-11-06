@@ -25,7 +25,8 @@ export class DetailedProductionService {
     public pushProductionLimit(objectProductionLimit:{
         id_producer:string, 
         productionDate:string, 
-        productionLimit:number})
+        productionLimit:number
+        production:number})
     {
         console.log("I emit production limit : "+objectProductionLimit);
         this.client.emit('production.limit',objectProductionLimit);

@@ -14,7 +14,9 @@ export class ProductionAdaptService {
     findAll(): Promise<ProductionAdapter[]> {
         return this.ProductionAdapterRepository.find();
         }
-
+    findByUsername(id_producer: string): Promise<ProductionAdapter | undefined> {
+        return this.ProductionAdapterRepository.findOne({ id_producer }); 
+        }
     async sumDiffLimitProd(){
         let listLocalDiff = await this.findAll()
         let sumLimit=0
@@ -47,6 +49,15 @@ export class ProductionAdaptService {
         productionAdapter.productionDate=productionProducer.productionDate;
         productionAdapter.production=productionProducer.production;
         productionAdapter.productionLimit=productionProducer.productionLimit;
+        this.ProductionAdapterRepository.save(productionAdapter);
+    }
+    async updateProductionLimit(productionProducer:{id_producer:string,productionDate:Date,production:number}){
+        let productionAdapter = new ProductionAdapter()
+        let currentProductionAdapter = await this.findByUsername(productionProducer.id_producer)
+        productionAdapter.id_producer=productionProducer.id_producer;
+        productionAdapter.productionDate=productionProducer.productionDate;
+        productionAdapter.production=productionProducer.production;
+        productionAdapter.productionLimit=currentProductionAdapter.productionLimit;
         this.ProductionAdapterRepository.save(productionAdapter);
     }
 
