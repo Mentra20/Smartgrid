@@ -207,13 +207,15 @@ async function main() {
 
     //STEP 11 
     console.log(ANSI_GREEN + "\n\n================= STEP 12 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "Trois mois s'écoulent, le client veut voir sa consommation du premier mois et du mois courant " + ANSI_RESET);
+    console.log(ANSI_GREEN + "Trois mois s'écoulent, le client veut voir sa facture du premier mois et du mois courant " + ANSI_RESET);
 
     var firstYear = globalDate.getFullYear();
     var firstMonth = globalDate.getMonth();
     //TODO : s'écouler 3 mois
     generateBill2LastYear(houseID);
     await sleep(2000)
+    await waitTick(20);
+
 
     var firstMonthBillReq = {houseID:houseID, year:firstYear, month:firstMonth};   
     var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear(), month:globalDate.getMonth()+1};    
@@ -233,7 +235,7 @@ async function beforeStep() {
     //------ BEFORE STEPS ------
 
     var response;
-    var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
+    var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true}, type: "BASIC" }
         //On inscrit des maisons et ajout des objets
     response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: { client_name: "Jean" }, method: "POST" });
     var houseID1 = response.body;
@@ -262,6 +264,8 @@ async function doTick() {
     await sleep(600);
 
     response = await doRequest({ url: "http://electricity-frame:3015/clock/tick", form: { date: globalDate }, method: "POST" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/tick", form: { date: globalDate }, method: "POST" });
+
 
     //Wait que tout s'envoie bien
     await sleep(300);

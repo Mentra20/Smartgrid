@@ -65,16 +65,28 @@ async function main(){
 
     // STEP 2
     console.log(ANSI_GREEN + "\n\n================= STEP 2 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On ajoute à la maison un objet produisant de l'électricité " + ANSI_RESET)
+    console.log(ANSI_GREEN + "On ajoute à la maison un objet produisant de l'électricité et une batterie " + ANSI_RESET)
 
-    var objProd = { object: { name: "Roue du hamster", maxConsumption: -300, enabled: true }, type: "BASIC" }
+    var objProd = { object: { name: "Roue du hamster", maxProduction: 300, enabled: true }, type: "BASIC" }
 
     console.log("\nOn ajoute à la maison " + ANSI_YELLOW +  houseID + ANSI_RESET + " l'objet de production : ");
     console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET);
     await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: objProd, method: "POST" });
 
+    //TODO AJOUTER UNE BATTERIE DANS LA MAISON
+    var batteryID;//= TODO
+
     console.log("\nOn regarde les objets de la maison :");
     await checkObject(houseID);
+
+    await doTick(1);
+    console.log("\nOn regarde depuis smartGrid si la batterie a bien été ajoutée");
+    var batteryReq = {producerID:houseProdID,batteryID:batteryID}
+
+    response = await doRequest({ url: "http://battery:3018/get-battery-info", qs: batteryReq, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:battery; [route]:get-battery-info; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit qu'on a bien des informations sur la batterie : " + ANSI_YELLOW + response.body + ANSI_RESET);
+    //SUR DEUX LIGNES ??????
 
     // STEP 3
     console.log(ANSI_GREEN + "\n\n================= STEP 3 =================" + ANSI_RESET)
@@ -89,30 +101,43 @@ async function main(){
 
     // STEP 4
     console.log(ANSI_GREEN + "\n\n================= STEP 4 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On regarde la production de la maison, celle-ci est accessible mais pas suffisante" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On regarde la production de la maison depuis SmartGrid, celle-ci est accessible mais pas suffisante" + ANSI_RESET)
 
-    console.log("\nOn accède à la production de la maison avec l'id de producteur et on vérifie qu'elle est accessible");
-    await waitTick(5);
+    console.log("\nOn accède à la production de la maison depuis SmartGrid avec l'id de producteur et on vérifie qu'elle est accessible");
+    await waitTick(4);
     await sleep(2000);
     reqQs = { date: globalDate, producerID: houseProdID };
     response = await doRequest({ url: "http://production-api:2999/detailed-production", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:request-manager; [route]:detailed-production; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit bien qu'il y a une production pour cette maison (mais pas suffisante pour la consommation) :" + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
+    console.log("On voit qu'il y a une production pour cette maison (mais pas suffisante pour la consommation) :" + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 5
     console.log(ANSI_GREEN + "\n\n================= STEP 5 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On voit que la maison n'est pas en autarcie " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
-    response = await doRequest({ url: "http://autarky:3030/autarky/get-house-autarky", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:autarky; [route]:get-house-autarky; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est negative : " + ANSI_YELLOW + response.body+ ANSI_RESET  + " W donc on est pas en autarcie");
+
+    var reqClientNotif = {clientID: houseID }
+    response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-house-message", qs: reqClientNotif, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que le client n'a pas recu de notification : ");
+    console.log("Messages reçus pour le client d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
+
+    var batteryReqWithDate = {date:globalDate,producerID:houseProdID,batteryID:batteryID}
+
+    response = await doRequest({ url: "http://battery:3018/get-battery-state", qs: batteryReqWithDate, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que la batterie n'a rien stocké : " + ANSI_YELLOW + response.body + ANSI_RESET);
+    //SUR DEUX LIGNES ??????
 
     // STEP 6
     console.log(ANSI_GREEN + "\n\n================= STEP 6 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On ajoute un deuxième objet producteur dans la maison" + ANSI_RESET)
 
-    var objProd = { object: { name: "Générateur nucléaire DIY", maxConsumption: -600, enabled: true }, type: "BASIC" }
+    var objProd = { object: { name: "Générateur nucléaire DIY", maxProduction: 600, enabled: true }, type: "BASIC" }
 
     console.log("\nOn ajoute à la maison " + ANSI_YELLOW + houseID + ANSI_RESET + " l'objet de production : ");
     console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET );
@@ -123,12 +148,12 @@ async function main(){
 
     // STEP 7
     console.log(ANSI_GREEN + "\n\n================= STEP 7 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On remarque que la consommation est maintenant négative" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On remarque que la consommation est maintenant nulle" + ANSI_RESET)
 
     reqQs = { houseID: houseID };
     response = await doRequest({ url: "http://house:3000/consumption/global", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:consumption/global; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
-    console.log("\nLa consommation de la maison n'est plus positive : " + ANSI_YELLOW + response.body + " W.");
+    console.log("\nLa consommation de la maison est nulle : " + ANSI_YELLOW + response.body + " W.");
 
     // STEP 8
     console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET)
@@ -142,13 +167,33 @@ async function main(){
     console.log("On voit bien qu'il a une production pour cette maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 9
+    await waitTick(10);
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On voit maintenant que la maison est en autarcie " + ANSI_RESET)
+    console.log(ANSI_GREEN + "On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
-    response = await doRequest({ url: "http://autarky:3030/autarky/get-house-autarky", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:autarky; [route]:get-house-autarky; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie");
+
+    reqClientNotif = {clientID: houseID }
+    response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-house-message", qs: reqClientNotif, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que le client a recu une notification : ");
+    console.log("Messages reçus pour le client d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
+
+    //STEP 10 
+    console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On constate que la batterie a stockée le surplus d'énergie  " + ANSI_RESET)
+
+    batteryReqWithDate = {date:globalDate,producerID:houseProdID,batteryID:batteryID}
+
+    response = await doRequest({ url: "http://battery:3018/get-battery-state", qs: batteryReqWithDate, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que la batterie a stocké le surplus d'énergie : " + ANSI_YELLOW + response.body + ANSI_RESET);
+    //SUR DEUX LIGNES ??????
+
+    //TODO AJOUTE STEP 11 ON ENLEVE DE LA PROD ET ON VOIT SI CA PREND DANS CE QU'IL Y A DANS LA BATTERIE ET CA LA VIDE
 }
 
 async function doTick() {

@@ -8,6 +8,4 @@ export class Client {
     clientName: string;
 
     id_producer: string | null;
-
-
 }

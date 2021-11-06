@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { Client } from 'src/models/Client';
+import { ClientData } from 'src/models/ClientData';
 import { ClientRegistryService } from '../../services/client-registry/client-registry.service';
 
 @Controller('client-registry')
@@ -24,22 +25,26 @@ export class ClientRegistryController {
     return this.clientRegistryService.getClientWithProducerID(producerID);
   }
 
+  @Get('client-privacy-settings')
+  getClientPrivacySettings(@Query('clientID') clientID: string): Promise<ClientData> {
+    return this.clientRegistryService.getClientPrivacySettings(clientID);
+  }
+
   @Get('allHouses')
   getAllHouses(): Promise<Client[]> {
     return this.clientRegistryService.getAllClients();
   }
 
   @Post('subscribe')
-  clientSubscribe(
-    @Body('clientName') clientName: string,
-    @Body('communityID') communityID: number,
-  ): Promise<string> {
+  clientSubscribe(@Body('clientName') clientName: string, @Body('communityID') communityID: number, @Body("privacyDetailedData") privacyDetailedData:boolean, 
+  @Body("privacyConsumptionData") privacyConsumptionData:boolean, @Body("privacyProductionData") privacyProductionData:boolean): Promise<string> {
     console.log(
       '[client-registry][clientSubscribe] clientName:string ' +
-        clientName +
-        '=> void',
+        clientName + ' communityID:string ' + communityID + ' privacyDetailedData:boolean ' + privacyDetailedData +
+        ' privacyConsumptionData:boolean ' + privacyConsumptionData + ' privacyProductionData:boolean ' + privacyProductionData +
+        ' => Promise<String>',
     );
-    return this.clientRegistryService.subscribeClient(clientName, communityID);
+    return this.clientRegistryService.subscribeClient(clientName, communityID, privacyDetailedData, privacyConsumptionData, privacyProductionData);
   }
 
   @Post('updateClientName')

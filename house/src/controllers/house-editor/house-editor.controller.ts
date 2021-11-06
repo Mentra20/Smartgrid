@@ -1,11 +1,14 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Post, Res } from '@nestjs/common';
 import { AbstractHouseObject, BasicHouseObject, ScheduledHouseObject } from 'src/models/house-object';
 import { HousesService } from 'src/services/houses/houses.service';
 import { Response } from 'express'
 import { HouseObjectPipe } from 'src/pipes/house-object.pipe';
 import { House } from 'src/models/house';
+import { Battery } from 'src/models/battery';
+import { randomUUID } from 'crypto';
 @Controller('house-editor')
 export class HouseEditorController {
+    logger = new Logger(HouseEditorController.name)
 
     constructor(private housesService:HousesService){
 
@@ -14,7 +17,7 @@ export class HouseEditorController {
     @Post("add-house")
     public async addHouse(@Body('client_name') clientName:string){
         console.log("[HouseEditorController][addHouse] Param : clientname="+clientName)
-        var clientId= await this.housesService.registryNewClient(clientName);
+        var clientId= await this.housesService.registryNewClient(clientName,true,true,true);//TODO récupérer les privacys
         var newHouse = new House(clientName,clientId);
         this.housesService.addHouse(newHouse)
         console.log("[HouseEditorController][addHouse] return : clientid="+clientId)
@@ -74,6 +77,31 @@ export class HouseEditorController {
         currentObject.changeMaxConsumption(consumption);
     }
 
+    @Post("house/:id_house/add-battery")
+    public addBatteryForHouse(@Param("id_house") houseId:string,@Body("battery") battery:any){
+        var newBattery = new Battery();
+        newBattery.batteryID = battery.batteryID||randomUUID()
+        newBattery.maxProductionFlowW = battery.maxProductionFlowW?+battery.maxProductionFlowW:50
+        newBattery.maxStorageFlowW = battery.maxStorageFlowW?+battery.maxStorageFlowW:50
+        newBattery.capacityWH = battery.capacityWH?+battery.capacityWH:1000
+        newBattery.currentStorageWH = battery.currentStorageWH?+battery.capacityWH:0
+
+        var currentHouse = this.housesService.getHouse(houseId);
+        if(!currentHouse){
+            this.logger.error(`cannot found house: ${houseId}`)
+            return
+        }
+
+        while(!currentHouse.getBattery(newBattery.batteryID)){
+            this.logger.error("battery id already use for this house, new id generate")
+            newBattery.batteryID = randomUUID()
+        }
+        currentHouse.addBattery(newBattery);
+
+        this.logger.debug(`New battery add for house ${houseId} : ${JSON.stringify(newBattery)}`)
+        return newBattery.batteryID;
+    }
+
     @Get("house/:id_house/get_all_object")
     public getAllObject(@Param("id_house") houseId:string){
         return this.housesService.getHouse(houseId)?.getAllObject();
@@ -93,4 +121,19 @@ export class HouseEditorController {
     public getSpecificObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string){
         return this.housesService.getHouse(houseId)?.getAllObject().find((object)=>object.getName()===objectName);
     }
+
+    @Post("house/:id_house/all-battery")
+    public getAllBattery(@Body("id_house") houseId:string){
+        var currentHouse = this.housesService.getHouse(houseId);
+        if(!currentHouse){
+            this.logger.error(`cannot found house: ${houseId}`)
+            return
+        }
+
+        var result = currentHouse.getAllBattery();
+        this.logger.debug(`all battery for house ${houseId} : ${JSON.stringify(result)}`)
+        return result;
+    }
+
+
 }

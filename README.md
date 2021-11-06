@@ -29,9 +29,9 @@ Les containers de nos services sont re-créés entre chaque scénario.
 9 - On voit que l’objet consomme à son heure d'activité  
 10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
-12 - Trois mois s'écoulent, le client veut voir sa consommation du premier mois et du mois courant  
+12 - Trois mois s'écoulent, le client veut voir sa facture du premier mois et du mois courant  
 
-**Scénario 2 : Gestion de la consommation, pic et autarky dans une communauté**  
+**Scénario 2 : Gestion de la consommation, achat des données, pic et autarky dans une communauté**  
 
 1 - On a des maisons dans une communauté et une autre dans une autre communauté    
 2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons   
@@ -40,18 +40,23 @@ Les containers de nos services sont re-créés entre chaque scénario.
 5 - On détecte un pic de consommation dans cette communauté  
 6 - On demande aux objets planifiables d'arrêter de charger dans cette communauté   
 7 - On remarque qu’il n’y a maintenant plus de pic  
+8 - On regarde si la communauté est en autarcie et ce n'est pas le cas
+9 - On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie
+10 - On ajoute un nouveau partenaire avec des datapoints, il récupère les données de production des clients  
+11 - Le partenaire récupère les données de consommation détaillée des clients mais n'a plus de datapoints, il en reprend et retente mais il n'a pas le niveau de confiance requis  
 
-**Scénario 3 : Production d'une maison et autarcie**
+**Scénario 3 : Production d'une maison, autarcie et notification**
 
 1 - On inscrit une maison avec des objets consommant de l'éléctricité et on l'inscrit en tant que producteur  
-2 - On ajoute à la maison un objet produisant de l'électricité  
+2 - On ajoute à la maison un objet produisant de l'électricité et une batterie  
 3 - On remarque que la consommation est réduite mais toujours positive  
-4 - On regarde la production de la maison, celle-ci est accessible mais pas suffisante  
-5 - On voit que la maison n'est pas en autarcie  
+4 - On regarde la production de la maison depuis SmartGrid, celle-ci est accessible mais pas suffisante  
+5 - On voit que la maison n'est pas en autarcie et que la batterie n'a rien stocké  
 6 - On ajoute un deuxième objet producteur dans la maison  
-7 - On remarque que la consommation est maintenant négative  
+7 - On remarque que la consommation est maintenant nulle  
 8 - On voit que la production est maintenant plus grande que la consommation  
-9 - On voit maintenant que la maison est en autarcie  
+9 - On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification
+10 - On constate que la batterie a stocké le surplus d'énergie  
 
 *PS: Plusieurs sleep sont effectués dans les scénarios pour attendre que le traitement des événements s'effectues.*
 
@@ -76,10 +81,13 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Port
 
-- 127.0.0.1 autarky=_
+- 127.0.0.1 autarky-oversight=3032
+- 127.0.0.1 battery=3018
+- 127.0.0.1 battery-provider=3017
 - 127.0.0.1 bill-api=3016
 - 127.0.0.1 client-consumption-api=2997
 - 127.0.0.1 client-database=3004
+- 127.0.0.1 client-notifier=3031
 - 127.0.0.1 consumption-adder=_  
 - 127.0.0.1 consumption-api:2998
 - 127.0.0.1 consumption-detailed=3008  
@@ -89,23 +97,29 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - 127.0.0.1 consumption-verifier=_  
 - 127.0.0.1 daily-consumption-db=3013
 - 127.0.0.1 daily-production-db=3014
+- 127.0.0.1 daily-real-energy-output=3020
 - 127.0.0.1 electricity-frame=3015  
 - 127.0.0.1 global-consumption-database=3009
 - 127.0.0.1 global-production-database=3001
 - 127.0.0.1 house=3000  
+- 127.0.0.1 partner-api=3019 
 - 127.0.0.1 producer-database=3010
 - 127.0.0.1 producers=3005  
 - 127.0.0.1 production-adapter=_
 - 127.0.0.1 production-api=2999
 - 127.0.0.1 production-provider=3006
 - 127.0.0.1 registry-manager=3003  
+- 127.0.0.1 real-energy-output=3030
 
 ## Host
 
 127.0.0.1 autarky
+127.0.0.1 battery
+127.0.0.1 battery-provider
 127.0.0.1 bill-api
 127.0.0.1 client-consumption-api
 127.0.0.1 client-database
+127.0.0.1 client-notifier
 127.0.0.1 consumption-adder
 127.0.0.1 consumption-api
 127.0.0.1 consumption-db
@@ -116,16 +130,19 @@ Les containers de nos services sont re-créés entre chaque scénario.
 127.0.0.1 consumption-verifier
 127.0.0.1 daily-consumption-db
 127.0.0.1 daily-production-db
+127.0.0.1 daily-real-energy-output
 127.0.0.1 electricity-frame
 127.0.0.1 global-consumption-database
 127.0.0.1 global-production-database
 127.0.0.1 house
+127.0.0.1 partner-api
 127.0.0.1 producer-database
 127.0.0.1 producers
 127.0.0.1 production-adapter
 127.0.0.1 production-api
 127.0.0.1 production-provider
 127.0.0.1 registry-manager
+127.0.0.1 real-energy-output
 
 127.0.0.1 kafka
 127.0.0.1 mock

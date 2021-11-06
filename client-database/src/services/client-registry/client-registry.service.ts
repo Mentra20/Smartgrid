@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Client } from 'src/models/Client';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ClientData } from 'src/models/ClientData';
 
 @Injectable()
 export class ClientRegistryService {
   constructor(
     @InjectRepository(Client)
     private clientRepository: Repository<Client>,
+    @InjectRepository(ClientData)
+    private clientDataRepository: Repository<ClientData>,
   ) {}
 
   async getClientWithClientID(houseID: string): Promise<Client> {
@@ -15,21 +18,13 @@ export class ClientRegistryService {
   }
 
   async getClientWithProducerID(producerID: string): Promise<Client> {
-    console.log('searching for client with producer id ' + producerID);
-    const c: Client = await this.clientRepository.findOne({
+    return await this.clientRepository.findOne({
       where: { id_producer: producerID },
     });
-    console.log(
-      'line found' +
-        c?.id +
-        ' ' +
-        c?.id_producer +
-        ' ' +
-        c?.clientName +
-        ' ' +
-        c?.id_community,
-    );
-    return c;
+  }
+
+  async getClientPrivacySettings(clientID: string): Promise<ClientData> {
+    return await this.clientDataRepository.findOne(clientID);
   }
 
   async getAllClients(): Promise<Client[]> {
@@ -45,8 +40,11 @@ export class ClientRegistryService {
   async subscribeClient(
     clientName: string,
     communityID: number,
+    privacyDetailedData:boolean, 
+    privacyConsumptionData:boolean, 
+    privacyProductionData:boolean
   ): Promise<string> {
-    return await this.generateClientSubscription(clientName, communityID);
+    return await this.generateClientSubscription(clientName, communityID, privacyDetailedData, privacyConsumptionData, privacyProductionData);
   }
 
   async updateClientNameinDB(idClient: string, newClientName: string) {
@@ -71,6 +69,9 @@ export class ClientRegistryService {
   private async generateClientSubscription(
     clientName: string,
     communityID: number,
+    privacyDetailedData:boolean, 
+    privacyConsumptionData:boolean, 
+    privacyProductionData:boolean
   ): Promise<string> {
     const client = new Client();
     client.clientName = clientName;
@@ -79,6 +80,13 @@ export class ClientRegistryService {
     await this.clientRepository.save(client);
 
     const ID_House = client.id;
+    const clientData = new ClientData();
+    clientData.id = ID_House;
+    clientData.privacyDetailedData = privacyDetailedData;
+    clientData.privacyConsumptionData = privacyConsumptionData;
+    clientData.privacyProductionData = privacyProductionData;
+
+    await this.clientDataRepository.save(clientData);
 
     console.log(
       'Saved ' +
@@ -87,7 +95,12 @@ export class ClientRegistryService {
         client.id +
         '.\nCommunity ID is ' +
         client.id_community +
-        '.',
+        '. Client privacy choice are : privacy detailed data = ' + 
+        clientData.privacyDetailedData +
+        ', privacy consumption data = ' +
+        clientData.privacyConsumptionData +
+        ', privacy production data = ' +
+        clientData.privacyProductionData,
     );
     return ID_House;
   }

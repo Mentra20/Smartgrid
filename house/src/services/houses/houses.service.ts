@@ -1,13 +1,20 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
+import { Battery } from 'src/models/battery';
 import { House } from 'src/models/house';
 import { ScheduledHouseObject } from 'src/models/house-object';
 
 @Injectable()
 export class HousesService {
+    private logger = new Logger(HousesService.name)
+
     private URL_PUSH_CONSUMPTION = "http://consumption-provider:3012/add-detailed-consumption"
     private URL_PUSH_PRODUCTION = "http://production-provider:3006/add-production"
+    private URL_BATTERY_STATE = "http://battery-provider:3017/battery-state"
+    private URL_BATTERY_SUBSCRIBTION = "http://battery-provider:3017/battery-subscription"
+
+
 
     private URL_TIME_SLOT = "http://consumption-scheduler:3002/schedule"
     private URL_REGISTER_NEW_HOUSE = "http://registry-manager:3003/subscription/clientSubscribe"
@@ -21,74 +28,98 @@ export class HousesService {
 
     doTick(date:Date){
         this.currentDate = date;
-        this.pushAllHouseConsumption();
-        this.pushAllHouseProduction();
+        this.doTickForAllHouse()
     }
-
-    getTotalConsumption(houseID:string){
-        return this.allHouse.get(houseID)?.getTotalConsumption(this.currentDate);
-    }
-
-    getAllConsumption(houseID:string){
-        var currentHouse = this.allHouse.get(houseID);
-        currentHouse.getAllObject();
-
-    }
-
-    async pushConsumption(house:House){
-        var jsonHouseDetailed = [];
-        for(let object of house.getAllObject()){
-            var consumption = object.getCurrentConsumption(this.currentDate)
-            if(consumption>0){
-                jsonHouseDetailed.push({objectName:object.getName(),consumption:consumption})
-            }
+    doTickForAllHouse(){
+        for(let houseEntry of this.allHouse){
+            this.doTickForHouse(houseEntry[1])
         }
-        console.log(`PUSH to ${this.URL_PUSH_CONSUMPTION}: ${JSON.stringify({param:jsonHouseDetailed})}`)
-        this.http.post(this.URL_PUSH_CONSUMPTION,{detailedConsumptions:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:jsonHouseDetailed}}).subscribe({
-            next : (response)=> console.log(response.data),
-            error : (error)=> console.error("error"),
+    }
+
+    doTickForHouse(house:House){
+        var houseTotalConsumption = house.getTotalConsumption(this.currentDate);
+        var houseTotalProduction = house.getTotalProduction(this.currentDate);
+        var houseConsumptionDetailled = house.generateConsumptionArray(this.currentDate)
+        var batteryUsage = house.useBattery(houseTotalProduction,houseTotalConsumption)
+
+        houseConsumptionDetailled.push(...batteryUsage) //WARN: verifier le fonctionnement dans ce cas
+        houseTotalProduction+=batteryUsage.reduce((elt:{production:number},somme:number)=>somme+=elt.production,0)
+
+        this.pushBatteryStateOfHouse(house)
+        this.pushConsumption(house,houseConsumptionDetailled)
+        if(house.getProducerId()!=undefined){
+            this.pushProduction(house,houseTotalProduction)
+        }
+
+    }
+
+
+    async pushConsumption(house:House,houseConsumptionDetailled:any){
+        var message = {detailedConsumptions:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:houseConsumptionDetailled}}
+        this.logger.debug(`[pushConsumption] params: ${JSON.stringify(message)}`)
+        await this.http.post(this.URL_PUSH_CONSUMPTION,message).subscribe({
+            error : (error)=> this.logger.error("error"),
         }
         );
     }
 
-    public pushAllHouseConsumption(){
-        for(let houseEntry of this.allHouse){
-            this.pushConsumption(houseEntry[1])
+    async pushProduction(house:House,totalProduction:number){
+        var message = {production:{id_producer:house.getProducerId(),productionDate:this.currentDate,production:totalProduction}}
+        this.logger.debug(`[pushProduction] params: ${JSON.stringify(message)}`)
+
+        await this.http.post(this.URL_PUSH_PRODUCTION,message).subscribe({
+            error : (error)=> this.logger.error(error),
+        })
+    }
+
+    
+    private pushBatteryStateOfHouse(house:House){
+        for(var battery of house.getAllBattery()||[]){
+            this.pushBatteryState(battery,house.getProducerId())
         }
     }
 
-    async pushProduction(house:House){
-        var production = 0;
-        for(let object of house.getAllObject()){
-            var consumption = object.getCurrentConsumption(this.currentDate)
-            if(consumption<0){
-                production+= -consumption;
+    private pushBatteryState(battery:Battery,producerId:string){
+        this.http.post(this.URL_BATTERY_STATE,
+            {
+                id_battery:battery.batteryID,
+                id_producer:producerId,
+                current_storage:battery.currentStorageWH,
+                date:this.currentDate
             }
+        ).subscribe({
+            next : (response)=> this.logger.log(response),
+            error : (error)=> this.logger.error(error),
         }
-        if(production>0){
-            this.http.post(this.URL_PUSH_PRODUCTION,{production:{id_producer:house.getProducerId(),productionDate:this.currentDate,production}}).subscribe({
-                next : (response)=> console.log(response),
-                error : (error)=> console.error(error),
-            }
-            );
-        }
+        );
     }
 
-    public pushAllHouseProduction(){
-        for(let houseEntry of this.allHouse){
-            if(houseEntry[1].getProducerId()){
-                this.pushProduction(houseEntry[1])
+
+    public async registerNewBattery(battery:Battery,producerId:string){
+        this.logger.debug(`register new battery for producerId ${producerId} : ${battery} `)
+        await this.http.post(this.URL_BATTERY_SUBSCRIBTION, { 
+            id_producer:producerId,
+            battery: {
+                id_battery:battery.batteryID,
+                id_producer:producerId, 
+                capacity:battery.capacityWH,
+                max_production_flow:battery.maxProductionFlowW,
+                max_storage_flow:battery.maxStorageFlowW
             }
-        }
+        }).subscribe({         
+            error : (error)=> this.logger.error(error)
+        })
     }
+
 
     public async registryNewProducter(houseID:string):Promise<string>{
         console.log('client tring to become producer' + houseID);
         return (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_PRODUCER, { clientID: houseID }))).data
     }
 
-    public async registryNewClient(clientName:string):Promise<string>{
-        var response = (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, { clientName: clientName })));
+    public async registryNewClient(clientName:string, privacyDetailedData:boolean, privacyConsumptionData:boolean, privacyProductionData:boolean):Promise<string>{
+        var message = {clientName: clientName, privacyDetailedData: privacyDetailedData, privacyConsumptionData: privacyConsumptionData, privacyProductionData: privacyProductionData};
+        var response = (await firstValueFrom(this.http.post(this.URL_REGISTER_NEW_HOUSE, message)));
         console.log(response.data);
         return response.data
     }
