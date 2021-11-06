@@ -35,7 +35,7 @@ export class ProductionAdaptController {
     @MessagePattern("production.raw.global")
     async updateProduction(@Payload() productionAdaptMSG:any) {
         var msg = productionAdaptMSG.value
-        console.log("productionRawGlobal receive :"+JSON.stringify(msg.value))
+        console.log("productionRawGlobal receive :"+JSON.stringify(msg))
         var messageJson={id_producer:msg.id_producer,productionDate:new Date(msg.productionDate),production:+msg.production}
         await this.productionAdaptService.updateProductionLimit(messageJson)
         }

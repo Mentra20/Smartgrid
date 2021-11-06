@@ -62,7 +62,7 @@ export class ProductionServiceStorage {
         var message = {producerName:producerName};
         var reponse;
         reponse = (await firstValueFrom(this.http.post(this.URL_RegisteryManager,message))).data;
-        let productionLimit=500; //par defaut la limite est à 500
+        let productionLimit=3000; //par defaut la limite est à 500
         this.dictProducerLimit[producerName]={id_producer:reponse,productionLimit:productionLimit};
         this.dictProducer[producerName]={id_producer:reponse,production:production};
         return reponse;
