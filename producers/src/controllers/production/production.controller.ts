@@ -19,7 +19,7 @@ export class ProductionController {
     @Get('change-production-negative')
     changeProductionNegativeAndReturnIt(@Query('newProduction') newProduction:number) {
         console.log("[change-production][changeProductionNegativeAndReturnIt] consumption:number "+newProduction+" => number")
-        this.productionServiceStorage.setProduction(+newProduction);
+        this.productionServiceStorage.setProductionNegative(+newProduction);
     } 
 
     @Get('get-production-limit')
