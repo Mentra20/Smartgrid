@@ -16,6 +16,11 @@ export class ProductionController {
         console.log("[change-production][changeProductionAndReturnIt] consumption:number "+newProduction+" => number")
         this.productionServiceStorage.setProduction(+newProduction);
     }
+    @Get('change-production-negative')
+    changeProductionNegativeAndReturnIt(@Query('newProduction') newProduction:number) {
+        console.log("[change-production][changeProductionNegativeAndReturnIt] consumption:number "+newProduction+" => number")
+        this.productionServiceStorage.setProduction(+newProduction);
+    } 
 
     @Get('get-production-limit')
     getProductionLimit(producerName:string): number {

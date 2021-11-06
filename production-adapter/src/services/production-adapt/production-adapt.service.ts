@@ -14,7 +14,7 @@ export class ProductionAdaptService {
     findAll(): Promise<ProductionAdapter[]> {
         return this.ProductionAdapterRepository.find();
         }
-    findByUsername(id_producer: string): Promise<ProductionAdapter | undefined> {
+    findByProducerId(id_producer: string): Promise<ProductionAdapter | undefined> {
         return this.ProductionAdapterRepository.findOne({ id_producer }); 
         }
     async sumDiffLimitProd(){
@@ -32,7 +32,7 @@ export class ProductionAdaptService {
 
     async adaptProduction(amountToAdd: any) {
         let diffLocal = await this.sumDiffLimitProd()
-        if (diffLocal>amountToAdd){
+        if (diffLocal>=amountToAdd){
             firstValueFrom(this.http.get(this.URL_PRODUCERS_ADAPT, {params: {newProduction:amountToAdd}})).then((body)=> {
                 console.log("Production adapter told the producers to change their production.");
             });
@@ -41,8 +41,13 @@ export class ProductionAdaptService {
         else {
             return diffLocal-amountToAdd
         }
-        
     }
+    async adaptProductionNegative(amountToAdd: any) {
+            firstValueFrom(this.http.get(this.URL_PRODUCERS_ADAPT+"-negative", {params: {newProduction:amountToAdd}})).then((body)=> {
+                console.log("Production adapter told the producers to change their production.");
+            });
+    }
+
     saveProductionLimit(productionProducer:{id_producer:string,productionDate:Date,productionLimit:number,production:number}){
         let productionAdapter = new ProductionAdapter()
         productionAdapter.id_producer=productionProducer.id_producer;
@@ -53,7 +58,7 @@ export class ProductionAdaptService {
     }
     async updateProductionLimit(productionProducer:{id_producer:string,productionDate:Date,production:number}){
         let productionAdapter = new ProductionAdapter()
-        let currentProductionAdapter = await this.findByUsername(productionProducer.id_producer)
+        let currentProductionAdapter = await this.findByProducerId(productionProducer.id_producer)
         productionAdapter.id_producer=productionProducer.id_producer;
         productionAdapter.productionDate=productionProducer.productionDate;
         productionAdapter.production=productionProducer.production;

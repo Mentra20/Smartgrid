@@ -30,6 +30,26 @@ export class ProductionServiceStorage {
 
         }
     }
+    setProductionNegative(newProduction:number){
+        console.log("ProductionNegative set with production value : " + newProduction + " W.");
+        let productionLocal = newProduction;
+        for(var key in this.dictProducer) {
+            let prodCurrentValue=this.dictProducer[key].production;
+            if (prodCurrentValue>0){
+                let localDiff=prodCurrentValue+productionLocal
+                if (localDiff<0){
+                    productionLocal=localDiff
+                    this.dictProducer[key].production = 0;
+                }
+                else {
+                    this.dictProducer[key].production=+productionLocal
+                }
+            }
+
+        }
+    }    
+
+        
 
 
     getProducerLimit(producerName:string){
