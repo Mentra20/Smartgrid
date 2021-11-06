@@ -8,7 +8,7 @@ export class ConsumptionController {
 
     @Get("global")
     getConsumption(@Query("houseID") houseId:string): number {
-        var consumption = this.housesService.getTotalConsumption(houseId);
+        var consumption = this.housesService.getHouse(houseId)?.getTotalConsumption(this.housesService.getCurrentDate());
         console.log("[consumption/global][getConsumption] houseId:string " +houseId + " => number ");
         console.log("controller consumption global: "+consumption + " W.")
         return consumption;

@@ -28,9 +28,7 @@ export class HousesService {
 
     doTick(date:Date){
         this.currentDate = date;
-        this.pushAllHouseConsumption();
-        this.pushAllHouseProduction();
-        this.pushAllBatteryState();
+        this.doTickForAllHouse()
     }
     doTickForAllHouse(){
         for(let houseEntry of this.allHouse){
@@ -39,119 +37,55 @@ export class HousesService {
     }
 
     doTickForHouse(house:House){
-        
-    }
+        var houseTotalConsumption = house.getTotalConsumption(this.currentDate);
+        var houseTotalProduction = house.getTotalProduction(this.currentDate);
+        var houseConsumptionDetailled = house.generateConsumptionArray(this.currentDate)
+        var batteryUsage = house.useBattery(houseTotalProduction,houseTotalConsumption)
 
-    generateConsumptionArray(house:House){
-        var jsonHouseDetailed = [];
-        for(let object of house.getAllObject()){
-            var consumption = object.getCurrentConsumption(this.currentDate)
-            if(consumption>0){
-                jsonHouseDetailed.push({objectName:object.getName(),consumption:consumption})
-            }
-        }
-        return jsonHouseDetailed;
-    }
+        houseConsumptionDetailled.push(...batteryUsage) //WARN: verifier le fonctionnement dans ce cas
+        houseTotalProduction+=batteryUsage.reduce((elt:{production:number},somme:number)=>somme+=elt.production,0)
 
-    calculeProductionHouse(house:House){
-        var production = 0;
-        for(let object of house.getAllObject()){
-            var consumption = object.getCurrentConsumption(this.currentDate)
-            if(consumption<0){
-                production+= -consumption;
-            }
-        }
-        return production;
-    }
-
-    useBattery(house:House,totalProduction:number,totalConsumption:number){
-        var margeProduction = totalConsumption-totalProduction;
-        var batteryUse = []
-        if(margeProduction>0){
-            //TODO modifier
-            for(var battery of house.getAllBattery()){
-                var chargeStore =battery.chargeBattery(margeProduction);
-                batteryUse.push({battery,consumption:chargeStore})
-                margeProduction-=chargeStore
-            }
-        }
-        else if(margeProduction<0){
-            //TODO modifier
-            for(var battery of house.getAllBattery()){
-                var chargeUse =battery.useChargeOfBattery(margeProduction);
-                batteryUse.push({battery,production:-chargeUse})
-                margeProduction+=chargeUse
-            }
-        }
-        else{
-            batteryUse.push()
-        }
-    }
-
-    getTotalConsumption(houseID:string){
-        return this.allHouse.get(houseID)?.getTotalConsumption(this.currentDate);
-    }
-
-    getAllConsumption(houseID:string){
-        var currentHouse = this.allHouse.get(houseID);
-        currentHouse.getAllObject();
+        this.pushBatteryStateOfHouse(house)
+        this.pushConsumption(house,houseConsumptionDetailled)
+        this.pushProduction(house,houseTotalProduction)
 
     }
 
-    async pushConsumption(house:House){
-        var jsonHouseDetailed = [];
-        for(let object of house.getAllObject()){
-            var consumption = object.getCurrentConsumption(this.currentDate)
-            if(consumption>0){
-                jsonHouseDetailed.push({objectName:object.getName(),consumption:consumption})
-            }
-        }
-        console.log(`PUSH to ${this.URL_PUSH_CONSUMPTION}: ${JSON.stringify({param:jsonHouseDetailed})}`)
-        this.http.post(this.URL_PUSH_CONSUMPTION,{detailedConsumptions:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:jsonHouseDetailed}}).subscribe({
-            next : (response)=> console.log(response.data),
-            error : (error)=> console.error("error"),
+
+    async pushConsumption(house:House,houseConsumptionDetailled:any){
+        var message = {detailedConsumptions:{houseID:house.getHouseId(),consumptionDate:this.currentDate,object:houseConsumptionDetailled}}
+        this.logger.debug(`[pushConsumption] params: ${JSON.stringify(message)}`)
+        await this.http.post(this.URL_PUSH_CONSUMPTION,message).subscribe({
+            next : (response)=> this.logger.debug(response.data),
+            error : (error)=> this.logger.error("error"),
         }
         );
     }
 
-    public pushAllHouseConsumption(){
-        for(let houseEntry of this.allHouse){
-            this.pushConsumption(houseEntry[1])
-        }
+    async pushProduction(house:House,totalProduction:number){
+        var message = {production:{id_producer:house.getProducerId(),productionDate:this.currentDate,production:totalProduction}}
+        this.logger.debug(`[pushProduction] params: ${JSON.stringify(message)}`)
+
+        await this.http.post(this.URL_PUSH_PRODUCTION,message).subscribe({
+            next : (response)=> this.logger.debug(response.data),
+            error : (error)=> this.logger.error(error),
+        })
     }
 
-    async pushProduction(house:House){
-        var production = 0;
-        for(let object of house.getAllObject()){
-            var consumption = object.getCurrentConsumption(this.currentDate)
-            if(consumption<0){
-                production+= -consumption;
-            }
-        }
-        if(production>0){
-
-        }
-    }
-
-    public pushAllBatteryState(){
-        for(let houseEntry of this.allHouse){
-            this.pushBatteryStateOfHouse(houseEntry[1])
-        }
-    }
     
     private pushBatteryStateOfHouse(house:House){
         for(var battery of house.getAllBattery()||[]){
             this.pushBatteryState(battery,house.getProducerId())
         }
-
     }
+
     private pushBatteryState(battery:Battery,producerId:string){
         this.http.post(this.URL_BATTERY_STATE,
             {
-            id_battery:battery.batteryID,
-            id_producer:producerId,
-            current_storage:battery.currentStorageWH,
-            date:this.currentDate
+                id_battery:battery.batteryID,
+                id_producer:producerId,
+                current_storage:battery.currentStorageWH,
+                date:this.currentDate
             }
         ).subscribe({
             next : (response)=> this.logger.log(response),
@@ -160,13 +94,6 @@ export class HousesService {
         );
     }
 
-    public pushAllHouseProduction(){
-        for(let houseEntry of this.allHouse){
-            if(houseEntry[1].getProducerId()){
-                this.pushProduction(houseEntry[1])
-            }
-        }
-    }
 
     public async registerNewBattery(battery:Battery,producerId:string){
         this.logger.debug(`register new battery for producerId ${producerId} : ${battery} `)

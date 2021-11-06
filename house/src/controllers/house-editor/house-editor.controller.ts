@@ -40,7 +40,7 @@ export class HouseEditorController {
 
 
     @Post("house/:id_house/add-object")
-    public addObject(@Param("id_house") houseId:string, @Body("",new HouseObjectPipe()) object:AbstractHouseObject){
+    public addObject(@Param("id_house") houseId:string, @Body("object",new HouseObjectPipe()) object:AbstractHouseObject){
         console.log(`[HouseEditorController][addObject] Param : ${JSON.stringify({houseId,object})}`)
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){

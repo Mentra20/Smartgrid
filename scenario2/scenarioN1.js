@@ -233,7 +233,7 @@ async function beforeStep() {
     //------ BEFORE STEPS ------
 
     var response;
-    var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
+    var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true}, type: "BASIC" }
         //On inscrit des maisons et ajout des objets
     response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: { client_name: "Jean" }, method: "POST" });
     var houseID1 = response.body;

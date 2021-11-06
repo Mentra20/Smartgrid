@@ -1,8 +1,10 @@
+import { Logger } from "@nestjs/common";
 import { map } from "rxjs";
 import { Battery } from "./battery";
 import { AbstractHouseObject } from "./house-object";
 
 export class House {
+    private logger = new Logger(House.name)
 
     private allHouseObject:Map<string,AbstractHouseObject> = new Map();
     private producerId:string;
@@ -66,6 +68,68 @@ export class House {
     public getAllBattery():Battery[]{
         return this.batteryList;
     }
+
+    generateConsumptionArray(currentDate:Date){
+        var jsonHouseDetailed = [];
+        for(let object of this.getAllObject()){
+            var consumption = object.getCurrentConsumption(currentDate)
+            if(consumption>0){
+                jsonHouseDetailed.push({objectName:object.getName(),consumption:consumption})
+            }
+        }
+        return jsonHouseDetailed;
+    }
+
+    calculeProductionHouse(currentDate:Date){
+        var production = 0;
+        for(let object of this.getAllObject()){
+            var consumption = object.getCurrentConsumption(currentDate)
+            if(consumption<0){
+                production+= -consumption;
+            }
+        }
+        return production;
+    }
+
+    useBattery(totalProduction:number,totalConsumption:number){
+        var margeProduction = totalConsumption-totalProduction;
+        var batteryUse = []
+        if(margeProduction>0){
+            //TODO modifier
+            for(var battery of this.getAllBattery()){
+                var chargeStore =battery.chargeBattery(margeProduction);
+                batteryUse.push({battery,consumption:chargeStore,production:0})
+                margeProduction-=chargeStore
+            }
+        }
+        else if(margeProduction<0){
+            //TODO modifier
+            for(var battery of this.getAllBattery()){
+                var chargeUse =battery.useChargeOfBattery(margeProduction);
+                batteryUse.push({battery,production:chargeUse,consumption:0})
+                margeProduction+=chargeUse
+            }
+        }
+        else{
+            batteryUse.push({battery,production:0,consumption:0})
+        }
+        return batteryUse
+    }
+
+    getTotalProduction(currentDate:Date){
+    var production = 0;
+    for(let object of this.getAllObject()){
+        if(!object.isProductionObject()){continue}
+        var consumption = object.getCurrentConsumption(currentDate)
+        if(consumption>=0){
+            production+= -consumption;
+        }
+        else{
+            this.logger.error("Consumption negative not allowned")
+        }
+    }
+    return production
+}
 
 
 }
