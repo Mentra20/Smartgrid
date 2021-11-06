@@ -80,6 +80,7 @@ export class HouseEditorController {
     @Post("house/:id_house/add-battery")
     public addBatteryForHouse(@Param("id_house") houseId:string,@Body("battery") battery:any){
         var newBattery = new Battery();
+        newBattery.batteryName = battery.batteryName||"battery_default"
         newBattery.batteryID = battery.batteryID||randomUUID()
         newBattery.maxProductionFlowW = battery.maxProductionFlowW?+battery.maxProductionFlowW:50
         newBattery.maxStorageFlowW = battery.maxStorageFlowW?+battery.maxStorageFlowW:50
@@ -92,10 +93,11 @@ export class HouseEditorController {
             return
         }
 
-        while(!currentHouse.getBattery(newBattery.batteryID)){
-            this.logger.error("battery id already use for this house, new id generate")
+        while(currentHouse.getBattery(newBattery.batteryID)!=undefined){
+            this.logger.error(`battery id "${newBattery.batteryID}" already use for this house, new id generate`)
             newBattery.batteryID = randomUUID()
         }
+        this.housesService.registerNewBattery(newBattery,currentHouse.getProducerId())
         currentHouse.addBattery(newBattery);
 
         this.logger.debug(`New battery add for house ${houseId} : ${JSON.stringify(newBattery)}`)

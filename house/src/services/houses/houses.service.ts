@@ -36,14 +36,20 @@ export class HousesService {
         }
     }
 
-    doTickForHouse(house:House){
+    async doTickForHouse(house:House){
         var houseTotalConsumption = house.getTotalConsumption(this.currentDate);
         var houseTotalProduction = house.getTotalProduction(this.currentDate);
         var houseConsumptionDetailled = house.generateConsumptionArray(this.currentDate)
         var batteryUsage = house.useBattery(houseTotalProduction,houseTotalConsumption)
 
-        houseConsumptionDetailled.push(...batteryUsage) //WARN: verifier le fonctionnement dans ce cas
-        houseTotalProduction+=batteryUsage.reduce((elt:{production:number},somme:number)=>somme+=elt.production,0)
+        batteryUsage.forEach((battery)=>houseConsumptionDetailled.push(battery))
+
+        var batteryProduction = 0
+        for(var battery of batteryUsage){
+            batteryProduction+=battery.production
+        }
+
+        houseTotalProduction+=batteryProduction
 
         this.pushBatteryStateOfHouse(house)
         this.pushConsumption(house,houseConsumptionDetailled)
@@ -80,15 +86,16 @@ export class HousesService {
     }
 
     private pushBatteryState(battery:Battery,producerId:string){
-        this.http.post(this.URL_BATTERY_STATE,
-            {
+        var message = {
+            battery:{
                 id_battery:battery.batteryID,
-                id_producer:producerId,
-                current_storage:battery.currentStorageWH,
-                date:this.currentDate
-            }
-        ).subscribe({
-            next : (response)=> this.logger.log(response),
+                current_storage:battery.currentStorageWH
+            },
+            producerID:producerId,
+            date:this.currentDate
+        };
+        this.logger.debug(`[pushBatteryState] params : ${JSON.stringify(message)}`)
+        this.http.post(this.URL_BATTERY_STATE,message).subscribe({
             error : (error)=> this.logger.error(error),
         }
         );

@@ -55,7 +55,7 @@ async function main() {
 
     // STEP 1
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN +"On a des maisons dans une communauté et une autre dans une autre communauté"+ ANSI_RESET);
+    console.log(ANSI_GREEN +"On a des maisons dans une communauté et une autre dans une autre communauté\n"+ ANSI_RESET);
 
     var client1 = { client_name: "Jean-Paul" };
     var houseID1 = await addHouse(client1);
@@ -87,7 +87,7 @@ async function main() {
 
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
 
-    console.log("On ajoute un objet non programmable à chaque maison");
+    console.log("\nOn ajoute un objet non programmable à chaque maison");
     await addObject(houseID1, mixeur);
     await addObject(houseID2, mixeur);
     await addObject(houseID3, mixeur);
@@ -138,7 +138,7 @@ async function main() {
     console.log(ANSI_GREEN +"On regarde la consommation totale de toutes les maisons"+ ANSI_RESET);
 
     var response = await doRequest({ url: "http://consumption-api:2998/total-consumption", qs: { date: globalDate }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:consumption-api; [route]:total-consumption; [params]: " + JSON.stringify({ date: globalDate }) + " => [return]:" + JSON.parse(response.body) + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:consumption-api; [route]:total-consumption; [params]: " + JSON.stringify({ date: globalDate }) + " => [return]:" + JSON.parse(response.body) + ANSI_RESET);
     console.log("Actuellement, la consommation totale est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     await sleep(2000)
@@ -147,7 +147,7 @@ async function main() {
     console.log(ANSI_GREEN +"On regarde la consommation dans la communauté "+communityHouse2+ ANSI_RESET);
 
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
     console.log("Actuellement, la consommation de la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET +" est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     await sleep(2000)
@@ -157,7 +157,7 @@ async function main() {
 
     await waitTick(10);
     await sleep(5000)
-    console.log("on a un pic de consommation dans la communauté : ")
+    console.log("\non a un pic de consommation dans la communauté : ")
     console.log(ANSI_YELLOW+pickDetection+ANSI_YELLOW);
 
     consumer.stop();
@@ -175,7 +175,7 @@ async function main() {
     console.log(ANSI_GREEN + "\n\n================= STEP 7 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On remarque qu’il n’y a maintenant plus de pic"+ ANSI_RESET)
     var response = await doRequest({ url: "http://consumption-api:2998/community-consumption", qs: { date: globalDate, communityID: communityHouse2 }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:consumption-api; [route]:community-consumption; [params]: " + JSON.stringify({ date: globalDate, communityID: communityHouse2 }) + " => [return]:" + JSON.stringify(response.body) + ANSI_RESET);
     console.log("Actuellement, la consommation de la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET +" est : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
 
@@ -185,12 +185,12 @@ async function main() {
     var autarkyQs = { date: globalDate, communityID:communityHouse2}
     response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
     var exceedConsumption = response.body;
-    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est négative : " + ANSI_YELLOW +exceedConsumption + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET+" n'est pas en autarcie");
 
     var reqCommuNotif = {communityID: communityHouse2 }
     response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-community-message", qs: reqCommuNotif, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit qu'il n'y a pas de notification pour la communauté : ");
     console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + communityHouse2+" : "+ response.body+ ANSI_RESET);
 
@@ -203,7 +203,7 @@ async function main() {
     response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID2 + "/become-producer", method: "POST" });
 
 
-    console.log("On ajoute un objet qui produit à la maison "+ANSI_YELLOW +houseID2+ ANSI_RESET +" de la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET);
+    console.log("\nOn ajoute un objet qui produit à la maison "+ANSI_YELLOW +houseID2+ ANSI_RESET +" de la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET);
     await addObject(houseID2, velo);
     await checkObject(houseID2);
 
@@ -219,7 +219,7 @@ async function main() {
 
     reqCommuNotif = {communityID: communityHouse2 }
     response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-community-message", qs: reqCommuNotif, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:" + communityHouse2 + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit qu'il a une notification pour la communauté : ");
     console.log("Messages reçus pour la communauté d'ID " + ANSI_YELLOW + communityHouse2+" : "+ response.body+ ANSI_RESET);
 
@@ -227,24 +227,24 @@ async function main() {
     console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On ajoute un nouveau partenaire avec des datapoints, il récupère les données de production des clients  "+ ANSI_RESET);
 
-    console.log("Un nouveau partenaire s'inscrit");
+    console.log("\nUn nouveau partenaire s'inscrit");
     var partnerID = "partenaire-scénario";
     var reqPartnerSub = {partnerID:partnerID, datapoint:100, trustLevel:2}
     response = await doRequest({ url: "http://partner-api:3019/add-partner", form: reqPartnerSub, method: "POST" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:add-partner; [params]:" + JSON.stringify(reqPartnerSub) + " => [return]:_"+ ANSI_RESET);
 
-    console.log("On voit qu'on peut récuperer ses informations");
+    console.log("\nOn voit qu'on peut récuperer ses informations");
     response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
     console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
 
-    console.log("Le partenaire récupère les données de production des clients (coûte 70 datapoints)");
+    console.log("\nLe partenaire récupère les données de production des clients (coûte 70 datapoints)");
     var reqPartnerRequest = {partnerID:partnerID, date:globalDate}
     response = await doRequest({ url: "http://partner-api:3019/request-production", qs: reqPartnerRequest, method: "GET" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:request-production; [params]:" + JSON.stringify(reqPartnerRequest) + " => [return]:"+response.body+ ANSI_RESET);
-    console.log("Données de production du "+ANSI_YELLOW +globalDate+ ANSI_RESET+" récupérées par le partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
+    console.log("Données de production du "+ANSI_YELLOW +globalDate+ ANSI_RESET+" récupérées par le partenaire :\n"+ANSI_YELLOW +response.body+ ANSI_RESET);
 
-    console.log("Son nombre de datapoints est mis à jour");
+    console.log("\nSon nombre de datapoints est mis à jour");
     response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
     console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
@@ -253,25 +253,25 @@ async function main() {
     console.log(ANSI_GREEN + "\n\n================= STEP 11 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "Le partenaire reprend des datapoints et récupère les données de consommation détaillée des clients mais n'a pas le niveau de confiance requis  "+ ANSI_RESET);
 
-    console.log("Le partenaire à payé en amont, des datapoints lui sont ajoutés");
+    console.log("\nLe partenaire à payé en amont, des datapoints lui sont ajoutés");
     var reqPartnerAddPoint = {partnerID:partnerID, datapoint:100}
     response = await doRequest({ url: "http://partner-api:3019/add-datapoint", form: reqPartnerAddPoint, method: "POST" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:add-datapoint; [params]:" + JSON.stringify(reqPartnerAddPoint) + " => [return]:_"+ ANSI_RESET);
 
-    console.log("Son nombre de datapoints est mis à jour");
+    console.log("\nSon nombre de datapoints est mis à jour");
     response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
     console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
 
-    console.log("Le partenaire essaye de récupéré les données de consommation détaillée des clients (coûte 100 datapoints)")
+    console.log("\nLe partenaire essaye de récupéré les données de consommation détaillée des clients (coûte 100 datapoints)")
     reqPartnerRequest = {partnerID:partnerID, date:globalDate}
     response = await doRequest({ url: "http://partner-api:3019/request-detailed-consumption", qs: reqPartnerRequest, method: "GET" });
     console.log(ANSI_BLUE + "[service]:partner-api; [route]:request-detailed-consumption; [params]:" + JSON.stringify(reqPartnerRequest) + " => [return]:"+response.body+ ANSI_RESET);
     console.log("Données de consommation détaillée du "+ANSI_YELLOW +globalDate+ ANSI_RESET+" récupérées par le partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
-    
     console.log("Il ne récupère rien car n'a pas le niveau de confiance requis (nécéssaire : 3), ses datapoints ne sont pas débités");
+
     response = await doRequest({ url: "http://partner-api:3019/get-partner-info", qs: {partnerID}, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:partner-api; [route]:get-partner-info; [params]:" + partnerID + " => [return]:"+response.body+ ANSI_RESET);
     console.log("Informations du partenaire :"+ANSI_YELLOW +response.body+ ANSI_RESET);
 }
 
@@ -289,7 +289,7 @@ async function checkCarCons(houseID) {
 
 async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
-    console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
     console.log("On constate qu'il a bien été ajouté :");
     console.log(ANSI_YELLOW + response.body + ANSI_RESET);
     console.log("");

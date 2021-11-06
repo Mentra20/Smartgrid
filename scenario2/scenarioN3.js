@@ -74,7 +74,8 @@ async function main(){
     await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: objProd, method: "POST" });
 
     //TODO AJOUTER UNE BATTERIE DANS LA MAISON
-    var batteryID;//= TODO
+    var battery = {batteryName:"battery scenario",maxProductionFlowW:1000,maxStorageFlowW:1000,capacityWH:5000}
+    var batteryID = await doRequest({ url:"http://house:3000/house-editor/house/" + houseID + "/add-battery",form:{battery},method:'POST'}).body
 
     console.log("\nOn regarde les objets de la maison :");
     await checkObject(houseID);
@@ -159,7 +160,7 @@ async function main(){
     console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On voit que la production est maintenant plus grande que la consommation" + ANSI_RESET)
 
-    await waitTick(5);
+    await waitTick(10);
     await sleep(1000);
     reqQs = { date: globalDate, producerID: houseProdID };
     response = await doRequest({ url: "http://production-api:2999/detailed-production", qs: reqQs, method: "GET" });
@@ -204,6 +205,7 @@ async function doTick() {
     await sleep(600);
 
     response = await doRequest({ url: "http://electricity-frame:3015/clock/tick", form: { date: globalDate }, method: "POST" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/tick", form: { date: globalDate }, method: "POST" });
 
     //Wait que tout s'envoie bien
     await sleep(300);

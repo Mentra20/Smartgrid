@@ -20,14 +20,8 @@ export class AutarkyOversightController {
     @Payload()
     realConsumptionCommunityMSG: any,
   ) {
-    console.log(
-      'received this message :' + JSON.stringify(realConsumptionCommunityMSG),
-    );
+    console.log('received this message :' + JSON.stringify(realConsumptionCommunityMSG));
     this.autarkyOversightService
-      .processAutarkyCommunity(realConsumptionCommunityMSG.value)
-      .forEach((message) => {
-        console.log('message : \n', JSON.stringify(message));
-        this.client.emit('client.notification', message);
-      });
+      .processAutarky(realConsumptionCommunityMSG.value)
   }
 }

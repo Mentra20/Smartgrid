@@ -92,26 +92,24 @@ export class House {
     }
 
     useBattery(totalProduction:number,totalConsumption:number){
-        var margeProduction = totalConsumption-totalProduction;
+        var margeProduction = totalProduction - totalConsumption;
         var batteryUse = []
         if(margeProduction>0){
-            //TODO modifier
             for(var battery of this.getAllBattery()){
                 var chargeStore =battery.chargeBattery(margeProduction);
-                batteryUse.push({battery,consumption:chargeStore,production:0})
+                batteryUse.push({name:battery.batteryName,consumption:chargeStore,production:0})
                 margeProduction-=chargeStore
             }
         }
         else if(margeProduction<0){
-            //TODO modifier
             for(var battery of this.getAllBattery()){
-                var chargeUse =battery.useChargeOfBattery(margeProduction);
-                batteryUse.push({battery,production:chargeUse,consumption:0})
+                var chargeUse =battery.useChargeOfBattery(-margeProduction);
+                batteryUse.push({name:battery.batteryName,production:chargeUse,consumption:0})
                 margeProduction+=chargeUse
             }
         }
         else{
-            batteryUse.push({battery,production:0,consumption:0})
+            batteryUse.push({name:battery.batteryName,production:0,consumption:0})
         }
         return batteryUse
     }
