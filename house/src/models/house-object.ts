@@ -57,7 +57,6 @@ export class BasicHouseObject extends AbstractHouseObject{
         return this.enabled? this.maxProduction:0;
     }
 
-
     public getMaxConsumption() {
         return this.maxConsumption;
     }
