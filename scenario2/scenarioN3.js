@@ -67,7 +67,7 @@ async function main(){
     console.log(ANSI_GREEN + "\n\n================= STEP 2 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On ajoute à la maison un objet produisant de l'électricité et une batterie " + ANSI_RESET)
 
-    var objProd = { object: { name: "Roue du hamster", maxConsumption: -300, enabled: true }, type: "BASIC" }
+    var objProd = { object: { name: "Roue du hamster", maxProduction: 300, enabled: true }, type: "BASIC" }
 
     console.log("\nOn ajoute à la maison " + ANSI_YELLOW +  houseID + ANSI_RESET + " l'objet de production : ");
     console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET);
@@ -116,7 +116,7 @@ async function main(){
     console.log(ANSI_GREEN + "On voit que la maison n'est pas en autarcie " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
-    response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est negative : " + ANSI_YELLOW + response.body+ ANSI_RESET  + " W donc on est pas en autarcie");
 
@@ -137,7 +137,7 @@ async function main(){
     console.log(ANSI_GREEN + "\n\n================= STEP 6 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On ajoute un deuxième objet producteur dans la maison" + ANSI_RESET)
 
-    var objProd = { object: { name: "Générateur nucléaire DIY", maxConsumption: -600, enabled: true }, type: "BASIC" }
+    var objProd = { object: { name: "Générateur nucléaire DIY", maxProduction: 600, enabled: true }, type: "BASIC" }
 
     console.log("\nOn ajoute à la maison " + ANSI_YELLOW + houseID + ANSI_RESET + " l'objet de production : ");
     console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET );
@@ -167,11 +167,12 @@ async function main(){
     console.log("On voit bien qu'il a une production pour cette maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 9
+    await waitTick(10);
     console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
-    response = await doRequest({ url: "http://realEnergyOutput:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
     console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie");
 

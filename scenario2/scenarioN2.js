@@ -18,6 +18,7 @@ ANSI_BLUE = "\033[0;34m"; // BLUE
 ANSI_PURPLE = "\033[0;35m"; // PURPLE
 ANSI_CYAN = "\033[0;36m"; // CYAN
 ANSI_WHITE = "\033[0;37m"; // WHITE
+var pickDetection = undefined;
 
 
 
@@ -122,6 +123,13 @@ async function main() {
     await askSchedule(houseID3, "Car");
     await askSchedule(houseID4, "Car");
 
+    var topicListener = consumer.run({
+        eachMessage: async({ topic, partition, message }) => {
+            pickDetection = message.value.toString();
+        }
+    })
+    await topicListener;
+
     await waitTick(1);
 
     await sleep(2000)
@@ -146,16 +154,12 @@ async function main() {
     console.log(ANSI_GREEN + "\n\n================= STEP 5 =================" + ANSI_RESET);
     console.log(ANSI_GREEN + "On détecte un pic de consommation dans cette communauté"+ ANSI_RESET);
 
-    var topicListener = consumer.run({
-        eachMessage: async({ topic, partition, message }) => {
-            console.log("on a un pic de consommation dans la communauté : ")
-            console.log(ANSI_YELLOW + message.value.toString()+ ANSI_RESET)
-        }
-    })
-    await topicListener;
 
     await waitTick(10);
     await sleep(5000)
+    console.log("on a un pic de consommation dans la communauté : ")
+    console.log(ANSI_YELLOW+pickDetection+ANSI_YELLOW);
+
     consumer.stop();
     consumer.disconnect();
 
@@ -205,7 +209,7 @@ async function main() {
 
     await waitTick(10);
     await sleep(1000)
-
+    
     console.log("On vérifie que la communauté est bien passée en autarcie")
 
     autarkyQs = { date: globalDate, communityID:communityHouse2}

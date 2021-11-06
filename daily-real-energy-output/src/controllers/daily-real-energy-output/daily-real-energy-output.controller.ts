@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 import { DailyRealEnergy } from 'src/models/DailyRealEnergy';
+import { EnergyParserPipe } from 'src/pipe/energy-parser.pipe';
 import { DailyRealEnergyOutputService } from 'src/services/daily-real-energy-output/daily-real-energy-output.service';
 
 @Controller('daily-real-energy-output')
@@ -17,19 +18,19 @@ export class DailyRealEnergyOutputController {
     }
 
     @MessagePattern("energy.output.community") 
-    addClientRealDailyDataToDB(@Payload() clientRealDailyDataMSG:any) {
-        var clientRealDailyData:{
-            id_client:string,
-            id_producer:string,
-            date:string,
-            id_community:number,
-            energy:number
+    addClientRealDailyDataToDB(@Payload(EnergyParserPipe) clientRealDailyDataMSG:{
+        id_community:number,
+        id_client:string,
+        id_producer:string,
+        date:Date,
+        energy:number
+    }[]) {
+
+        for(var clientRealDailyData of clientRealDailyDataMSG){
+            console.log("Daily real energy output received the client " + clientRealDailyData.id_client + " data from Kafka : " + JSON.stringify(clientRealDailyData));
+
+            this.dailyRealEnergyOutputService.addClientDataToDB(clientRealDailyData);
         }
-        = clientRealDailyDataMSG.value;
-
-        console.log("Daily real energy output received the client " + clientRealDailyData.id_client + " data from Kafka : " + JSON.stringify(clientRealDailyData));
-
-        this.dailyRealEnergyOutputService.addClientDataToDB(clientRealDailyData);
     }
 
     @Get('daily-real-energy-output')

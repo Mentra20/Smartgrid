@@ -246,29 +246,35 @@ export class RealEnergyOutputService {
         order: { communityID: 'ASC' },
       });
     const messages = [];
-    const message: {
-      communityID: number;
+    var message: {
+      communityID: number,
+      date:Date,
       houses: {
         house: {
-          clientID: string;
-          realEnergyOutput: number;
-        };
+          clientID: string,
+          producerID:string,
+          realEnergyOutput: number
+        }
       }[];
-    } = {
+    } 
+    if(housesRealEnergyOutput.length==0){return []}
+    message = {
+      date,
       communityID: housesRealEnergyOutput[0].communityID,
       houses: [],
     };
     let currentCommunityID = housesRealEnergyOutput[0].communityID;
     housesRealEnergyOutput.forEach((house) => {
+      console.log(`house : ${JSON.stringify(house)}`)
       if (house.communityID != currentCommunityID) {
         currentCommunityID = house.communityID;
         messages.push(message);
-        message.communityID = currentCommunityID;
-        message.houses = [];
+        message = {communityID:currentCommunityID,houses:[],date}
       }
       message.houses.push({
         house: {
           clientID: house.clientID,
+          producerID:house.producerID,
           realEnergyOutput: house.realEnergyOutput,
         },
       });

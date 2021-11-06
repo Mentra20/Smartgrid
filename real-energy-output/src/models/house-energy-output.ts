@@ -1,17 +1,20 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class HouseEnergyOutput {
-  @PrimaryColumn()
-  clientID: string;
+  @PrimaryGeneratedColumn()
+  id:number
+
+  @Column({ nullable: true })
+  clientID: string | null;
 
   @Column({ nullable: true })
   producerID: string | null;
 
-  @PrimaryColumn()
+  @Column()
   realEnergyOutputDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   communityID: number;
 
   @Column('double precision')

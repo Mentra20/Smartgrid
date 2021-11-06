@@ -87,7 +87,7 @@ export class BillService {
         var totalConsumption = 0; //W/H
         for (let dailyEnergy of energy) {
             if (dailyEnergy.energy <= 0 ) {
-                totalConsumption += +dailyEnergy.energy;
+                totalConsumption += -dailyEnergy.energy;
             }
         }
 

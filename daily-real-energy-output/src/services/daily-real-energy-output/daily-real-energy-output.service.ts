@@ -12,8 +12,8 @@ export class DailyRealEnergyOutputService {
         @InjectRepository(DailyRealEnergy)
         private dailyRealEnergyRepository: Repository<DailyRealEnergy>){}
 
-    async addClientDataToDB(clientRealDailyData: { id_client: string; id_producer: string; date: string; id_community: number; energy: number; }) {
-        var dailyDate = new Date(new Date(clientRealDailyData.date).setHours(0,0,0,0)); //Only day
+    async addClientDataToDB(clientRealDailyData: { id_client: string; id_producer: string; date: Date; id_community: number; energy: number; }) {
+        var dailyDate = new Date(clientRealDailyData.date.setHours(0,0,0,0)); //Only day
         var energyinWH = this.convertWToWH(clientRealDailyData.energy);
 
         console.log("Add energy " + clientRealDailyData.energy +" W/H for client " + clientRealDailyData.id_client + " at daily date " + dailyDate + ".");

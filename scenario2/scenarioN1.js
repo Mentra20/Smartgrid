@@ -214,6 +214,8 @@ async function main() {
     //TODO : s'écouler 3 mois
     generateBill2LastYear(houseID);
     await sleep(2000)
+    await waitTick(20);
+
 
     var firstMonthBillReq = {houseID:houseID, year:firstYear, month:firstMonth};   
     var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear(), month:globalDate.getMonth()+1};    
@@ -262,6 +264,8 @@ async function doTick() {
     await sleep(600);
 
     response = await doRequest({ url: "http://electricity-frame:3015/clock/tick", form: { date: globalDate }, method: "POST" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/tick", form: { date: globalDate }, method: "POST" });
+
 
     //Wait que tout s'envoie bien
     await sleep(300);
