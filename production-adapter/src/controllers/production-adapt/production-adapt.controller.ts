@@ -15,20 +15,22 @@ export class ProductionAdaptController {
     }
 
     @MessagePattern("production.adapt")
-    changeProduction(@Payload() productionAdaptMSG:any) {
+    async changeProduction(@Payload() productionAdaptMSG:any) {
         var amountToAdd = +productionAdaptMSG.value.productionToAdd;
         console.log("Producer adapter received the amount of W producers need to supply : " + amountToAdd + " W.");
-        this.productionAdaptService.adaptProduction(amountToAdd);
-    }
+        let maybeNegatif = await this.productionAdaptService.adaptProduction(amountToAdd);
+        if (maybeNegatif != -1){
+            let messageJson = {needSupplyAmount:maybeNegatif}
+            console.log("Producer adapter Need to supply : " + amountToAdd + " W but the limit is reached.");
+            this.client.emit("production.reached.limit",messageJson)
+            }
+        }
     @MessagePattern("production.limit")
     productionLimit(@Payload() message){
         console.log("productionLimit receive :"+JSON.stringify(message.value))
         var value = message.value;
         var messageJson={id_producer:value.id_producer,productionDate:new Date(value.productionDate),productionLimit:+value.productionLimit,production:+value.production}
-        var bool = this.productionAdaptService.receiveProductionLimit(messageJson)
-        if (bool) {
-            this.client.emit("production.reached.limit",messageJson)
+        this.productionAdaptService.saveProductionLimit(messageJson)
         }
-    }
 
 }

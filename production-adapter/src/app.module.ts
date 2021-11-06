@@ -21,7 +21,7 @@ import {ProductionAdapter} from './production-adapter'
         }
       }
     },
-  ]),,
+  ]),
   TypeOrmModule.forFeature([ProductionAdapter]),
   TypeOrmModule.forRoot({
     type: 'postgres',

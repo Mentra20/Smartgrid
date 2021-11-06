@@ -17,11 +17,19 @@ export class ProductionServiceStorage {
     
     setProduction(newProduction:number){
         console.log("Production set with production value : " + newProduction + " W.");
+        let localStorageLimit = newProduction
         for(var key in this.dictProducer) {
-            this.dictProducer[key].production+=newProduction;
-            break;
+            if (localStorageLimit==0){
+                break;
             }
+            if (key in this.dictProducerLimit){
+                let capacityToAdd = this.dictProducerLimit[key].productionLimit-this.dictProducer[key].production;
+                this.dictProducer[key].production+=capacityToAdd;
+                localStorageLimit=localStorageLimit-capacityToAdd
+            }
+
         }
+    }
 
 
     getProducerLimit(producerName:string){
@@ -29,19 +37,13 @@ export class ProductionServiceStorage {
         return this.dictProducerLimit[producerName];
         }
     
-    setProductionLimit(newProductionLimit:number){
-        console.log("Production Limit set with production value : " + newProductionLimit + " W.");
-        for(var key in this.dictProducer) {
-            this.dictProducerLimit[key].productionLimit+=newProductionLimit;
-            break;
-            }
-        }
 
     async addSupplier(producerName:string,production:number){
         var message = {producerName:producerName};
         var reponse;
-        reponse = (await firstValueFrom(this.http.post(this.URL_RegisteryManager,message))).data
-        this.dictProducerLimit[producerName]={id_producer:reponse,productionLimit:500}; //par defaut la limite est à 500
+        reponse = (await firstValueFrom(this.http.post(this.URL_RegisteryManager,message))).data;
+        let productionLimit=500; //par defaut la limite est à 500
+        this.dictProducerLimit[producerName]={id_producer:reponse,productionLimit:productionLimit};
         this.dictProducer[producerName]={id_producer:reponse,production:production};
         return reponse;
     }

@@ -23,11 +23,6 @@ export class ProductionController {
         return this.productionServiceStorage.getProducerLimit(producerName).productionLimit;
     }
 
-    @Get('change-production-limit')
-    changeProductionLimitAndReturnIt(@Query('newProduction') newProductionLimit:number) {
-        console.log("[change-production-limit][changeProductionLimitAndReturnIt] productionLimit:number "+newProductionLimit+" => number")
-        this.productionServiceStorage.setProductionLimit(+newProductionLimit);
-    }
     
     @Post('add-supplier')
     async addProducter(@Body('producerName') producerName:string,@Body('production') production:number): Promise<number> {
