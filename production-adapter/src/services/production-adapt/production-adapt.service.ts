@@ -21,7 +21,7 @@ export class ProductionAdaptService {
         let sumProd=0
         for (let pas = 0; pas < listLocalDiff.length; pas++) {
             sumLimit=sumLimit+listLocalDiff[pas].productionLimit
-            sumProd=sumProd+listLocalDiff[pas].productionLimit
+            sumProd=sumProd+listLocalDiff[pas].production
         }
         return sumLimit-sumProd
         
