@@ -1,10 +1,6 @@
 # smartrix-21-22-soa-21-22-i
 
-Le PDF de rendu du 03/10/2021 est dans [/DOC/Rendu intermédiaire - Equipe I.pdf](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/dev/DOC/Rendu%20interm%C3%A9diaire%20-%20Equipe%20I.pdf)
-
-Le ReadMe de rendu du 03/10/2021 est dans [/DOC/README_RenduIntermédiaire.md](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/master/documentation/Rendu%20final%20-%20Equipe%20I.pdf)  
-
-Le rapport final est [ici](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/dev/documentation/rendu)  
+Le rapport final est [ici](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/master/documentation/Rendu%20final%20-%20Equipe%20I.pdf)  
 
 # Résultats attendus lors du prepare.sh
 *Attention : des erreurs peuvent apparaître lors de la première exécution de prepare.sh, cela est dû à la tentative de suppression des images docker des maisons.* 
