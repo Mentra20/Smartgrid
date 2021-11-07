@@ -1,0 +1,117 @@
+================= STEP 0 =================
+On regarde les maisons actuellement inscrites : 
+[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:46
+Il y a 46 maison inscrite
+
+
+================= STEP 1 =================
+Une nouvelle maison s'inscrit à SmartGrid : 
+
+[service]:house; [route]:house-editor/add-house; [params]:{"client_name":"Jean-Paul"} => [return]:aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad
+
+La maison est inscrite :
+[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:47
+Il y a bien une maison en plus (initialement 46) : 47
+
+
+================= STEP 2 =================
+SmartGrid attribue un ID à la maison
+
+La maison reçoit un ID : aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad
+
+
+================= STEP 3 =================
+Le client peut voir sa consommation depuis son boitier
+
+[service]:house; [route]:consumption/global; [params]:houseID:aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad => [return]:500
+La consommation globale de la maison : 500 W.
+
+Le client peut voir sa consommation depuis le site web
+[service]:client-consumption; [route]:house-global-consumption; [params]:date:Sun Nov 07 2021 17:03:09 GMT+0100 (heure normale d’Europe centrale) ,houseID:aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad => [return]:500
+La consommation globale de la maison : 500 W.
+
+
+================= STEP 4 =================
+Un nouveau producteur s'inscrit à SmartGrid
+
+On regarde le nombres producteurs actuellement inscrits :
+[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]: (nb inscrit) 19
+On a 19 producteurs inscrits
+
+Un nouveau producteur souhaite s'inscrire :
+[service]:supplier; [route]:add-supplier; [params]:{"producerName":"ENGIE","production":1000} => [return]:b65d1ad1-974e-4462-9ced-032bfd36606a
+
+Le producteur est inscrit :
+[service]:producer-database; [route]:producer-registry/allProducers; [params]:_ => [return]: (nombre)20
+Notre producteur est bien inscrit (initialement 19) : 20
+
+
+================= STEP 5 =================
+SmartGrid attribue un ID au producteur
+
+Le producteur reçoit un ID : b65d1ad1-974e-4462-9ced-032bfd36606a
+
+
+================= STEP 6 =================
+On vérifie que la consommation est égale à la production
+
+On vérifie la tension de la ligne à la date du Sun Nov 07 2021 17:09:09 GMT+0100 (heure normale d’Europe centrale)
+[service]:consumption-api; [route]:total-consumption; [params]: {"date":"2021-11-07T16:09:09.770Z"} => [return]:4000
+Consommation : 4000 W.
+[service]:production-api; [route]:total-production; [params]: {"date":"2021-11-07T16:09:09.770Z"} => [return]:4000
+Production : 4000 W.
+On voit que la consommation est égale à la production
+
+
+================= STEP 7 =================
+Un objet paramètrable est branché
+
+[service]:house; [route]:house-editor/house/aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad/add-object; [params]: {"object":{"name":"voiture","maxConsumption":2000},"type":"SCHEDULED"} => [return]:_
+[service]:house; [route]:house-editor/house/aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"voiture","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":2000}]
+On constate qu'il a bien été ajouté :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"voiture","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":2000}]
+
+
+================= STEP 8 =================
+On demande un planning de consommation pour cet objet
+
+[service]:house; [route]:manage-schedul-object/aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad/scheduled-object/voiture/requestTimeSlot; [params]:_ => [return]: {"start":"2021-11-07T16:09:09.770Z","end":"2021-11-07T21:09:09.770Z"}
+On reçoit le planning suivant :
+{"start":"2021-11-07T16:09:09.770Z","end":"2021-11-07T21:09:09.770Z"}
+
+
+================= STEP 9 =================
+On voit que l'objet consomme à son heure d'activité
+
+On peut voir que l’objet consomme à la date Sun Nov 07 2021 17:10:09 GMT+0100 (heure normale d’Europe centrale) depuis smartGrid
+[service]:client-consumption-api; [route]:house-detailed-consumption; [params]: {"date":"2021-11-07T16:10:09.770Z","houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","objectName":"voiture"} => [return]:2000
+La consommation de l'objet voiture de la maison d'ID aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad à la date du Sun Nov 07 2021 17:10:09 GMT+0100 (heure normale d’Europe centrale) est : 2000 W.
+
+
+================= STEP 10 =================
+On constate que la consommation n'est plus égale à la production
+
+La tension sur la ligne n'est plus stable à la date du Sun Nov 07 2021 17:10:09 GMT+0100 (heure normale d’Europe centrale), on demande aux producteurs de s’adapter :
+[service]:consumption-api; [route]:total-consumption; [params]: {"date":"2021-11-07T16:10:09.770Z"} => [return]:6000
+Consommation : 6000 W.
+[service]:production-api; [route]:total-production; [params]: {"date":"2021-11-07T16:10:09.770Z"} => [return]:4000
+Production : 4000 W.
+
+
+================= STEP 11 =================
+On vérifie que la production s’est bien adaptée 
+
+[service]:production-api; [route]:total-production; [params]: {"date":"2021-11-07T16:11:09.770Z"} => [return]:6000
+Production : 6000 W.
+
+
+================= STEP 12 =================
+Trois mois s'écoulent, le client veut voir sa facture du premier mois et du mois courant 
+
+[service]:bill-api; [route]:bill/bill-for-house; [params]: {"houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","year":2021,"month":10} => [return]:{"year":2021,"month":10,"houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","consumption":601274,"production":0,"productionPrice":0.0001,"consumptionPrice":0.00012,"calculedConsumptionPrice":72.15288,"calculedProductionPrice":0,"finalPrice":72.15288}
+Facture du premier mois (10/2021) : 
+{"year":2021,"month":10,"houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","consumption":601274,"production":0,"productionPrice":0.0001,"consumptionPrice":0.00012,"calculedConsumptionPrice":72.15288,"calculedProductionPrice":0,"finalPrice":72.15288}
+
+[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: {"houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","year":2021,"month":11} => [return]:{"year":2021,"month":11,"houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","consumption":1183.3333333333333,"production":0,"consumptionPrice":0.00015,"productionPrice":0.0001,"calculedConsumptionPrice":0.17749999999999996,"calculedProductionPrice":0,"finalPrice":0.17749999999999996}
+Facture du mois courant (11/2021) : 
+{"year":2021,"month":11,"houseID":"aa6d8278-4dda-4e9d-8c4f-d1bc23a0aaad","consumption":1183.3333333333333,"production":0,"consumptionPrice":0.00015,"productionPrice":0.0001,"calculedConsumptionPrice":0.17749999999999996,"calculedProductionPrice":0,"finalPrice":0.17749999999999996}
