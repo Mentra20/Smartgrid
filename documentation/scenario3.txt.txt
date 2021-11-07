@@ -1,0 +1,137 @@
+Scénario 3 : Production d'une maison et autarcie
+
+
+
+================= STEP 0 =================
+On regarde les maisons actuellement inscrites :
+[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:51
+Il y a 51 maison inscrite
+
+
+================= STEP 1 =================
+On inscrit une maison avec des objets consommant de l'éléctricité et on l'inscrit en tant que producteur
+
+On inscrit une maison et on lui ajoute un objet qui consomme 500 W :
+[service]:house; [route]:house-editor/add-house; [params]:{"client_name":"Jean-Paul"} => [return]:1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9
+
+On inscrit une maison en tant que producteur :
+[service]:house; [route]:house-editor/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/become-producer; [params]:_ => [return]:43fc11e9-21ed-48a8-9a3d-a0d9b0659d60
+
+La maison est inscrite :
+[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: nb inscrit:52
+Il y a bien une maison en plus (initialement 51) : 52
+
+On regarde les objets de la maison :
+[service]:house; [route]:house-editor/house/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false}]
+On a les objets suivants :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false}]
+
+[service]:house; [route]:house-editor/house/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/all-battery; [params]:_ => [return]: []
+On a les batteries suivantes :
+[]
+
+
+================= STEP 2 =================
+On ajoute à la maison un objet produisant de l'électricité et une batterie 
+
+On ajoute à la maison 1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 l'objet de production :
+{"object":{"name":"Roue du hamster","maxProduction":300,"enabled":true},"type":"BASIC"}
+
+On ajoute à la maison 1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 la batterie:
+{"batteryName":"battery scenario","maxProductionFlowW":1000,"maxStorageFlowW":1000,"capacityWH":5000}
+
+On regarde les objets de la maison :
+[service]:house; [route]:house-editor/house/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Roue du hamster","enabled":"true","maxConsumption":0,"maxProduction":300,"_isConsumptionObject":false,"_isProductionObject":true}]
+On a les objets suivants :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Roue du hamster","enabled":"true","maxConsumption":0,"maxProduction":300,"_isConsumptionObject":false,"_isProductionObject":true}]
+
+[service]:house; [route]:house-editor/house/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/all-battery; [params]:_ => [return]: [{"batteryName":"battery scenario","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","maxProductionFlowW":1000,"maxStorageFlowW":1000,"capacityWH":5000,"currentStorageWH":0}]
+On a les batteries suivantes :
+[{"batteryName":"battery scenario","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","maxProductionFlowW":1000,"maxStorageFlowW":1000,"capacityWH":5000,"currentStorageWH":0}]   
+
+On regarde depuis smartGrid si la batterie a bien été ajoutée
+[service]:battery; [route]:get-battery-info; [params]:{"producerID":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f"} => [return]:
+On voit qu'on a bien des informations sur la batterie :
+
+
+================= STEP 3 =================
+On remarque que la consommation est réduite mais toujours positive
+
+On vérifie que la maison1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 consomme toujours
+[service]:house; [route]:consumption/global; [params]:1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 => [return]:500
+La consommation de la maison est positive : 500 W.
+
+
+================= STEP 4 =================
+On regarde la production de la maison depuis SmartGrid, celle-ci est accessible mais pas suffisante
+
+On accède à la production de la maison depuis SmartGrid avec l'id de producteur et on vérifie qu'elle est accessible
+[service]:request-manager; [route]:detailed-production; [params]:{"date":"2021-11-07T16:04:35.641Z","producerID":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60"} => [return]:300
+On voit qu'il y a une production pour cette maison (mais pas suffisante pour la consommation) :300 W.
+
+
+================= STEP 5 =================
+On voit que la maison n'est pas en autarcie 
+
+[service]:autarky-api; [route]:get-house-autarky; [params]:{"date":"2021-11-07T16:04:35.641Z","clientID":"1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9"} => [return]:-200
+On voit que la valeur (prod - cons) est negative : -200 W donc on est pas en autarcie
+
+[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 => [return]:
+On voit que le client n'a pas recu de notification :
+Messages reçus pour le client d'ID 1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 : 
+
+[service]:battery; [route]:get-battery-state; [params]:{"producerID":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f"} => [return]:{"id_producer":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","id_battery":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","date":"2021-11-07T16:04:35.641Z","current_storage":0}
+On voit que la batterie n'a rien stocké : {"id_producer":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","id_battery":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","date":"2021-11-07T16:04:35.641Z","current_storage":0}
+
+
+================= STEP 6 =================
+On ajoute un deuxième objet producteur dans la maison
+
+On ajoute à la maison 1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 l'objet de production :
+{"object":{"name":"Générateur nucléaire DIY","maxProduction":600,"enabled":true},"type":"BASIC"}
+
+On regarde les objets de la maison :
+[service]:house; [route]:house-editor/house/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Roue du hamster","enabled":"true","maxConsumption":0,"maxProduction":300,"_isConsumptionObject":false,"_isProductionObject":true},{"name":"Générateur nucléaire DIY","enabled":"true","maxConsumption":0,"maxProduction":600,"_isConsumptionObject":false,"_isProductionObject":true}]
+On a les objets suivants :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Roue du hamster","enabled":"true","maxConsumption":0,"maxProduction":300,"_isConsumptionObject":false,"_isProductionObject":true},{"name":"Générateur nucléaire DIY","enabled":"true","maxConsumption":0,"maxProduction":600,"_isConsumptionObject":false,"_isProductionObject":true}]
+
+[service]:house; [route]:house-editor/house/1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9/all-battery; [params]:_ => [return]: [{"batteryName":"battery scenario","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","maxProductionFlowW":1000,"maxStorageFlowW":1000,"capacityWH":5000,"currentStorageWH":0}]
+On a les batteries suivantes :
+[{"batteryName":"battery scenario","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","maxProductionFlowW":1000,"maxStorageFlowW":1000,"capacityWH":5000,"currentStorageWH":0}]   
+
+
+================= STEP 7 =================
+On voit que la production est maintenant plus grande que la consommation
+
+[service]:house; [route]:consumption/global; [params]:1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 => [return]:500
+La consommation de la maison est de 500W : 500 W.
+
+[service]:request-manager; [route]:detailed-production; [params]:{"date":"2021-11-07T16:14:35.641Z","producerID":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60"} => [return]:900
+On voit bien qu'il a une production pour cette maison 900W (300W+600W): 900 W.
+
+
+================= STEP 8 =================
+On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification 
+
+[service]:autarky-api; [route]:get-house-autarky; [params]:{"date":"2021-11-07T16:24:35.641Z","clientID":"1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9"} => [return]:0
+On voit que la valeur (prod - cons) est positive : 0 W donc on est en autarcie, la valeur vaut 0 car la batterie a stockée le surplus.
+
+[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 => [return]:{"type":"House","id":"1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9","autarky":true}
+On voit que le client a recu une notification :
+Messages reçus pour le client d'ID 1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9 : {"type":"House","id":"1e6a8d4d-ea07-4a9d-bdd7-c5587906d9a9","autarky":true}
+
+
+================= STEP 9 =================
+On constate que la batterie a stockée le surplus d'énergie  
+
+[service]:battery; [route]:get-battery-state; [params]:{"producerID":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f"} => [return]:{"id_producer":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","id_battery":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","date":"2021-11-07T16:24:35.641Z","current_storage":133.33333333333337}       
+On voit que la batterie a stocké le surplus d'énergie : {"id_producer":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","id_battery":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","date":"2021-11-07T16:24:35.641Z","current_storage":133.33333333333337}
+Soit la batterie a stocké 133.33WH d'éléctricité
+
+
+================= STEP 10 =================
+On désactive le réacteur DIY pour que la consommation soit plus élevée que la production et que la batterie soit utilisée
+
+[service]:battery; [route]:get-battery-state; [params]:{"producerID":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","batteryID":"c86c350e-8220-4626-b2c0-3fcf8505ec1f"} => [return]:{"id_producer":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","id_battery":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","date":"2021-11-07T16:31:35.641Z","current_storage":110.00000000000006}       
+On voit que la batterie a stocké le surplus d'énergie : {"id_producer":"43fc11e9-21ed-48a8-9a3d-a0d9b0659d60","id_battery":"c86c350e-8220-4626-b2c0-3fcf8505ec1f","date":"2021-11-07T16:31:35.641Z","current_storage":110.00000000000006}
+Soit la batterie a stocké 110.00WH d'éléctricité
