@@ -24,7 +24,7 @@ export class ConsumptionPeakService {
         communityConsumptionMap.forEach((value,key,map)=> {
             if(value > this.peakLimit){
                 console.log("Consumption peak detect for communityID "+key+" with value "+value + " W.");
-                this.emitPeakSignal(key);
+                this.emitPeakSignal(key,value);
             }
         });
     }
@@ -78,8 +78,8 @@ export class ConsumptionPeakService {
         return clientInfo;
     }
 
-    public emitPeakSignal(communityID:string){
-        var message = {communityID:communityID};
+    public emitPeakSignal(communityID:string,peakValue:number){
+        var message = {communityID:communityID,peakValue:peakValue};
         console.log("Emit consumption peak for communityID : "+JSON.stringify(message));
         this.client.emit('consumption.peak',message);
     }
