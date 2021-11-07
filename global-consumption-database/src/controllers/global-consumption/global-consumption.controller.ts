@@ -51,7 +51,7 @@ export class GlobalConsumptionController {
 
         console.log("House " + houseID + "consumption at date " + date + " is " + houseConsumption?.totalConsumption||0 + " W.");
 
-        return houseConsumption?.totalConsumption||0;
+        return houseConsumption;
     }
 
     @Get('get-community-consumption')
