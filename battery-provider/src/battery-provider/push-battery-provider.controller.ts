@@ -9,7 +9,7 @@ export class PushBatteryProviderController {
 
     }
 
-    @Post("battery-sate")
+    @Post("battery-state")
     batteryState(@Body("producerID") producerID:string,@Body("battery") battery:any,@Body("date") date:string){
         this.batteryProviderService.pushBatteryState({
             id_battery:battery.id_battery,

@@ -53,10 +53,10 @@ Les containers de nos services sont re-créés entre chaque scénario.
 4 - On regarde la production de la maison depuis SmartGrid, celle-ci est accessible mais pas suffisante  
 5 - On voit que la maison n'est pas en autarcie et que la batterie n'a rien stocké  
 6 - On ajoute un deuxième objet producteur dans la maison  
-7 - On remarque que la consommation est maintenant nulle  
-8 - On voit que la production est maintenant plus grande que la consommation  
-9 - On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification
-10 - On constate que la batterie a stocké le surplus d'énergie  
+7 - On voit que la production est maintenant plus grande que la consommation  
+8 - On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification
+9 - On constate que la batterie a stocké le surplus d'énergie  
+10 - On descative le reacteur DIY pour que la consommation soit plus elevé que la production et que la batterie soit utilisé
 
 *PS: Plusieurs sleep sont effectués dans les scénarios pour attendre que le traitement des événements s'effectues.*
 

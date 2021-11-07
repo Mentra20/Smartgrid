@@ -9,7 +9,7 @@ export class Battery {
     currentStorageWH:number
 
     chargeBattery(flowW:number){
-        var maxFlow = Math.min((this.currentStorageWH-this.capacityWH)*TICK_BY_HOURE,this.maxStorageFlowW,flowW)
+        var maxFlow = Math.min((this.capacityWH-this.currentStorageWH)*TICK_BY_HOURE,this.maxStorageFlowW,flowW)
         if(maxFlow>0){
             this.currentStorageWH += (maxFlow)/TICK_BY_HOURE
         }

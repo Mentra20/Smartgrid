@@ -68,7 +68,7 @@ export class RealEnergyOutputController {
     );
 
     console.log(
-      'house real-energy-output of ID +' +
+      'house real-energy-output of ID ' +
         clientID +
         ' at date ' +
         date +

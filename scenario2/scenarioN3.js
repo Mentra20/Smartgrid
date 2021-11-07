@@ -73,8 +73,10 @@ async function main(){
     console.log(ANSI_YELLOW + JSON.stringify(objProd)+ ANSI_RESET);
     await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: objProd, method: "POST" });
 
-    //TODO AJOUTER UNE BATTERIE DANS LA MAISON
-    var batteryID;//= TODO
+    console.log("\nOn ajoute à la maison " + ANSI_YELLOW +  houseID + ANSI_RESET + " la batterie: ");
+    var battery = {batteryName:"battery scenario",maxProductionFlowW:1000,maxStorageFlowW:1000,capacityWH:5000}
+    console.log(ANSI_YELLOW + JSON.stringify(battery)+ ANSI_RESET);
+    var batteryID = (await doRequest({ url:"http://house:3000/house-editor/house/" + houseID + "/add-battery",form:{battery},method:'POST'})).body
 
     console.log("\nOn regarde les objets de la maison :");
     await checkObject(houseID);
@@ -117,19 +119,19 @@ async function main(){
 
     reqQs = { date: globalDate, clientID: houseID }
     response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est negative : " + ANSI_YELLOW + response.body+ ANSI_RESET  + " W donc on est pas en autarcie");
 
     var reqClientNotif = {clientID: houseID }
     response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-house-message", qs: reqClientNotif, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que le client n'a pas recu de notification : ");
     console.log("Messages reçus pour le client d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
 
     var batteryReqWithDate = {date:globalDate,producerID:houseProdID,batteryID:batteryID}
 
     response = await doRequest({ url: "http://battery:3018/get-battery-state", qs: batteryReqWithDate, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la batterie n'a rien stocké : " + ANSI_YELLOW + response.body + ANSI_RESET);
     //SUR DEUX LIGNES ??????
 
@@ -148,52 +150,60 @@ async function main(){
 
     // STEP 7
     console.log(ANSI_GREEN + "\n\n================= STEP 7 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On remarque que la consommation est maintenant nulle" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On voit que la production est maintenant plus grande que la consommation" + ANSI_RESET)
+    await waitTick(10);
 
     reqQs = { houseID: houseID };
     response = await doRequest({ url: "http://house:3000/consumption/global", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:house; [route]:consumption/global; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
-    console.log("\nLa consommation de la maison est nulle : " + ANSI_YELLOW + response.body + " W.");
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:consumption/global; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log("La consommation de la maison est de 500W : " + ANSI_YELLOW + response.body + " W.");
 
-    // STEP 8
-    console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On voit que la production est maintenant plus grande que la consommation" + ANSI_RESET)
-
-    await waitTick(5);
-    await sleep(1000);
     reqQs = { date: globalDate, producerID: houseProdID };
     response = await doRequest({ url: "http://production-api:2999/detailed-production", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:request-manager; [route]:detailed-production; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit bien qu'il a une production pour cette maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
+    console.log(ANSI_BLUE + "\n[service]:request-manager; [route]:detailed-production; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit bien qu'il a une production pour cette maison 900W (300W+600W): " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
-    //STEP 9
+    //STEP 8
     await waitTick(10);
-    console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
+    console.log(ANSI_GREEN + "\n\n================= STEP 8 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
     response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
-    console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie");
+    console.log(ANSI_BLUE + "\n[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie, la valeur vaut 0 car la batterie a stockée le surplus.");
 
     reqClientNotif = {clientID: houseID }
     response = await doRequest({ url: "http://client-notifier:3031/client-notifier/get-house-message", qs: reqClientNotif, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:client-notifier; [route]:client-notifier/get-house-message; [params]:" + houseID + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que le client a recu une notification : ");
     console.log("Messages reçus pour le client d'ID " + ANSI_YELLOW + houseID+" : "+ response.body+ ANSI_RESET);
 
-    //STEP 10 
-    console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET)
+    //STEP 9 
+    console.log(ANSI_GREEN + "\n\n================= STEP 9 =================" + ANSI_RESET)
     console.log(ANSI_GREEN + "On constate que la batterie a stockée le surplus d'énergie  " + ANSI_RESET)
 
     batteryReqWithDate = {date:globalDate,producerID:houseProdID,batteryID:batteryID}
 
     response = await doRequest({ url: "http://battery:3018/get-battery-state", qs: batteryReqWithDate, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la batterie a stocké le surplus d'énergie : " + ANSI_YELLOW + response.body + ANSI_RESET);
-    //SUR DEUX LIGNES ??????
+    console.log("Soit la batterie a stocké " + ANSI_YELLOW + Number(JSON.parse(response.body).current_storage).toFixed(2) + ANSI_RESET+"WH d'éléctricité");
 
-    //TODO AJOUTE STEP 11 ON ENLEVE DE LA PROD ET ON VOIT SI CA PREND DANS CE QU'IL Y A DANS LA BATTERIE ET CA LA VIDE
+    //STEP 10 
+    console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On descative le reacteur DIY pour que la consommation soit plus elevé que la production et que la batterie soit utilisé" + ANSI_RESET)
+
+    var bodyDisableDIY = {object_name:"Générateur nucléaire DIY",enabled:false}
+    await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/basic-object/enabled", form: bodyDisableDIY, method: "POST" });
+    await waitTick(7);
+    batteryReqWithDate = {date:globalDate,producerID:houseProdID,batteryID:batteryID}
+
+    response = await doRequest({ url: "http://battery:3018/get-battery-state", qs: batteryReqWithDate, method: "GET" });
+    console.log(ANSI_BLUE + "\n[service]:battery; [route]:get-battery-state; [params]:" + JSON.stringify(batteryReq)+ " => [return]:" + response.body + ANSI_RESET);
+    console.log("On voit que la batterie a stocké le surplus d'énergie : " + ANSI_YELLOW + response.body + ANSI_RESET);
+    console.log("Soit la batterie a stocké " + ANSI_YELLOW + Number(JSON.parse(response.body).current_storage).toFixed(2) + ANSI_RESET+"WH d'éléctricité");
+
 }
 
 async function doTick() {
@@ -204,6 +214,7 @@ async function doTick() {
     await sleep(600);
 
     response = await doRequest({ url: "http://electricity-frame:3015/clock/tick", form: { date: globalDate }, method: "POST" });
+    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/tick", form: { date: globalDate }, method: "POST" });
 
     //Wait que tout s'envoie bien
     await sleep(300);
@@ -225,6 +236,11 @@ async function checkObject(houseID) {
     var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
     console.log("On a les objets suivants :");
+    console.log(ANSI_YELLOW + response.body+ ANSI_RESET );
+
+    var response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/all-battery", method: "GET" });
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:house-editor/house/" + houseID + "/all-battery" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
+    console.log("On a les batteries suivantes :");
     console.log(ANSI_YELLOW + response.body+ ANSI_RESET );
 }
 

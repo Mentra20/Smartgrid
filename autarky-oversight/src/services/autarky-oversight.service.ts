@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class AutarkyOversightService {
   private housesAutarky;
   private communitiesAutarky;
 
-  constructor() {
+  constructor(@Inject('AUTARKY-OVERSIGHT') private client: ClientKafka,
+  ) {
     this.communitiesAutarky = {};
     this.housesAutarky = {};
   }
 
-  processAutarkyCommunity(realConsumptionCommunityMSG: {
+  processAutarky(realConsumptionCommunityMSG: {
     communityID: number;
     houses: {
       house: {
@@ -19,86 +21,41 @@ export class AutarkyOversightService {
       };
     }[];
   }) {
-    const messages: { type: string; id: any; autarky: boolean }[] = [];
-    let communityAutarky = 0;
-    realConsumptionCommunityMSG.houses.forEach((house) => {
-      if (this.housesAutarky[house.house.clientID] != undefined) {
-        console.log(
-          'precedent house autarky was ' +
-            this.housesAutarky[house.house.clientID],
-          'actual house autarky is ' + (house.house.realEnergyOutput >= 0),
-        );
-        if (
-          this.housesAutarky[house.house.clientID] &&
-          !(house.house.realEnergyOutput >= 0)
-        ) {
-          console.log('message in queue for house :' + house.house.clientID);
-          messages.push({
-            type: 'House',
-            id: house.house.clientID,
-            autarky: false,
-          });
-        }
-        if (
-          !this.housesAutarky[house.house.clientID] &&
-          house.house.realEnergyOutput >= 0
-        ) {
-          console.log('message in queue for house :' + house.house.clientID);
-          messages.push({
-            type: 'House',
-            id: house.house.clientID,
-            autarky: true,
-          });
-        }
-      }
-      console.log(
-        'new house autarky is ' + (house.house.realEnergyOutput >= 0),
-      );
-      this.housesAutarky[house.house.clientID] =
-        house.house.realEnergyOutput >= 0;
-      communityAutarky += house.house.realEnergyOutput;
-    });
-    if (
-      this.communitiesAutarky[realConsumptionCommunityMSG.communityID] !=
-      undefined
-    ) {
-      console.log(
-        'precedent community autarky was ' +
-          this.communitiesAutarky[realConsumptionCommunityMSG.communityID],
-        'actual community autarky is ' + (communityAutarky >= 0),
-      );
-      if (
-        this.communitiesAutarky[realConsumptionCommunityMSG.communityID] &&
-        !(communityAutarky >= 0)
-      ) {
-        console.log(
-          'message in queue for community :' +
-            realConsumptionCommunityMSG.communityID,
-        );
-        messages.push({
-          type: 'Community',
-          id: realConsumptionCommunityMSG.communityID,
-          autarky: false,
-        });
-      }
-      if (
-        !this.communitiesAutarky[realConsumptionCommunityMSG.communityID] &&
-        communityAutarky >= 0
-      ) {
-        console.log(
-          'message in queue for community :' +
-            realConsumptionCommunityMSG.communityID,
-        );
-        messages.push({
-          type: 'Community',
-          id: realConsumptionCommunityMSG.communityID,
-          autarky: true,
-        });
-      }
+    this.checkSwitchAutarkyHouses(realConsumptionCommunityMSG.houses)
+    this.checkSwitchAutarkyCommunity(realConsumptionCommunityMSG)
+  }
+
+  checkSwitchAutarkyCommunity(community){
+    var sumEnergy = community.houses.reduce((houseContainer,acc)=>acc + Number(houseContainer?.house?.realEnergyOutput||0),0)
+
+    var CommunityIsInAutarkyLastStep = this.communitiesAutarky[community.communityID]||false
+    var CommunityIsInAutarky = sumEnergy >= 0
+
+    if (CommunityIsInAutarkyLastStep!=CommunityIsInAutarky) {
+      console.log(`precedent community autarky was ${CommunityIsInAutarkyLastStep} actual house community is ${CommunityIsInAutarky} for community ${community.communityID}`);
+      this.communitiesAutarky[community.communityID]=CommunityIsInAutarky
+      var message = {type: 'Community',id: community.communityID,autarky: CommunityIsInAutarky}
+      console.log('message : \n', JSON.stringify(message));
+      this.client.emit('client.notification', message);
     }
-    console.log('new community autarky is ' + (communityAutarky >= 0));
-    this.communitiesAutarky[realConsumptionCommunityMSG.communityID] =
-      communityAutarky >= 0;
-    return messages;
+  }
+
+  checkSwitchAutarkyHouses(houses){
+    houses.forEach((houseContainer) => {
+      this.checkSwitchAutarkyHouse(houseContainer.house)
+    })
+  }
+
+  checkSwitchAutarkyHouse(house){
+    var houseIsInAutarkyLastStep = this.housesAutarky[house.clientID]||false
+    var houseIsInAutarky = house.realEnergyOutput >= 0
+
+    if (houseIsInAutarkyLastStep!=houseIsInAutarky) {
+      console.log(`precedent house autarky was ${houseIsInAutarkyLastStep} actual house autarky is ${houseIsInAutarky} for house ${house.clientID}`);
+      this.housesAutarky[house.clientID]=houseIsInAutarky
+      var message = {type: 'House',id: house.clientID,autarky: houseIsInAutarky}
+      console.log('message : \n', JSON.stringify(message));
+      this.client.emit('client.notification', message);
+    }
   }
 }

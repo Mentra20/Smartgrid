@@ -43,13 +43,13 @@ async function main() {
 
     // STEP 1
     console.log(ANSI_GREEN + "\n\n================= STEP 1 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "\nUne nouvelle maison s'inscrit à SmartGrid : " + ANSI_RESET);
+    console.log(ANSI_GREEN + "Une nouvelle maison s'inscrit à SmartGrid : " + ANSI_RESET);
 
     var client = { client_name: "Jean-Paul" };
     var mixeur = { object: { name: "Mixeur", maxConsumption: 500, enabled: true }, type: "BASIC" }
 
     response = await doRequest({ url: "http://house:3000/house-editor/add-house", form: client, method: "POST" });
-    console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/add-house; [params]:" + JSON.stringify(client) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:house-editor/add-house; [params]:" + JSON.stringify(client) + " => [return]:" + response.body + ANSI_RESET);
     var houseID = response.body;
 
     //ajout de l'object
@@ -70,10 +70,10 @@ async function main() {
     //STEP 3 
     await waitTick(1);
     console.log(ANSI_GREEN + "\n\n================= STEP 3 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "\nLe client peut voir sa consommation depuis son boitier" + ANSI_RESET)
+    console.log(ANSI_GREEN + "Le client peut voir sa consommation depuis son boitier" + ANSI_RESET)
 
     response = await doRequest({ url: "http://house:3000/consumption/global", qs: { houseID: houseID }, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:house; [route]:consumption/global; [params]:houseID:" + houseID + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:consumption/global; [params]:houseID:" + houseID + " => [return]:" + response.body + ANSI_RESET);
     console.log("La consommation globale de la maison : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     console.log("\nLe client peut voir sa consommation depuis le site web");
@@ -141,7 +141,7 @@ async function main() {
     var voiture = { object: { name: objectName, maxConsumption: 2000 }, type: "SCHEDULED" }
 
     response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/add-object", form: voiture, method: "POST" });
-    console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(voiture) + " => [return]:_" + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:house-editor/house/" + houseID + "/add-object" + "; [params]: " + JSON.stringify(voiture) + " => [return]:_" + ANSI_RESET);
 
     response = await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/get_all_object", method: "GET" });
     console.log(ANSI_BLUE + "[service]:house; [route]:house-editor/house/" + houseID + "/get_all_object" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
@@ -155,7 +155,7 @@ async function main() {
     response = await doRequest({ url: "http://consumption-scheduler:3002/schedule", form: { dayDate: globalDate }, method: "POST" });
 
     response = await doRequest({ url: "http://house:3000/manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot", method: "POST" });
-    console.log(ANSI_BLUE + "[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:house; [route]:manage-schedul-object/" + houseID + "/scheduled-object/" + objectName + "/requestTimeSlot" + "; [params]:_ => [return]: " + response.body + ANSI_RESET);
     console.log("On reçoit le planning suivant :");
     console.log(ANSI_YELLOW + response.body + ANSI_RESET);
 
@@ -202,7 +202,7 @@ async function main() {
     dateReq = { date: globalDate };
 
     response = await doRequest({ url: "http://production-api:2999/total-production", qs: dateReq, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:production-api; [route]:total-production; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:production-api; [route]:total-production; [params]: " + JSON.stringify(dateReq) + " => [return]:" + response.body + ANSI_RESET);
     console.log("Production : " + ANSI_YELLOW + response.body + ANSI_RESET + " W.");
 
     //STEP 11 
@@ -213,20 +213,19 @@ async function main() {
     var firstMonth = globalDate.getMonth();
     //TODO : s'écouler 3 mois
     generateBill2LastYear(houseID);
-    await sleep(2000)
-    await waitTick(20);
+    await waitTick(30);
 
 
     var firstMonthBillReq = {houseID:houseID, year:firstYear, month:firstMonth};   
     var currMonthBillReq = {houseID:houseID, year:globalDate.getFullYear(), month:globalDate.getMonth()+1};    
 
     response = await doRequest({ url: "http://bill-api:3016/bill/bill-for-house", qs: firstMonthBillReq, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:bill-api; [route]:bill/bill-for-house; [params]: " + JSON.stringify(firstMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
     console.log("Facture du premier mois ("+ANSI_YELLOW + firstMonth+"/"+firstYear + ANSI_RESET +") : ");
     console.log(ANSI_YELLOW + response.body + ANSI_RESET);
 
     response = await doRequest({ url: "http://bill-api:3016/bill/generate-temporary-bill", qs: currMonthBillReq, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:bill-api; [route]:bill/generate-temporary-bill; [params]: " + JSON.stringify(currMonthBillReq) + " => [return]:" + response.body + ANSI_RESET);
     console.log("Facture du mois courant ("+ANSI_YELLOW + (globalDate.getMonth()+1)+"/"+globalDate.getFullYear()+ ANSI_RESET +") : ");
     console.log(ANSI_YELLOW+ response.body+ANSI_RESET);
 }
