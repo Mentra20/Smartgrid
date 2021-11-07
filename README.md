@@ -2,18 +2,25 @@
 
 Le PDF de rendu du 03/10/2021 est dans [/DOC/Rendu intermédiaire - Equipe I.pdf](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/dev/DOC/Rendu%20interm%C3%A9diaire%20-%20Equipe%20I.pdf)
 
-Le ReadMe de rendu du 03/10/2021 est dans [/DOC/README_RenduIntermédiaire.md](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/dev/DOC/README_RenduIntermédiaire.md)  
+Le ReadMe de rendu du 03/10/2021 est dans [/DOC/README_RenduIntermédiaire.md](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/master/documentation/Rendu%20final%20-%20Equipe%20I.pdf)  
+
+Le rapport final est [ici](https://github.com/pns-si5-soa/smartrix-21-22-soa-21-22-i/blob/dev/documentation/rendu)  
 
 # Résultats attendus lors du prepare.sh
-
 *Attention : des erreurs peuvent apparaître lors de la première exécution de prepare.sh, cela est dû à la tentative de suppression des images docker des maisons.* 
 
 # Résultats attendus lors du run.sh
 ## Résultats attendus avant l’exécution des scénarios
 Avant l’exécution des scénarios, les containers de tous nos services (sauf house créé lors du prepare.sh) sont lancés grâce au docker-compose, puis on crée le container permettant de lancer les scénarios. 
-Les containers de nos services sont re-créés entre chaque scénario.
 
-*Attention : une erreur peut arriver “Error: No such container: scenario2”. Cela est dû à la tentative de suppression de scenario 2 s’il existe encore.*
+*Attention : certains résultats peuvent différés en fonction des appels précédents (ex: consommation totale)*
+
+# Participation
+Valentin Campello : 95
+Lucie Morant : 95 
+Yann Martin D'Escrienne : 107
+Tigran Nersissian : 95
+Yohann Tognetti : 108
 
 ## Scénarios
 **Scénario 1 : inscription, object paramétrable et adaptation de la production avec la consommation**
