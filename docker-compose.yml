@@ -1,6 +1,45 @@
 version: '3.8'
 
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    networks:
+      - si5-soa
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - si5-soa
+      
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka
+    ports:
+      - 8080:8080
+    environment:
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+      - si5-soa
 
   database:
     image: postgres:13.4
@@ -14,6 +53,108 @@ services:
       - db:/var/lib/postgresql/data
     networks:
       - si5-soa
+
+  autarky-api:
+    container_name: autarky-api
+    image: autarky-api:1.0.0
+    build:
+      context: ./autarky-api
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3021:3021
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  autarky-oversight:
+    container_name: autarky-oversight
+    image: autarky-oversight:1.0.0
+    build:
+      context: ./autarky-oversight
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3032:3032
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  battery:
+    container_name: battery
+    image: battery:1.0.0
+    build:
+      context: ./battery
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3018:3018
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  battery-provider:
+    container_name: battery-provider
+    image: battery-provider:1.0.0
+    build:
+      context: ./battery-provider
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3017:3017
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  bill-api:
+    container_name: bill-api
+    image: bill-api:1.0.0
+    build:
+      context: ./bill-api
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3016:3016
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  client-consumption-api:
+    container_name: client-consumption-api
+    image: client-consumption-api:1.0.0
+    build:
+      context: ./client-consumption-api
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 2997:2997
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
 
   client-database:
     container_name: client-database
@@ -31,27 +172,59 @@ services:
     depends_on:
       - "database"
 
-  consumption-db:
-    container_name: consumption-db
-    image: consumption-db:1.0.0
+  client-notifier:
+    container_name: client-notifier
+    image: client-notifier:1.0.0
     build:
-      context: ./consumption-db
+      context: ./client-notifier
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3009:3009
+      - 3031:3031
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
     depends_on:
       - "database"
+      - "kafka"
 
-  consumption-manager:
-    container_name: consumption-manager
-    image: consumption-manager:1.0.0
+  consumption-adder:
+    container_name: consumption-adder
+    image: consumption-adder:1.0.0
     build:
-      context: ./consumption-manager
+      context: ./consumption-adder
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "kafka"
+
+  consumption-api:
+    container_name: consumption-api
+    image: consumption-api:1.0.0
+    build:
+      context: ./consumption-api
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 2998:2998
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  consumption-detailed:
+    container_name: consumption-detailed
+    image: consumption-detailed:1.0.0
+    build:
+      context: ./consumption-detailed
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
@@ -60,6 +233,41 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  consumption-peak:
+    container_name: consumption-peak
+    image: consumption-peak:1.0.0
+    build:
+      context: ./consumption-peak
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  consumption-provider:
+    container_name: consumption-provider
+    image: consumption-provider:1.0.0
+    build:
+      context: ./consumption-provider
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3012:3012
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
 
   consumption-scheduler:
     container_name: consumption-scheduler
@@ -74,6 +282,9 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
 
   consumption-verifier:
     container_name: consumption-verifier
@@ -83,11 +294,115 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3007:3007
+      - 3013:3013
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  daily-consumption-db:
+    container_name: daily-consumption-db
+    image: daily-consumption-db:1.0.0
+    build:
+      context: ./daily-consumption-db
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3013:3013
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  daily-production-db:
+    container_name: daily-production-db
+    image: daily-production-db:1.0.0
+    build:
+      context: ./daily-production-db
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3014:3014
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  daily-real-energy-output:
+    container_name: daily-real-energy-output
+    image: daily-real-energy-output:1.0.0
+    build:
+      context: ./daily-real-energy-output
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3020:3020
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  electricity-frame:
+    container_name: electricity-frame
+    image: electricity-frame:1.0.0
+    build:
+      context: ./electricity-frame
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3015:3015
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "kafka"
+
+  global-consumption-database:
+    container_name: global-consumption-database
+    image: global-consumption-database:1.0.0
+    build:
+      context: ./global-consumption-database
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3009:3009
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
+  global-production-database:
+    container_name: global-production-database
+    image: global-production-database:1.0.0
+    build:
+      context: ./global-production-database
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3001:3001
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
 
   house:
     container_name: house
@@ -102,6 +417,24 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+
+  partner-api:
+    container_name: partner-api
+    image: partner-api:1.0.0
+    build:
+      context: ./partner-api
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3019:3019
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
+
 
   producer-database:
     container_name: producer-database
@@ -118,28 +451,60 @@ services:
       - /usr/src/app
     depends_on:
       - "database"
+      - "kafka"
 
-  production-db:
-    container_name: production-db
-    image: production-db:1.0.0
+  producers:
+    container_name: producers
+    image: producers:1.0.0
     build:
-      context: ./production-db
+      context: ./producers
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 3001:3001
+      - 3005:3005
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "kafka"
+
+  production-adapter:
+    container_name: production-adapter
+    image: production-adapter:1.0.0
+    build:
+      context: ./production-adapter
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "kafka"
+
+  production-api:
+    container_name: production-api
+    image: production-api:1.0.0
+    build:
+      context: ./production-api
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 2999:2999
     networks:
       - si5-soa
     volumes:
       - /usr/src/app
     depends_on:
       - "database"
+      - "kafka"
 
-  production-manager:
-    container_name: production-manager
-    image: production-manager:1.0.0
+  production-provider:
+    container_name: production-provider
+    image: production-provider:1.0.0
     build:
-      context: ./production-manager
+      context: ./production-provider
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
@@ -148,6 +513,25 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
+
+  real-energy-output:
+    container_name: real-energy-output
+    image: real-energy-output:1.0.0
+    build:
+      context: ./real-energy-output
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3030:3030
+    networks:
+      - si5-soa
+    volumes:
+      - /usr/src/app
+    depends_on:
+      - "database"
+      - "kafka"
 
   registry-manager:
     container_name: registry-manager
@@ -162,21 +546,9 @@ services:
       - si5-soa
     volumes:
       - /usr/src/app
+    depends_on:
+      - "kafka"
 
-
-  supplier:
-    container_name: supplier
-    image: supplier:1.0.0
-    build:
-      context: ./supplier
-      dockerfile: ./Dockerfile
-    command: npm run start:prod
-    ports:
-      - 3005:3005
-    networks:
-      - si5-soa
-    volumes:
-      - /usr/src/app
 
 networks:
   si5-soa:

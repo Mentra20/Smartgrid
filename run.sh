@@ -9,7 +9,18 @@ echo "==========================================================================
 echo "---------------------------- Scenario1 ----------------------------"
 
 docker exec scenario2 sh -c 'node ./scenarioN1.js'
+
+echo "=========================================================================================="
+echo "---------------------------- Scenario2 ----------------------------"
+
 docker exec scenario2 sh -c 'node ./scenarioN2.js'
+
+echo "=========================================================================================="
+echo "---------------------------- Scenario3 ----------------------------"
+
+docker exec scenario2 sh -c 'node ./scenarioN3.js'
+
+docker-compose exec -T database bash -c 'psql -u$POSTGRES_PASSWORD -p$POSTGRES_PASSWORD $POSTGRES_DB' < ./scriptSQL/resetDB.sql
 
 docker-compose stop
 docker stop scenario2

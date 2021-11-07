@@ -18,42 +18,47 @@ Les containers de nos services sont re-créés entre chaque scénario.
 ## Scénarios
 **Scénario 1 : inscription, object paramétrable et adaptation de la production avec la consommation**
 
-1 - Une maison s’inscrit à la smartgrid  
-2 - La maison reçoit un id  
-3 - Le client peut voir sa consommation  
-4 - Un producteur s’inscrit à la smartgrid  
-5 - Le producteur reçoit un id  
+1 - Une nouvelle maison s’inscrit à Smartgrid  
+2 - SmartGrid attribue un ID à la maison   
+3 - Le client peut voir sa consommation depuis son boitier  
+4 - Un nouveau producteur s’inscrit à SmartGrid    
+5 - SmartGrid attribue un ID au producteur  
 6 - On vérifie que la consommation est égale à la production  
-7 - Un object paramètrable est branché  
-8 - On demande un planning de consommation  
-9 - On peut voir que l’objet consomme à l‘heure donnée depuis smartGrid
-10 - On peut voir que la production n’est plus égale à la consommation, on demande aux producteurs de s’adapter 
+7 - Un object paramètrable est branché à la maison   
+8 - On demande un planning de consommation pour cet objet   
+9 - On voit que l’objet consomme à son heure d'activité  
+10 - On constate que la production n’est plus égale à la consommation  
 11 - On vérifie que la production s’est bien adaptée  
+12 - Trois mois s'écoulent, le client veut voir sa facture du premier mois et du mois courant  
 
-**Scénario 2 : Gestion de la consommation et pic de consommation dans une communauté**  
+**Scénario 2 : Gestion de la consommation, achat des données, pic et autarky dans une communauté**  
 
-1 - Plusieurs maisons dans une communautés et d'autres maisons dans d'autres communautés  
-2 - Plein d’objets planifiables et non planifiables dans les maisons de la communauté  
-3 - On regarde la consommation totale de toutes les maisons  
-4 - On regarde la consommation dans la communauté  
-5 - On détecte un pic de consommation dans cette communautée  
-6 - On demande au object panifiable d'arrêter de charger  
-7 - On remarque qu’il n’y a plus de pic   
+1 - On a des maisons dans une communauté et une autre dans une autre communauté    
+2 - On ajoute plein d’objets planifiables et non planifiables dans les maisons   
+3 - On regarde la consommation totale de toutes les maisons   
+4 - On regarde la consommation dans une communauté  
+5 - On détecte un pic de consommation dans cette communauté  
+6 - On demande aux objets planifiables d'arrêter de charger dans cette communauté   
+7 - On remarque qu’il n’y a maintenant plus de pic  
+8 - On regarde si la communauté est en autarcie et ce n'est pas le cas
+9 - On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie
+10 - On ajoute un nouveau partenaire avec des datapoints, il récupère les données de production des clients  
+11 - Le partenaire récupère les données de consommation détaillée des clients mais n'a plus de datapoints, il en reprend et retente mais il n'a pas le niveau de confiance requis  
 
-**Scénario 3 : Achat de la production supplémentaire d'une maison**
+**Scénario 3 : Production d'une maison, autarcie et notification**
 
-1 - Une maison consommant de l'électricité  
-2 - Ajout d’un objet produisant de l'électricité  
-3 - On peut voir au niveau de la maison que de l'électricité est produite mais pas en excès  
-4 - On remarque que la consommation de la maison au niveau de SmartGrid est réduite  
-5 - On peut voir niveau producteur que l'on n'accède pas à cette électricité  
+1 - On inscrit une maison avec des objets consommant de l'éléctricité et on l'inscrit en tant que producteur  
+2 - On ajoute à la maison un objet produisant de l'électricité et une batterie  
+3 - On remarque que la consommation est réduite mais toujours positive  
+4 - On regarde la production de la maison depuis SmartGrid, celle-ci est accessible mais pas suffisante  
+5 - On voit que la maison n'est pas en autarcie et que la batterie n'a rien stocké  
 6 - On ajoute un deuxième objet producteur dans la maison  
-7 - La production est en excès  
-8 - On peut y accèder côté producteur  
-9 - On remarque que la consommation de la maison au niveau de SmartGrid est nulle  
+7 - On voit que la production est maintenant plus grande que la consommation  
+8 - On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification
+9 - On constate que la batterie a stocké le surplus d'énergie  
+10 - On désactive le réacteur DIY pour que la consommation soit plus elevée que la production et que la batterie soit utilisée
 
-
-*PS: Quand une maison est lancée lors d’un scénario, on fait un sleep() de 10 secondes pour être sûr que celle-ci soit bien inscrite lors de la prochaine étape.*
+*PS: Plusieurs sleep sont effectués dans les scénarios pour attendre que le traitement des événements s'effectues.*
 
 ## Docker
 
@@ -65,6 +70,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - log of service: `docker-compose logs -f --tail=1000 name-of-service`
 
 ## Utils
+
 - Create new nestJS project with cli: `nest new project-name`
 - Install dependency:  `npm install`
 - Run script in package.json: `npm run script-name`
@@ -74,15 +80,73 @@ Les containers de nos services sont re-créés entre chaque scénario.
 ## Route
 
 ## Port
-- 127.0.0.1 house=3000  
-- 127.0.0.1 production-db=3001
+
+- 127.0.0.1 autarky-api=3021  
+- 127.0.0.1 autarky-oversight=3032
+- 127.0.0.1 battery=3018
+- 127.0.0.1 battery-provider=3017
+- 127.0.0.1 bill-api=3016
+- 127.0.0.1 client-consumption-api=2997
+- 127.0.0.1 client-database=3004
+- 127.0.0.1 client-notifier=3031
+- 127.0.0.1 consumption-adder=_  
+- 127.0.0.1 consumption-api:2998
+- 127.0.0.1 consumption-detailed=3008  
+- 127.0.0.1 consumption-peak=_  
+- 127.0.0.1 consumption-provider=3012
 - 127.0.0.1 consumption-scheduler=3002  
-- 127.0.0.1 registry-manager=3003   
-- 127.0.0.1 client-database=3004  
-- 127.0.0.1 supplier=3005  
-- 127.0.0.1 production-manager=3006 
-- 127.0.0.1 consumption-verifier=3007  
-- 127.0.0.1 consumption-manager=3008  
-- 127.0.0.1 consumption-db=3009 
-- 127.0.0.1 producer-database=3010  
-- 127.0.0.1 producers=3011
+- 127.0.0.1 consumption-verifier=_  
+- 127.0.0.1 daily-consumption-db=3013
+- 127.0.0.1 daily-production-db=3014
+- 127.0.0.1 daily-real-energy-output=3020
+- 127.0.0.1 electricity-frame=3015  
+- 127.0.0.1 global-consumption-database=3009
+- 127.0.0.1 global-production-database=3001
+- 127.0.0.1 house=3000  
+- 127.0.0.1 partner-api=3019 
+- 127.0.0.1 producer-database=3010
+- 127.0.0.1 producers=3005  
+- 127.0.0.1 production-adapter=_
+- 127.0.0.1 production-api=2999
+- 127.0.0.1 production-provider=3006
+- 127.0.0.1 registry-manager=3003  
+- 127.0.0.1 real-energy-output=3030
+
+## Host
+
+127.0.0.1 autarky-api
+127.0.0.1 autarky-oversight
+127.0.0.1 battery
+127.0.0.1 battery-provider
+127.0.0.1 bill-api
+127.0.0.1 client-consumption-api
+127.0.0.1 client-database
+127.0.0.1 client-notifier
+127.0.0.1 consumption-adder
+127.0.0.1 consumption-api
+127.0.0.1 consumption-db
+127.0.0.1 consumption-detailed
+127.0.0.1 consumption-peak
+127.0.0.1 consumption-provider
+127.0.0.1 consumption-scheduler
+127.0.0.1 consumption-verifier
+127.0.0.1 daily-consumption-db
+127.0.0.1 daily-production-db
+127.0.0.1 daily-real-energy-output
+127.0.0.1 electricity-frame
+127.0.0.1 global-consumption-database
+127.0.0.1 global-production-database
+127.0.0.1 house
+127.0.0.1 partner-api
+127.0.0.1 producer-database
+127.0.0.1 producers
+127.0.0.1 production-adapter
+127.0.0.1 production-api
+127.0.0.1 production-provider
+127.0.0.1 registry-manager
+127.0.0.1 real-energy-output
+
+127.0.0.1 kafka
+127.0.0.1 mock
+127.0.0.1 database 
+

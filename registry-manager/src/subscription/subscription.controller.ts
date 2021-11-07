@@ -1,6 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
-import { getConnection } from "typeorm";
 
 @Controller('subscription')
 export class SubscriptionController {
@@ -8,18 +7,19 @@ export class SubscriptionController {
     constructor(private SubscriptionService: SubscriptionService){}
 
     @Post("clientSubscribe")
-    async clientSubscribe(@Body("clientName") clientName:string):Promise<string>{
+    async clientSubscribe(@Body("clientName") clientName:string, @Body("privacyDetailedData") privacyDetailedData:boolean, 
+    @Body("privacyConsumptionData") privacyConsumptionData:boolean, @Body("privacyProductionData") privacyProductionData:boolean):Promise<string>{
         console.log("[subscription][clientSubscribe] clientName:string "+ clientName + " => void");
         console.log("New client registration.\n");
-        var response = await this.SubscriptionService.subscribeClient(clientName)
+        var response = await this.SubscriptionService.subscribeClient(clientName, privacyDetailedData, privacyConsumptionData, privacyProductionData);
         console.log("[subscription][clientSubscribe] return :"+ response)
         return response;
     }
 
-    @Post("updateClientConnection")
-    updateConnexion(@Body("idHouse") idHouse:number, @Body("clientName") clientName:string){
+    @Post("updateClientName")
+    updateClientNameinDB(@Body("idHouse") idHouse:string, @Body("clientName") clientName:string){
         //console.log("[subscription/ip][clientSubscribe] ip:string "+ ip +" port:string "+ port +" => void")
-        return this.SubscriptionService.updateSubscription(idHouse, clientName);
+        return this.SubscriptionService.updateClientNameinDB(idHouse, clientName);
     }
 
     @Post("producerSubscribe")
@@ -30,10 +30,16 @@ export class SubscriptionController {
     }
 
     @Post("updateProducerName")
-    updateProducerName(@Body("producerID") producerID:number, @Body("producerNewName") producerNewName:string) {
-        console.log("[subscription][updateProducerName] producerID:number " + producerID + " producerNewName:string "
+    updateProducerNameinDB(@Body("producerID") producerID:string, @Body("producerNewName") producerNewName:string) {
+        console.log("[subscription][updateProducerName] producerID:string " + producerID + " producerNewName:string "
         + producerNewName + " => void\n");
-        return this.SubscriptionService.updateProducerName(producerID, producerNewName);
+        return this.SubscriptionService.updateProducerNameinDB(producerID, producerNewName);
+    }
+
+    @Post("clientBecomeProducer")
+    clientBecomeProducer(@Body("clientID") clientID:string): Promise<String> {
+        console.log("[subscription][clientBecomeProducer] clientID:string " + clientID);
+        return this.SubscriptionService.clientBecomeProducer(clientID);
     }
 
 }

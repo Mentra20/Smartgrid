@@ -4,10 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientRegistryController } from './controllers/client-registry/client-registry.controller';
 import { Client } from './models/Client';
+import { ClientData } from './models/ClientData';
 import { ClientRegistryService } from './services/client-registry/client-registry.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Client]),
+  imports: [TypeOrmModule.forFeature([Client,ClientData]),
   TypeOrmModule.forRoot({
     type: 'postgres',
     host: 'database',
@@ -15,7 +16,7 @@ import { ClientRegistryService } from './services/client-registry/client-registr
     username: 'SI5-SOA',
     password: 'SI5-SOA',
     database: 'SI5-SOA',
-    entities: [Client],
+    entities: [Client,ClientData],
     synchronize: true,
   })],
   controllers: [AppController, ClientRegistryController],
