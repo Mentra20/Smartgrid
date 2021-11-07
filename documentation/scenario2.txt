@@ -1,0 +1,247 @@
+Scénario 2 : Gestion de la consommation, pic et autarcie dans une communauté
+
+
+================= STEP 0 =================
+On regarde le nombre de maisons actuellement inscrites : 
+[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]: (length)47
+Nombre de maison inscrite: 47
+
+
+================= STEP 1 =================
+On a des maisons dans une communauté et une autre dans une autre communauté
+
+Une nouvelle maison souhaite s'inscrire :
+[service]:house; [route]:house-editor/add-house; [params]:{"client_name":"Jean-Paul"} => [return]:f3b8a521-70a9-48a0-b2d3-f7c87bc52a94
+
+
+Une nouvelle maison souhaite s'inscrire :
+[service]:house; [route]:house-editor/add-house; [params]:{"client_name":"Jean-Pierre"} => [return]:19201e04-4d24-4093-b684-f8c82644e3e9
+
+
+Une nouvelle maison souhaite s'inscrire :
+[service]:house; [route]:house-editor/add-house; [params]:{"client_name":"Jean-Sylvestre"} => [return]:a202d1b4-89ab-4253-91b0-d15f19c6d85d
+
+
+Une nouvelle maison souhaite s'inscrire :
+[service]:house; [route]:house-editor/add-house; [params]:{"client_name":"Jean-Baptiste"} => [return]:467a6e22-ab33-4d3b-b05f-8f88f24adef2
+
+
+On regarde les maisons qui sont inscrites (4 nouvelles pour le scenario) :
+[service]:client-database; [route]:client-registry/allHouses; [params]:_ => [return]:51
+On a bien 4 maison en plus (initialement 47) : 51
+
+
+================= STEP 2 =================
+On ajoute plein d’objets planifiables et non planifiables dans les maisons
+
+On ajoute un objet non programmable à chaque maison
+
+Un object est branché :
+{"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"}
+[service]:house; [route]:house-editor/house/f3b8a521-70a9-48a0-b2d3-f7c87bc52a94/add-object; [params]: {"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"} => [return]:_
+
+Un object est branché :
+{"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"}
+[service]:house; [route]:house-editor/house/19201e04-4d24-4093-b684-f8c82644e3e9/add-object; [params]: {"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"} => [return]:_
+
+Un object est branché :
+{"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"}
+[service]:house; [route]:house-editor/house/a202d1b4-89ab-4253-91b0-d15f19c6d85d/add-object; [params]: {"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"} => [return]:_
+
+Un object est branché :
+{"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"}
+[service]:house; [route]:house-editor/house/467a6e22-ab33-4d3b-b05f-8f88f24adef2/add-object; [params]: {"object":{"name":"Mixeur","maxConsumption":500,"enabled":true},"type":"BASIC"} => [return]:_
+
+
+On ajoute un objet programmable à chaque maison
+
+Un object est branché :
+{"object":{"name":"Car","maxConsumption":1300},"type":"SCHEDULED"}
+[service]:house; [route]:house-editor/house/f3b8a521-70a9-48a0-b2d3-f7c87bc52a94/add-object; [params]: {"object":{"name":"Car","maxConsumption":1300},"type":"SCHEDULED"} => [return]:_
+
+Un object est branché :
+{"object":{"name":"Car","maxConsumption":9000},"type":"SCHEDULED"}
+[service]:house; [route]:house-editor/house/19201e04-4d24-4093-b684-f8c82644e3e9/add-object; [params]: {"object":{"name":"Car","maxConsumption":9000},"type":"SCHEDULED"} => [return]:_
+
+Un object est branché :
+{"object":{"name":"Car","maxConsumption":1300},"type":"SCHEDULED"}
+[service]:house; [route]:house-editor/house/a202d1b4-89ab-4253-91b0-d15f19c6d85d/add-object; [params]: {"object":{"name":"Car","maxConsumption":1300},"type":"SCHEDULED"} => [return]:_
+
+Un object est branché :
+{"object":{"name":"Car","maxConsumption":1300},"type":"SCHEDULED"}
+[service]:house; [route]:house-editor/house/467a6e22-ab33-4d3b-b05f-8f88f24adef2/add-object; [params]: {"object":{"name":"Car","maxConsumption":1300},"type":"SCHEDULED"} => [return]:_
+
+
+On regarde les objets des maisons :
+
+
+Pour la maison 1 :
+
+[service]:house; [route]:house-editor/house/f3b8a521-70a9-48a0-b2d3-f7c87bc52a94/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":1300}]
+On constate qu'il a bien été ajouté :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":1300}]
+
+Pour la maison 2 :
+
+[service]:house; [route]:house-editor/house/19201e04-4d24-4093-b684-f8c82644e3e9/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":9000}]
+On constate qu'il a bien été ajouté :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":9000}]
+
+Pour la maison 3 :
+
+[service]:house; [route]:house-editor/house/a202d1b4-89ab-4253-91b0-d15f19c6d85d/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":1300}]
+On constate qu'il a bien été ajouté :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":1300}]
+
+Pour la maison 4 :
+
+[service]:house; [route]:house-editor/house/467a6e22-ab33-4d3b-b05f-8f88f24adef2/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":1300}]
+On constate qu'il a bien été ajouté :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":1300}]
+
+On demande un planing pour les objets planifiables :
+On demande un planning de consommation :
+[service]:house; [route]:manage-schedul-object/f3b8a521-70a9-48a0-b2d3-f7c87bc52a94/scheduled-object/Car/requestTimeSlot; [params]:_ => [return]: {"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+On reçoit le planning suivant :
+{"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+
+On demande un planning de consommation :
+[service]:house; [route]:manage-schedul-object/19201e04-4d24-4093-b684-f8c82644e3e9/scheduled-object/Car/requestTimeSlot; [params]:_ => [return]: {"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+On reçoit le planning suivant :
+{"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+
+On demande un planning de consommation :
+[service]:house; [route]:manage-schedul-object/a202d1b4-89ab-4253-91b0-d15f19c6d85d/scheduled-object/Car/requestTimeSlot; [params]:_ => [return]: {"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+On reçoit le planning suivant :
+{"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+
+On demande un planning de consommation :
+[service]:house; [route]:manage-schedul-object/467a6e22-ab33-4d3b-b05f-8f88f24adef2/scheduled-object/Car/requestTimeSlot; [params]:_ => [return]: {"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+On reçoit le planning suivant :
+{"start":"2021-11-07T15:58:22.144Z","end":"2021-11-07T20:58:22.144Z"}
+
+{"level":"INFO","timestamp":"2021-11-07T15:58:22.641Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"scenario2"}
+{"level":"INFO","timestamp":"2021-11-07T15:58:25.770Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"scenario2","memberId":"scenario2-0dd68ce1-bc9d-4845-a828-464c1600b6b5","leaderId":"scenario2-0dd68ce1-bc9d-4845-a828-464c1600b6b5","isLeader":true,"memberAssignment":{"consumption.peak":[0]},"groupProtocol":"RoundRobinAssigner","duration":3128}
+
+
+================= STEP 3 =================
+On regarde la consommation totale de toutes les maisons
+
+[service]:consumption-api; [route]:total-consumption; [params]: {"date":"2021-11-07T15:59:22.144Z"} => [return]:18900
+Actuellement, la consommation totale est : 18900 W.
+
+
+================= STEP 4 =================
+On regarde la consommation dans la communauté 4
+
+[service]:consumption-api; [route]:community-consumption; [params]: {"date":"2021-11-07T15:59:22.144Z","communityID":4} => [return]:"13100"
+Actuellement, la consommation de la communauté 4 est : 13100 W.
+
+
+================= STEP 5 =================
+On détecte un pic de consommation dans cette communauté
+
+on a un pic de consommation dans la communauté :
+{"communityID":4,"peakValue":13100}
+
+
+================= STEP 6 =================
+On demande aux objets panifiables d'arrêter de charger de la communauté 4
+
+On peut voir que l’objet consomme à la date Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) depuis smartGrid
+{"level":"INFO","timestamp":"2021-11-07T15:58:45.448Z","logger":"kafkajs","message":"[Consumer] Stopped","groupId":"scenario2"}
+[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: {"date":"2021-11-07T16:09:22.144Z","houseID":"f3b8a521-70a9-48a0-b2d3-f7c87bc52a94","objectName":"Car"} => [return]:1300
+La consommation de l'objet Car de la maison d'ID f3b8a521-70a9-48a0-b2d3-f7c87bc52a94 à la date du Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) est : 1300 
+W.
+
+On peut voir que l’objet consomme à la date Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) depuis smartGrid
+[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: {"date":"2021-11-07T16:09:22.144Z","houseID":"19201e04-4d24-4093-b684-f8c82644e3e9","objectName":"Car"} => [return]:0
+La consommation de l'objet Car de la maison d'ID 19201e04-4d24-4093-b684-f8c82644e3e9 à la date du Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) est : 0 W. 
+
+On peut voir que l’objet consomme à la date Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) depuis smartGrid
+[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: {"date":"2021-11-07T16:09:22.144Z","houseID":"a202d1b4-89ab-4253-91b0-d15f19c6d85d","objectName":"Car"} => [return]:0
+La consommation de l'objet Car de la maison d'ID a202d1b4-89ab-4253-91b0-d15f19c6d85d à la date du Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) est : 0 W. 
+
+On peut voir que l’objet consomme à la date Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) depuis smartGrid
+[service]:consumption-detailed; [route]:get-detailed-consumption; [params]: {"date":"2021-11-07T16:09:22.144Z","houseID":"467a6e22-ab33-4d3b-b05f-8f88f24adef2","objectName":"Car"} => [return]:0
+La consommation de l'objet Car de la maison d'ID 467a6e22-ab33-4d3b-b05f-8f88f24adef2 à la date du Sun Nov 07 2021 17:09:22 GMT+0100 (heure normale d’Europe centrale) est : 0 W. 
+{"level":"INFO","timestamp":"2021-11-07T15:58:47.019Z","logger":"kafkajs","message":"[Consumer] Stopped","groupId":"scenario2"}
+
+
+================= STEP 7 =================
+On remarque qu’il n’y a maintenant plus de pic
+
+[service]:consumption-api; [route]:community-consumption; [params]: {"date":"2021-11-07T16:09:22.144Z","communityID":4} => [return]:"1500"
+Actuellement, la consommation de la communauté 4 est : 1500 W.
+
+
+================= STEP 8 =================
+On regarde si la communauté est en autarcie et ce n'est pas le cas
+
+[service]:autarky-api; [route]:get-community-autarky; [params]:{"date":"2021-11-07T16:09:22.144Z","communityID":4} => [return]:-1500
+On voit que la valeur (prod - cons) est négative : -1500 W donc la communauté 4 n'est pas en autarcie
+
+[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:4 => [return]:
+On voit qu'il n'y a pas de notification pour la communauté :
+Messages reçus pour la communauté d'ID 4 : 
+
+
+================= STEP 9 =================
+On ajoute la production suffisante dans une des maisons de la communauté pour passer en autarcie
+
+On ajoute un objet qui produit à la maison 19201e04-4d24-4093-b684-f8c82644e3e9 de la communauté 4
+
+Un object est branché :
+{"object":{"name":"Vélo d'appartement","maxProduction":1700,"enabled":true},"type":"BASIC"}
+[service]:house; [route]:house-editor/house/19201e04-4d24-4093-b684-f8c82644e3e9/add-object; [params]: {"object":{"name":"Vélo d'appartement","maxProduction":1700,"enabled":true},"type":"BASIC"} => [return]:_
+
+[service]:house; [route]:house-editor/house/19201e04-4d24-4093-b684-f8c82644e3e9/get_all_object; [params]:_ => [return]: [{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":9000},{"name":"Vélo d'appartement","enabled":"true","maxConsumption":0,"maxProduction":1700,"_isConsumptionObject":false,"_isProductionObject":true}]
+On constate qu'il a bien été ajouté :
+[{"name":"Mixeur","enabled":"true","maxConsumption":500,"maxProduction":0,"_isConsumptionObject":true,"_isProductionObject":false},{"name":"Car","timeChargeNeed":5,"timeSlot":{"timeSlots":[]},"maxConsumption":9000},{"name":"Vélo d'appartement","enabled":"true","maxConsumption":0,"maxProduction":1700,"_isConsumptionObject":false,"_isProductionObject":true}]
+
+On vérifie que la communauté est bien passée en autarcie
+[service]:autarky-api; [route]:get-community-autarky; [params]:{"date":"2021-11-07T16:29:22.144Z","communityID":4} => [return]:200
+On voit que la valeur (prod - cons) est positive : 200 W donc la communauté 4 est maintenant en autarcie
+
+[service]:client-notifier; [route]:client-notifier/get-community-message; [params]:4 => [return]:{"type":"Community","id":4,"autarky":true}
+On voit qu'il a une notification pour la communauté :
+Messages reçus pour la communauté d'ID 4 : {"type":"Community","id":4,"autarky":true}
+
+
+================= STEP 10 =================
+On ajoute un nouveau partenaire avec des datapoints, il récupère les données de production des clients  
+
+Un nouveau partenaire s'inscrit
+[service]:partner-api; [route]:add-partner; [params]:{"partnerID":"partenaire-scénario","datapoint":100,"trustLevel":2} => [return]:_
+
+On voit qu'on peut récuperer ses informations
+[service]:partner-api; [route]:get-partner-info; [params]:partenaire-scénario => [return]:{"id_partner":"partenaire-scénario","dataPoint":130,"trustLevel":2}
+Informations du partenaire :{"id_partner":"partenaire-scénario","dataPoint":130,"trustLevel":2}
+
+Le partenaire récupère les données de production des clients (coûte 70 datapoints)
+[service]:partner-api; [route]:request-production; [params]:{"partnerID":"partenaire-scénario","date":"2021-11-07T16:29:22.144Z"} => [return]:["","","","","","","","",{"id_producer":"45c0736f-d91d-4890-a398-e7eea328b365","productionDate":"2021-11-07T16:29:22.144Z","production":1700}]
+Données de production du Sun Nov 07 2021 17:29:22 GMT+0100 (heure normale d’Europe centrale) récupérées par le partenaire :
+["","","","","","","","",{"id_producer":"45c0736f-d91d-4890-a398-e7eea328b365","productionDate":"2021-11-07T16:29:22.144Z","production":1700}]
+
+Son nombre de datapoints est mis à jour
+[service]:partner-api; [route]:get-partner-info; [params]:partenaire-scénario => [return]:{"id_partner":"partenaire-scénario","dataPoint":60,"trustLevel":2}
+Informations du partenaire :{"id_partner":"partenaire-scénario","dataPoint":60,"trustLevel":2}
+
+
+================= STEP 11 =================
+Le partenaire reprend des datapoints et récupère les données de consommation détaillée des clients mais n'a pas le niveau de confiance requis  
+
+Le partenaire à payé en amont, des datapoints lui sont ajoutés
+[service]:partner-api; [route]:add-datapoint; [params]:{"partnerID":"partenaire-scénario","datapoint":100} => [return]:_
+
+Son nombre de datapoints est mis à jour
+[service]:partner-api; [route]:get-partner-info; [params]:partenaire-scénario => [return]:{"id_partner":"partenaire-scénario","dataPoint":60,"trustLevel":2}
+Informations du partenaire :{"id_partner":"partenaire-scénario","dataPoint":60,"trustLevel":2}
+
+Le partenaire essaye de récupéré les données de consommation détaillée des clients (coûte 100 datapoints)
+[service]:partner-api; [route]:request-detailed-consumption; [params]:{"partnerID":"partenaire-scénario","date":"2021-11-07T16:29:22.144Z"} => [return]:[]
+Données de consommation détaillée du Sun Nov 07 2021 17:29:22 GMT+0100 (heure normale d’Europe centrale) récupérées par le partenaire :[]
+Il ne récupère rien car n'a pas le niveau de confiance requis (nécéssaire : 3), ses datapoints ne sont pas débités
+
+[service]:partner-api; [route]:get-partner-info; [params]:partenaire-scénario => [return]:{"id_partner":"partenaire-scénario","dataPoint":160,"trustLevel":2}
+Informations du partenaire :{"id_partner":"partenaire-scénario","dataPoint":160,"trustLevel":2}
