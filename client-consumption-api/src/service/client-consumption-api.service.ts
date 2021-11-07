@@ -19,7 +19,9 @@ export class ClientConsumptionApiService {
         params: { date: date, houseID: houseID },
       }),
     ).then((body) => {
-      return body.data||0
+      if(body.data){
+        return body.data.totalConsumption;
+      }
     });
   }
   getHouseDetailedConsumption(dateString: string, houseID: string, objectName: string):Promise<number> {

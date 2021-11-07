@@ -49,11 +49,11 @@ export class GlobalProductionController {
     }
 
     @Get('get-producer-production')
-    async getProducerProduction(@Query('date') dateString: string, @Query('producerID') producerID: string): Promise<number> {
+    async getProducerProduction(@Query('date') dateString: string, @Query('producerID') producerID: string): Promise<any> {
         console.log("[GlobalProductionController][getProducerProduction] params:"+{dateString}+" ,"+{producerID})
         var date = new Date(dateString)
-        var production = await this.productionService.getProducerProductionByDate(date, producerID)
-        return production?.production||0;
+        var production:Production = await this.productionService.getProducerProductionByDate(date, producerID)
+        return production;
 
     }
 }

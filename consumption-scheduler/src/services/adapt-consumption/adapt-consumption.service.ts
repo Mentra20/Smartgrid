@@ -10,7 +10,7 @@ export class AdaptConsumptionService {
     'http://house:3000/manage-schedul-object';
   constructor(private http: HttpService) {}
 
-  postAdaptConsumption(communityID: number) {
+  postAdaptConsumption(communityID: string) {
     firstValueFrom(
       this.http.get(this.URL_DATASERVICE_REGISTRY, {
         params: { communityID: communityID },

@@ -37,7 +37,7 @@ async function main() {
     await consumer.connect()
     await consumer.subscribe({ topic: 'consumption.peak', fromBeginning:false})
 
-    console.log(ANSI_GREEN + "Scénario 2 : Gestion de la consommation, pic et real-energy-output dans une communauté");
+    console.log(ANSI_GREEN + "Scénario 2 : Gestion de la consommation, pic et autarcie dans une communauté");
 
     // STEP 0
     console.log(ANSI_GREEN + "\n\n================= STEP 0 =================" + ANSI_RESET)
@@ -183,9 +183,9 @@ async function main() {
     console.log(ANSI_GREEN + "On regarde si la communauté est en autarcie et ce n'est pas le cas"+ ANSI_RESET)
 
     var autarkyQs = { date: globalDate, communityID:communityHouse2}
-    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
+    response = await doRequest({ url: "http://autarky-api:3021/get-community-autarky", qs: autarkyQs, method: "GET" });
     var exceedConsumption = response.body;
-    console.log(ANSI_BLUE + "\n[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    console.log(ANSI_BLUE + "\n[service]:autarky-api; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est négative : " + ANSI_YELLOW +exceedConsumption + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW + communityHouse2+ ANSI_RESET+" n'est pas en autarcie");
 
     var reqCommuNotif = {communityID: communityHouse2 }
@@ -213,8 +213,8 @@ async function main() {
     console.log("On vérifie que la communauté est bien passée en autarcie")
 
     autarkyQs = { date: globalDate, communityID:communityHouse2}
-    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-community-real-energy-output", qs: autarkyQs, method: "GET" });
-    console.log(ANSI_BLUE + "[service]:real-energy-output; [route]:get-community-real-energy-output; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
+    response = await doRequest({ url: "http://autarky-api:3021/get-community-autarky", qs: autarkyQs, method: "GET" });
+    console.log(ANSI_BLUE + "[service]:autarky-api; [route]:get-community-autarky; [params]:" + JSON.stringify(autarkyQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW +response.body + ANSI_RESET + " W donc la communauté "+ANSI_YELLOW +communityHouse2+ ANSI_RESET +" est maintenant en autarcie");
 
     reqCommuNotif = {communityID: communityHouse2 }

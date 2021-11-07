@@ -1,3 +1,4 @@
+start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd autarky-api | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd autarky-oversight | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd battery | npm i" &
 start powershell -command "[console]::windowwidth=100; [console]::windowheight=30; cd battery-provider | npm i" &

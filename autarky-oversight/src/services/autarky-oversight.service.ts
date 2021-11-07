@@ -26,10 +26,9 @@ export class AutarkyOversightService {
   }
 
   checkSwitchAutarkyCommunity(community){
-    var sumEnergy = community.houses.reduce((houseContainer,acc)=>acc + Number(houseContainer?.house?.realEnergyOutput||0),0)
-
+    var sumEnergy = community.houses.map((elt)=>elt.house.realEnergyOutput).reduce((acc,elt)=>acc+elt,0)
     var CommunityIsInAutarkyLastStep = this.communitiesAutarky[community.communityID]||false
-    var CommunityIsInAutarky = sumEnergy >= 0
+    var CommunityIsInAutarky = (sumEnergy >= 0)
 
     if (CommunityIsInAutarkyLastStep!=CommunityIsInAutarky) {
       console.log(`precedent community autarky was ${CommunityIsInAutarkyLastStep} actual house community is ${CommunityIsInAutarky} for community ${community.communityID}`);

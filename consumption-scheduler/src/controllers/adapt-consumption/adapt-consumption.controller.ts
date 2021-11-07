@@ -17,8 +17,8 @@ export class AdaptConsumptionController {
   }
 
   @MessagePattern('consumption.peak')
-  postAdaptConsumption(@Payload() communityID: any) {
-    console.log('community ayant un pic : ' + JSON.stringify(communityID.value));
-    this.adaptConsumptionService.postAdaptConsumption(+communityID.value.communityID);
+  postAdaptConsumption(@Payload() peakMSG: any) {
+    console.log('community ayant un pic : ' + JSON.stringify(peakMSG.value));
+    this.adaptConsumptionService.postAdaptConsumption(peakMSG.value.communityID);
   }
 }

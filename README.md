@@ -56,7 +56,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 7 - On voit que la production est maintenant plus grande que la consommation  
 8 - On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification
 9 - On constate que la batterie a stocké le surplus d'énergie  
-10 - On descative le reacteur DIY pour que la consommation soit plus elevé que la production et que la batterie soit utilisé
+10 - On désactive le réacteur DIY pour que la consommation soit plus elevée que la production et que la batterie soit utilisée
 
 *PS: Plusieurs sleep sont effectués dans les scénarios pour attendre que le traitement des événements s'effectues.*
 
@@ -81,6 +81,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Port
 
+- 127.0.0.1 autarky-api=3021  
 - 127.0.0.1 autarky-oversight=3032
 - 127.0.0.1 battery=3018
 - 127.0.0.1 battery-provider=3017
@@ -113,7 +114,8 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Host
 
-127.0.0.1 autarky
+127.0.0.1 autarky-api
+127.0.0.1 autarky-oversight
 127.0.0.1 battery
 127.0.0.1 battery-provider
 127.0.0.1 bill-api

@@ -32,7 +32,9 @@ export class ProductionApiService {
         params: { date: date, producerID:producerID },
       })
     ).then((body) => {
-      return body.data || 0
+      if(body.data){
+        return body.data.production;
+      }
     });
   }
   getDailyProduction(id_producer:string,productionDate:string) {
