@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { Producer } from 'src/classes/producer';
 
 @Injectable()
 export class ProductionServiceStorage {
@@ -8,68 +9,45 @@ export class ProductionServiceStorage {
     private URL_PUSH_PRODUCTION = "http://production-provider:3006/add-production"
     constructor(private http:HttpService){}
     dictProducer = {}
-    dictProducerLimit = {}
 
-    getProducer(producerName:string){
-        console.log("Production registred with info name : " + producerName);
-        return this.dictProducer[producerName];
-        }
-    
-    setProduction(newProduction:number){
-        console.log("Production set with production value : " + newProduction + " W.");
-        let localStorageLimit = newProduction
-        for(var key in this.dictProducer) {
-            if (localStorageLimit==0){
-                break;
-            }
-            if (key in this.dictProducerLimit){
-                let capacityToAdd = this.dictProducerLimit[key].productionLimit-this.dictProducer[key].production;
-                this.dictProducer[key].production+=capacityToAdd;
-                localStorageLimit=localStorageLimit-capacityToAdd
-            }
-
-        }
+    getProducer(producerID:string):Producer{
+        return this.dictProducer[producerID];
     }
-    setProductionNegative(newProduction:number){
-        console.log("ProductionNegative set with production value : " + newProduction + " W.");
-        let productionLocal = newProduction;
-        for(var key in this.dictProducer) {
-            let prodCurrentValue=this.dictProducer[key].production;
-            if (prodCurrentValue>0){
-                let localDiff=prodCurrentValue+productionLocal
-                if (localDiff<0){
-                    productionLocal=localDiff
-                    this.dictProducer[key].production = 0;
-                }
-                else {
-                    this.dictProducer[key].production=+productionLocal
-                }
-            }
 
+    changeProduction(producerID:string,changeProduction:number){
+        var producer:Producer = this.getProducer(producerID)
+        if(producer==undefined){
+            throw new Error("Cannot change production of undefine for id :"+producerID)
         }
-    }    
-
-        
-
-
-    getProducerLimit(producerName:string){
-        console.log("Production Limit registred with info name : " + producerName);
-        return this.dictProducerLimit[producerName];
+        producer.changeProduction(changeProduction);
+    }
+    changeProductionLimit(producerID:string,changeProductionLimit:number){
+        console.log(`[changeProductionLimit] producerID : ${producerID}, changeProductionLimit: ${changeProductionLimit}`)
+        var producer:Producer = this.getProducer(producerID)
+        if(this.getProducer(producerID)){
+            throw new Error("Cannot change production limit of undefine for id :"+producerID)
         }
+        producer.changeProductionLimit(changeProductionLimit);
+        this.pushProductionLimit(producerID)
+    }
     
 
     async addSupplier(producerName:string,production:number){
         var message = {producerName:producerName};
-        var reponse;
-        reponse = (await firstValueFrom(this.http.post(this.URL_RegisteryManager,message))).data;
-        let productionLimit=500000; //par defaut la limite est à 500,000
-        this.dictProducerLimit[producerName]={id_producer:reponse,productionLimit:productionLimit};
-        this.dictProducer[producerName]={id_producer:reponse,production:production};
-        return reponse;
+        var producerID = (await firstValueFrom(this.http.post(this.URL_RegisteryManager,message))).data;
+        var newProducer = new Producer(producerName,production)
+        newProducer.producerID = producerID
+        this.dictProducer[producerID]=newProducer
+        this.pushProductionLimit(producerID)
+        return newProducer;
     }
     
-    async pushProduction(producerName:string,date:string){
-        var jsonProduction = {id_producer:this.dictProducer[producerName].id_producer,productionDate:new Date(date),production:this.dictProducer[producerName].production};
+    async pushProduction(producerID:string,date:string){
+        var jsonProduction = {
+            id_producer:producerID,
+            productionDate:new Date(date),
+            production:this.dictProducer[producerID].currentProduction
+        };
         console.log("push to production provider : "+JSON.stringify(jsonProduction))
         this.http.post(this.URL_PUSH_PRODUCTION,{production:jsonProduction}).subscribe({
             next : (response)=> console.log(response.data),
@@ -77,8 +55,8 @@ export class ProductionServiceStorage {
         })
     }
     
-    async pushProductionLimit(producerName:string,date:string){
-        var jsonProductionLimit = {id_producer:this.dictProducerLimit[producerName].id_producer,productionDate:new Date(date),productionLimit:this.dictProducerLimit[producerName].productionLimit,production:this.dictProducerLimit[producerName].production};
+    async pushProductionLimit(producerID:string){
+        var jsonProductionLimit = {id_producer:producerID,productionLimit:this.dictProducer[producerID].maxProduction};
         console.log("push limit to production provider : "+JSON.stringify(jsonProductionLimit))
         this.http.post(this.URL_PUSH_PRODUCTION+"-limit",{productionLimit:jsonProductionLimit}).subscribe({
             next : (response)=> console.log(response.data),
@@ -90,9 +68,4 @@ export class ProductionServiceStorage {
             this.pushProduction(key,date);
         }
     }
-    async pushAllProductionLimit(date:string){
-        for(var key in this.dictProducerLimit) {
-            this.pushProductionLimit(key,date);
-        }
-    }   
 }

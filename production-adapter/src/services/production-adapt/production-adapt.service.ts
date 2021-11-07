@@ -9,61 +9,100 @@ export class ProductionAdaptService {
     private URL_PRODUCERS_ADAPT = "http://producers:3005/change-production";
     constructor(private http:HttpService,
         @InjectRepository(ProductionAdapter)
-        private ProductionAdapterRepository: Repository<ProductionAdapter>) {}
+        private productionAdapterRepository: Repository<ProductionAdapter>) {}
+
+        async realAdaptNeed(adaptNeed:number){
+            var producers = await this.productionAdapterRepository.find()
+            var arrayProductionNotUpdate:ProductionAdapter[] = await producers.filter((elt)=>elt.lastProductionReceive!=undefined && elt.productionLimit!=undefined)
+            var differenceNotUpdate = 0;
+            for(var elt of arrayProductionNotUpdate){
+                differenceNotUpdate+= (elt.lastProductionRequestToProducer?(elt.lastProductionRequestToProducer-elt.lastProductionReceive):0)
+            }
+            return adaptNeed-differenceNotUpdate;
+        }
     
-    findAll(): Promise<ProductionAdapter[]> {
-        return this.ProductionAdapterRepository.find();
+        async updateCurrentProduction(producerID:string,production:number){
+            var producer = await this.productionAdapterRepository.findOne(producerID)
+            if(producer==undefined){
+                producer = new ProductionAdapter()
+                producer.id_producer=producerID
+                producer.productionLimit = undefined
+
+            }
+            if(!producer.lastProductionRequestToProducer){
+                producer.lastProductionRequestToProducer= production
+            }
+            
+            producer.lastProductionReceive=production
+            await this.productionAdapterRepository.save(producer)
         }
-    findByProducerId(id_producer: string): Promise<ProductionAdapter | undefined> {
-        return this.ProductionAdapterRepository.findOne({ id_producer }); 
+
+        async updateProductionLimite(producerID:string,limit:number){
+            var producer = await this.productionAdapterRepository.findOne(producerID)
+            if(producer==undefined){
+                producer = new ProductionAdapter()
+                producer.id_producer=producerID
+                producer.lastProductionRequestToProducer = undefined
+                producer.lastProductionReceive=undefined
+
+            }
+            producer.productionLimit = limit
+            await this.productionAdapterRepository.save(producer)
+
+
         }
-    async sumDiffLimitProd(){
-        let listLocalDiff = await this.findAll()
-        let sumLimit=0
-        let sumProd=0
-        for (let pas = 0; pas < listLocalDiff.length; pas++) {
-            sumLimit=sumLimit+listLocalDiff[pas].productionLimit
-            sumProd=sumProd+listLocalDiff[pas].production
+
+        async increaseProduction(productionToIncrease:number){
+            console.log("[increaseProduction] "+productionToIncrease)
+
+            var producers:ProductionAdapter[] = await this.productionAdapterRepository.find()
+            producers = await producers.filter((elt)=>elt.lastProductionReceive!=undefined && elt.productionLimit!=undefined).sort((a,b)=>a.lastProductionRequestToProducer-b.lastProductionRequestToProducer)
+            for(var producer of producers){
+
+                var maxIncreaseValue = Math.min(productionToIncrease,producer.productionLimit-producer.lastProductionRequestToProducer)
+                var status = await this.pushChangeProduction(producer.id_producer,maxIncreaseValue)
+
+                if(status==500){
+                    this.productionAdapterRepository.remove(producer)
+                }
+                else{
+                    producer.lastProductionRequestToProducer = producer.lastProductionRequestToProducer+maxIncreaseValue
+                    await this.productionAdapterRepository.save(producer)
+                    productionToIncrease-=maxIncreaseValue;
+                }
+
+            }
         }
-        return sumLimit-sumProd
-        
-    }
+
+        async decreaseProduction(productionToDecrease:number){
+            console.log("[decreaseProduction] "+productionToDecrease)
+            var producers:ProductionAdapter[] = await this.productionAdapterRepository.find()
+            producers = await producers.filter((elt)=>elt.lastProductionReceive!=undefined && elt.productionLimit!=undefined).sort((a,b)=>b.lastProductionRequestToProducer-a.lastProductionRequestToProducer)
+            for(var producer of producers){
+                var maxDecreaseValue = Math.min(productionToDecrease,producer.lastProductionRequestToProducer)
+                var status = await this.pushChangeProduction(producer.id_producer,-maxDecreaseValue)
+
+                if(status==500){
+                    this.productionAdapterRepository.remove(producer)
+                }
+                else{
+                    producer.lastProductionRequestToProducer = producer.lastProductionRequestToProducer-maxDecreaseValue
+                    await this.productionAdapterRepository.save(producer)
+                    productionToDecrease-=maxDecreaseValue;
+                    if(productionToDecrease==0){
+                        return;
+                    }
+                }
+            }
+        }
+
+        async pushChangeProduction(producerID:string,adaptProduction:number):Promise<number>{
+            var message = {producerID,adaptProduction}
+            console.log("[pushChangeProduction] params: "+JSON.stringify(message))
+            return (await firstValueFrom(this.http.post(this.URL_PRODUCERS_ADAPT,message))).status;
+            ;
+        }
     
 
-    async adaptProduction(amountToAdd: any) {
-        let diffLocal = await this.sumDiffLimitProd()
-        if (diffLocal>=amountToAdd){
-            firstValueFrom(this.http.get(this.URL_PRODUCERS_ADAPT, {params: {newProduction:amountToAdd}})).then((body)=> {
-                console.log("Production adapter told the producers to change their production.");
-            });
-            return -1
-        }
-        else {
-            return diffLocal-amountToAdd
-        }
-    }
-    async adaptProductionNegative(amountToAdd: any) {
-            firstValueFrom(this.http.get(this.URL_PRODUCERS_ADAPT+"-negative", {params: {newProduction:amountToAdd}})).then((body)=> {
-                console.log("Production adapter told the producers to change their production.");
-            });
-    }
-
-    saveProductionLimit(productionProducer:{id_producer:string,productionDate:Date,productionLimit:number,production:number}){
-        let productionAdapter = new ProductionAdapter()
-        productionAdapter.id_producer=productionProducer.id_producer;
-        productionAdapter.productionDate=productionProducer.productionDate;
-        productionAdapter.production=productionProducer.production;
-        productionAdapter.productionLimit=productionProducer.productionLimit;
-        this.ProductionAdapterRepository.save(productionAdapter);
-    }
-    async updateProductionLimit(productionProducer:{id_producer:string,productionDate:Date,production:number}){
-        let productionAdapter = new ProductionAdapter()
-        let currentProductionAdapter = await this.findByProducerId(productionProducer.id_producer)
-        productionAdapter.id_producer=productionProducer.id_producer;
-        productionAdapter.productionDate=productionProducer.productionDate;
-        productionAdapter.production=productionProducer.production;
-        productionAdapter.productionLimit=currentProductionAdapter.productionLimit;
-        this.ProductionAdapterRepository.save(productionAdapter);
-    }
 
 }
