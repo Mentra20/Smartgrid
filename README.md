@@ -77,8 +77,6 @@ Les containers de nos services sont re-créés entre chaque scénario.
 - Generate controller: `nest g controller path/name`
 - Generate service: `nest g service path/name`
 
-## Route
-
 ## Port
 
 - 127.0.0.1 autarky-api=3021  
@@ -114,39 +112,39 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Host
 
-127.0.0.1 autarky-api
-127.0.0.1 autarky-oversight
-127.0.0.1 battery
-127.0.0.1 battery-provider
-127.0.0.1 bill-api
-127.0.0.1 client-consumption-api
-127.0.0.1 client-database
-127.0.0.1 client-notifier
-127.0.0.1 consumption-adder
-127.0.0.1 consumption-api
-127.0.0.1 consumption-db
-127.0.0.1 consumption-detailed
-127.0.0.1 consumption-peak
-127.0.0.1 consumption-provider
-127.0.0.1 consumption-scheduler
-127.0.0.1 consumption-verifier
-127.0.0.1 daily-consumption-db
-127.0.0.1 daily-production-db
-127.0.0.1 daily-real-energy-output
-127.0.0.1 electricity-frame
-127.0.0.1 global-consumption-database
-127.0.0.1 global-production-database
-127.0.0.1 house
-127.0.0.1 partner-api
-127.0.0.1 producer-database
-127.0.0.1 producers
-127.0.0.1 production-adapter
-127.0.0.1 production-api
-127.0.0.1 production-provider
-127.0.0.1 registry-manager
-127.0.0.1 real-energy-output
+- 127.0.0.1 autarky-api
+- 127.0.0.1 autarky-oversight
+- 127.0.0.1 battery
+- 127.0.0.1 battery-provider
+- 127.0.0.1 bill-api
+- 127.0.0.1 client-consumption-api
+- 127.0.0.1 client-database
+- 127.0.0.1 client-notifier
+- 127.0.0.1 consumption-adder
+- 127.0.0.1 consumption-api
+- 127.0.0.1 consumption-db
+- 127.0.0.1 consumption-detailed
+- 127.0.0.1 consumption-peak
+- 127.0.0.1 consumption-provider
+- 127.0.0.1 consumption-scheduler
+- 127.0.0.1 consumption-verifier
+- 127.0.0.1 daily-consumption-db
+- 127.0.0.1 daily-production-db
+- 127.0.0.1 daily-real-energy-output
+- 127.0.0.1 electricity-frame
+- 127.0.0.1 global-consumption-database
+- 127.0.0.1 global-production-database
+- 127.0.0.1 house
+- 127.0.0.1 partner-api
+- 127.0.0.1 producer-database
+- 127.0.0.1 producers
+- 127.0.0.1 production-adapter
+- 127.0.0.1 production-api
+- 127.0.0.1 production-provider
+- 127.0.0.1 registry-manager
+- 127.0.0.1 real-energy-output
 
-127.0.0.1 kafka
-127.0.0.1 mock
-127.0.0.1 database 
+- 127.0.0.1 kafka
+- 127.0.0.1 mock
+- 127.0.0.1 database 
 
