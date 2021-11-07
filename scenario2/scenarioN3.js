@@ -192,7 +192,7 @@ async function main(){
 
     //STEP 10 
     console.log(ANSI_GREEN + "\n\n================= STEP 10 =================" + ANSI_RESET)
-    console.log(ANSI_GREEN + "On descative le reacteur DIY pour que la consommation soit plus elevé que la production et que la batterie soit utilisé" + ANSI_RESET)
+    console.log(ANSI_GREEN + "On désactive le réacteur DIY pour que la consommation soit plus élevée que la production et que la batterie soit utilisée" + ANSI_RESET)
 
     var bodyDisableDIY = {object_name:"Générateur nucléaire DIY",enabled:false}
     await doRequest({ url: "http://house:3000/house-editor/house/" + houseID + "/basic-object/enabled", form: bodyDisableDIY, method: "POST" });
