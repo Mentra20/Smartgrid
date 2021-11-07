@@ -118,8 +118,8 @@ async function main(){
     console.log(ANSI_GREEN + "On voit que la maison n'est pas en autarcie " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
-    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "\n[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    response = await doRequest({ url: "http://autarky-api:3021/get-house-autarky", qs: reqQs, method: "GET" });
+    console.log(ANSI_BLUE + "\n[service]:autarky-api; [route]:get-house-autarky; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est negative : " + ANSI_YELLOW + response.body+ ANSI_RESET  + " W donc on est pas en autarcie");
 
     var reqClientNotif = {clientID: houseID }
@@ -169,8 +169,8 @@ async function main(){
     console.log(ANSI_GREEN + "On voit maintenant que la maison est passée en autarcie et que le client à reçu une notification " + ANSI_RESET)
 
     reqQs = { date: globalDate, clientID: houseID }
-    response = await doRequest({ url: "http://real-energy-output:3030/realEnergyOutput/get-house-real-energy-output", qs: reqQs, method: "GET" });
-    console.log(ANSI_BLUE + "\n[service]:real-energy-output; [route]:get-house-real-energy-output; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
+    response = await doRequest({ url: "http://autarky-api:3021/get-house-autarky", qs: reqQs, method: "GET" });
+    console.log(ANSI_BLUE + "\n[service]:autarky-api; [route]:get-house-autarky; [params]:" + JSON.stringify(reqQs) + " => [return]:" + response.body + ANSI_RESET);
     console.log("On voit que la valeur (prod - cons) est positive : " + ANSI_YELLOW + response.body + ANSI_RESET + " W donc on est en autarcie, la valeur vaut 0 car la batterie a stockée le surplus.");
 
     reqClientNotif = {clientID: houseID }

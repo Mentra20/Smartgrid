@@ -81,6 +81,7 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Port
 
+- 127.0.0.1 autarky-api=3021  
 - 127.0.0.1 autarky-oversight=3032
 - 127.0.0.1 battery=3018
 - 127.0.0.1 battery-provider=3017
@@ -113,7 +114,8 @@ Les containers de nos services sont re-créés entre chaque scénario.
 
 ## Host
 
-127.0.0.1 autarky
+127.0.0.1 autarky-api
+127.0.0.1 autarky-oversight
 127.0.0.1 battery
 127.0.0.1 battery-provider
 127.0.0.1 bill-api
