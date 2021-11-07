@@ -20,6 +20,7 @@ echo "---------------------------- Scenario3 ----------------------------"
 
 docker exec scenario2 sh -c 'node ./scenarioN3.js'
 
+docker-compose exec -T database bash -c 'psql -u$POSTGRES_PASSWORD -p$POSTGRES_PASSWORD $POSTGRES_DB' < ./scriptSQL/resetDB.sql
 
 docker-compose stop
 docker stop scenario2

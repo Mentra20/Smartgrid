@@ -1,5 +1,15 @@
+DELETE FROM battery_info where true;
+DELETE FROM battery_state where true;
 DELETE FROM client where true;
-DELETE FROM production where true;
-DELETE FROM house_consumption where true;
+DELETE FROM client_bill where true;
+DELETE FROM client_data where true;
+DELETE FROM daily_consumption where true;
+DELETE FROM daily_production where true;
+DELETE FROM daily_real_energy where true;
 DELETE FROM detailed_consumption where true;
+DELETE FROM house_consumption where true;
+DELETE FROM house_energy_output where true;
+DELETE FROM partner_info where true;
 DELETE FROM producer where true;
+DELETE FROM production where true;
+DELETE FROM production_adapter where true;
