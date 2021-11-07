@@ -12,9 +12,9 @@ Avant l’exécution des scénarios, les containers de tous nos services (sauf h
 *Attention : certains résultats peuvent différés en fonction des appels précédents (ex: consommation totale)*
 
 ## Log attendus des scénarios
-voir scenario1.txt dans documentation
-voir scenario2.txt dans documentation
-voir scenario3.txt dans documentation
+voir scenario1.txt dans documentation  
+voir scenario2.txt dans documentation  
+voir scenario3.txt dans documentation  
 
 # Participation
 Valentin Campello : 95
