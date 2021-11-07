@@ -19,7 +19,6 @@ export class DailyRealEnergyOutputService {
         console.log("Add energy " + clientRealDailyData.energy +" W/H for client " + clientRealDailyData.id_client + " at daily date " + dailyDate + ".");
 
         var existingRealDailyEnergy = await this.getClientDataByDate(dailyDate, clientRealDailyData.id_client);
-
         if(existingRealDailyEnergy){ //Existing line
             existingRealDailyEnergy.energy += energyinWH;
             await this.dailyRealEnergyRepository.save(existingRealDailyEnergy);
@@ -27,6 +26,11 @@ export class DailyRealEnergyOutputService {
             console.log("Existing energy is now : " + existingRealDailyEnergy.energy + "\n");
         }
         else{ //New line
+            if(clientRealDailyData.id_client==undefined){
+                console.error("no id resolve")
+                return
+            }
+
             var newRealDailyEnergy = new DailyRealEnergy();
             newRealDailyEnergy.id_client = clientRealDailyData.id_client;
             newRealDailyEnergy.id_producer = clientRealDailyData.id_producer;

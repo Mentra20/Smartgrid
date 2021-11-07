@@ -207,7 +207,7 @@ async function main() {
     await addObject(houseID2, velo);
     await checkObject(houseID2);
 
-    await waitTick(10);
+    await waitTick(20);
     await sleep(1000)
     
     console.log("On vérifie que la communauté est bien passée en autarcie")

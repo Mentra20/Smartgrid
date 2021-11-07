@@ -1,4 +1,4 @@
-import { Controller,Get, Query,Post,Param, Body } from '@nestjs/common';
+import { Controller,Get, Query,Post,Param, Body, ParseFloatPipe } from '@nestjs/common';
 import { ProductionServiceStorage} from 'src/services/production-storage/production-storage.service';
 
 @Controller()
@@ -6,28 +6,37 @@ export class ProductionController {
     constructor(private readonly productionServiceStorage: ProductionServiceStorage) {}
 
     @Get('get-production')
-    getProduction(producerName:string): number {
+    getProduction(@Query('producerID') producerID:string): number {
         console.log("[get-production][getProduction] => number")
-        return this.productionServiceStorage.getProducer(producerName).production;
+        return this.productionServiceStorage.getProducer(producerID).currentProduction;
     }
 
-    @Get('change-production')
-    changeProductionAndReturnIt(@Query('newProduction') newProduction:number) {
-        console.log("[change-production][changeProductionAndReturnIt] consumption:number "+newProduction+" => number")
-        this.productionServiceStorage.setProduction(+newProduction);
+    @Post('change-production')
+    changeProductionAndReturnIt(@Body('producerID') producerID:string,@Body('adaptProduction') adaptProduction:number) {
+        console.log("[change-production][changeProductionAndReturnIt] {producerID: "+producerID+"adaptProduction : "+adaptProduction+"} => number")
+        this.productionServiceStorage.changeProduction(producerID,+adaptProduction);
+    }
+
+    @Get('get-production-limit')
+    getProductionLimit(@Body('producerID') producerID:string): number {
+        console.log("[get-production-limit][getProductionLimit] => number")
+        return this.productionServiceStorage.getProducer(producerID).maxProduction
+    }
+
+    @Post('change-production-limit')
+    changeProductionLimite(@Body('producerID') producerID:string,@Body("productionLimite",ParseFloatPipe) productionLimite:number) {
+        console.log("[change-production-limit][changeProductionLimite]")
+        this.productionServiceStorage.changeProductionLimit(producerID,productionLimite)
     }
     
     @Post('add-supplier')
-    async addProducter(@Body('producerName') producerName:string,@Body('production') production:number): Promise<number> {
+    async addProducter(@Body('producerName') producerName:string,@Body('production') production:number): Promise<string> {
         console.log("[add-supplier][addProducter] production:number "+production+" => number")
-        await this.productionServiceStorage.addSupplier(producerName,+production);
-        return this.productionServiceStorage.getProducer(producerName).id_producer;
+        var newupplier = await this.productionServiceStorage.addSupplier(producerName,+production);
+        return newupplier.producerID;
     }
-    @Post('push-production')
-    PushProduction(@Body('producerName') producerName:string,@Body('date') date:string) {
-        console.log("[push-production][pushProduction] producerName:string "+producerName+" date:string" + date)
-        this.productionServiceStorage.pushProduction(producerName,date);
-    }
+
+
     @Post('tick')
     doTick(@Body("date") dateString:string){
         console.log("[tick][doTick]  date:string" + dateString)
