@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository} from 'typeorm';
 import { ProductionAdapter } from 'src/production-adapter';
+import { ClientKafka } from '@nestjs/microservices';
 @Injectable()
 export class ProductionAdaptService {
     private URL_PRODUCERS_ADAPT = "http://producers:3005/change-production";
-    constructor(private http:HttpService,
+    constructor(@Inject("PRODUCTION_ADAPTER") private client:ClientKafka,
+    private http:HttpService,
         @InjectRepository(ProductionAdapter)
         private productionAdapterRepository: Repository<ProductionAdapter>) {}
+
 
         async realAdaptNeed(adaptNeed:number){
             var producers = await this.productionAdapterRepository.find()
@@ -72,6 +75,10 @@ export class ProductionAdaptService {
                 }
 
             }
+            if(productionToIncrease>0){
+                console.log("Production maximal atteinte, impossible d'augmenter de : "+productionToIncrease)
+                this.client.emit("reach.production.limit",{productionToIncrease})
+            }
         }
 
         async decreaseProduction(productionToDecrease:number){
@@ -99,7 +106,7 @@ export class ProductionAdaptService {
         async pushChangeProduction(producerID:string,adaptProduction:number):Promise<number>{
             var message = {producerID,adaptProduction}
             console.log("[pushChangeProduction] params: "+JSON.stringify(message))
-            return (await firstValueFrom(this.http.post(this.URL_PRODUCERS_ADAPT,message))).status;
+            return (await firstValueFrom(this.http.post(this.URL_PRODUCERS_ADAPT,message)).then((response)=>response.status).catch((error)=>500));
             ;
         }
     
