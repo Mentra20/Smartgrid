@@ -97,19 +97,19 @@ export class House {
         if(margeProduction>0){
             for(var battery of this.getAllBattery()){
                 var chargeStore =battery.chargeBattery(margeProduction);
-                batteryUse.push({name:battery.batteryName,consumption:chargeStore,production:0})
+                batteryUse.push({objectName:battery.batteryName,consumption:chargeStore,production:0})
                 margeProduction-=chargeStore
             }
         }
         else if(margeProduction<0){
             for(var battery of this.getAllBattery()){
                 var chargeUse =battery.useChargeOfBattery(-margeProduction);
-                batteryUse.push({name:battery.batteryName,production:chargeUse,consumption:0})
+                batteryUse.push({objectName:battery.batteryName,production:chargeUse,consumption:0})
                 margeProduction+=chargeUse
             }
         }
         else{
-            batteryUse.push({name:battery.batteryName,production:0,consumption:0})
+            batteryUse.push({objectName:battery.batteryName,production:0,consumption:0})
         }
         return batteryUse
     }

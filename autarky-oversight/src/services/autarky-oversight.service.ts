@@ -26,7 +26,7 @@ export class AutarkyOversightService {
   }
 
   checkSwitchAutarkyCommunity(community){
-    var sumEnergy = community.houses.reduce((houseContainer,acc)=>acc + Number(houseContainer.house.realEnergyOutput),0)
+    var sumEnergy = community.houses.reduce((houseContainer,acc)=>acc + Number(houseContainer?.house?.realEnergyOutput||0),0)
 
     var CommunityIsInAutarkyLastStep = this.communitiesAutarky[community.communityID]||false
     var CommunityIsInAutarky = sumEnergy >= 0

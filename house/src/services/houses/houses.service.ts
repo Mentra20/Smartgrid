@@ -105,7 +105,7 @@ export class HousesService {
     public async registerNewBattery(battery:Battery,producerId:string){
         this.logger.debug(`register new battery for producerId ${producerId} : ${battery} `)
         await this.http.post(this.URL_BATTERY_SUBSCRIBTION, { 
-            id_producer:producerId,
+            producerID:producerId,
             battery: {
                 id_battery:battery.batteryID,
                 id_producer:producerId, 

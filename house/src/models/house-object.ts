@@ -1,7 +1,7 @@
 import { TimeSlots, TimeSlotsList } from "./time-slots";
 
 export abstract class AbstractHouseObject {
-    private name:string
+    protected name:string
     constructor(
         name:string
         ){

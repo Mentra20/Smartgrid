@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, ParseBoolPipe, Post, Res } from '@nestjs/common';
 import { AbstractHouseObject, BasicHouseObject, ScheduledHouseObject } from 'src/models/house-object';
 import { HousesService } from 'src/services/houses/houses.service';
 import { Response } from 'express'
@@ -51,8 +51,8 @@ export class HouseEditorController {
         return
     }
 
-    @Post("house/:id_house/basic-object/:object/enabled")
-    public enabledObject(@Param("id_house") houseId:string,@Param("object_name") objectName:string, @Body("enabled") enabled:boolean){
+    @Post("house/:id_house/basic-object/enabled")
+    public enabledObject(@Param("id_house") houseId:string,@Body("object_name") objectName:string, @Body("enabled",ParseBoolPipe) enabled:boolean){
         var currentHouse = this.housesService.getHouse(houseId);
         var currentObject = currentHouse?.getObject(objectName)
         if(!currentHouse ||!currentObject){
@@ -62,6 +62,7 @@ export class HouseEditorController {
             return ;
         }
         else{
+            this.logger.log(`La maison ${houseId} a ${enabled?'activé':'desactivé'} l'objet "${objectName}"`)
             currentObject.setEnabled(enabled);
         }
     }
@@ -124,8 +125,8 @@ export class HouseEditorController {
         return this.housesService.getHouse(houseId)?.getAllObject().find((object)=>object.getName()===objectName);
     }
 
-    @Post("house/:id_house/all-battery")
-    public getAllBattery(@Body("id_house") houseId:string){
+    @Get("house/:id_house/all-battery")
+    public getAllBattery(@Param("id_house") houseId:string){
         var currentHouse = this.housesService.getHouse(houseId);
         if(!currentHouse){
             this.logger.error(`cannot found house: ${houseId}`)
